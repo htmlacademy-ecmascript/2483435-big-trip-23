@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Богдан Троценко](https://up.htmlacademy.ru/ecmascript/23/user/2483435).
-* Наставник: `Неизвестно`.
+* Наставник: [Arthur Litovko](https://htmlacademy.ru/profile/id6927).
 
 ---
 
