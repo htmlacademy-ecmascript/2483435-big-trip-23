@@ -1,12 +1,12 @@
 import { createElement } from '../render.js';
 
-function createFilterTemplate() {
-  return '<p class="trip-events__msg">Failed to load latest route information</p>';
+function createWaypointsListTemplate() {
+  return '<ul class="trip-events__list"> </ul>';
 }
 
-export class LoadingErrorView {
+export default class WaypointsList {
   getTemplate() {
-    return createFilterTemplate();
+    return createWaypointsListTemplate();
   }
 
   getElement() {

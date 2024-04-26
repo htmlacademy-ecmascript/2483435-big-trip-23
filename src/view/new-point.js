@@ -1,7 +1,8 @@
 import { createElement } from '../render.js';
 
-function createFilterTemplate() {
-  return `<form class="event event--edit" action="#" method="post">
+function createNewPointTemplate() {
+  return `<li class="trip-events__item">
+  <form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -160,12 +161,13 @@ function createFilterTemplate() {
       </div>
     </section>
   </section>
-</form>`;
+</form>
+</li>`;
 }
 
-export class NewPointView {
+export default class NewPoint {
   getTemplate() {
-    return createFilterTemplate();
+    return createNewPointTemplate();
   }
 
   getElement() {

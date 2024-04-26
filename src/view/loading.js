@@ -1,12 +1,12 @@
 import { createElement } from '../render.js';
 
-function createFilterTemplate() {
+function createLoadingTemplate() {
   return '<p class="trip-events__msg">Loading...</p>';
 }
 
-export class LoadingProcessView {
+export class Loading {
   getTemplate() {
-    return createFilterTemplate();
+    return createLoadingTemplate();
   }
 
   getElement() {

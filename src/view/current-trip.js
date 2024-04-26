@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 
-function createFilterTemplate() {
+function createCurrentTripTemplate() {
   return `
   <section class="trip-main__trip-info  trip-info">
             <div class="trip-info__main">
@@ -15,9 +15,9 @@ function createFilterTemplate() {
           </section>`;
 }
 
-export class CurrentTripView {
+export default class CurrentTrip {
   getTemplate() {
-    return createFilterTemplate();
+    return createCurrentTripTemplate();
   }
 
   getElement() {

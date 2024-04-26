@@ -1,12 +1,12 @@
 import { createElement } from '../render.js';
 
-function createFilterTemplate() {
-  return '<p class="trip-events__msg">Click New Event to create your first point</p>';
+function createErrorDataTemplate() {
+  return '<p class="trip-events__msg">Failed to load latest route information</p>';
 }
 
-export class EmptyTripListView {
+export class ErrorData {
   getTemplate() {
-    return createFilterTemplate();
+    return createErrorDataTemplate();
   }
 
   getElement() {

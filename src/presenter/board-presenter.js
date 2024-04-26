@@ -1,22 +1,33 @@
-import { SortView } from '../view/list-sort-view.js';
-import { NewPointView } from '../view/new-point-view.js';
-import { NewPointWithoutOffersView } from '../view/new-point-without-offers-view.js';
-import { NewPointWithoutDestinationView } from '../view/new-point-without-destination-view.js';
-import { PointContentView } from '../view/point-content-view.js';
-import { ListView } from '../view/list-view.js';
+import { RenderPosition } from '../render.js';
+import CurrentTrip from '../view/current-trip.js';
+import Filters from '../view/filters.js';
+import Sorting from '../view/sorting.js';
+import WaypointsList from '../view/waypoints-list.js';
+import Waypoint from '../view/waypoint.js';
+import NewPoint from '../view/new-point.js';
+import PointContent from '../view/point-content.js';
 import { render } from '../render.js';
 
-export class BoardPresenter {
+const siteHeaderElement = document.querySelector('.trip-main');
+const siteFilterElement = document.querySelector('.trip-controls__filters');
+
+export default class BoardPresenter {
+  waypointList = new WaypointsList();
+
   constructor({ boardContainer }) {
     this.boardContainer = boardContainer;
   }
 
   init() {
-    render(new SortView(), this.boardContainer);
-    render(new PointContentView(), this.boardContainer);
-    render(new NewPointView(), this.boardContainer);
-    render(new NewPointWithoutOffersView(), this.boardContainer);
-    render(new NewPointWithoutDestinationView(), this.boardContainer);
-    render(new ListView(), this.boardContainer);
+    render(new CurrentTrip(), siteHeaderElement, RenderPosition.AFTERBEGIN);
+    render(new Filters(), siteFilterElement);
+    render(new Sorting(), this.boardContainer);
+    render(this.waypointList, this.boardContainer);
+    render(new PointContent(), this.waypointList.getElement());
+    render(new NewPoint(), this.waypointList.getElement());
+
+    for (let i = 0; i < 3; i++) {
+      render(new Waypoint(), this.waypointList.getElement());
+    }
   }
 }
