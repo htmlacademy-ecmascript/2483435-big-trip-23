@@ -14,11 +14,13 @@ const siteFilterElement = document.querySelector('.trip-controls__filters');
 export default class BoardPresenter {
   waypointList = new WaypointsList();
 
-  constructor({ boardContainer }) {
+  constructor({ boardContainer, waypointsModel }) {
     this.boardContainer = boardContainer;
+    this.waypointsModel = waypointsModel;
   }
 
   init() {
+    this.waypoints = [...this.waypointsModel.getWaypoints()];
     render(new CurrentTrip(), siteHeaderElement, RenderPosition.AFTERBEGIN);
     render(new Filters(), siteFilterElement);
     render(new Sorting(), this.boardContainer);
@@ -26,8 +28,8 @@ export default class BoardPresenter {
     render(new PointContent(), this.waypointList.getElement());
     render(new NewPoint(), this.waypointList.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(new Waypoint(), this.waypointList.getElement());
+    for (let i = 0; i < this.waypoints.length; i++) {
+      render(new Waypoint({waypoint: this.waypoints[i]}), this.waypointList.getElement());
     }
   }
 }
