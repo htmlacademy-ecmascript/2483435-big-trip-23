@@ -40,35 +40,37 @@ const OFFERS_LIST = [
   'Rent a car',
 ];
 
-const IS_FAVORITE = ['yes', 'no'];
+const IS_FAVORITE = [true, false];
 
 const EventDate = {
-  DATE: '10 MAR',
-  START: '10:00',
-  END: '15:00',
+  DATE: '2024-04-26',
+  START: '2019-03-18T12:00',
+  END: '2019-03-20T14:30',
 };
 
 const offers = {
   type: () => getRandomArrayElement(WAYPOINT_TYPE),
   name: () => getRandomArrayElement(OFFERS_LIST),
-  price: () => getRandomArrayElement(PRICE),
+  offersPrice: () => getRandomArrayElement(PRICE),
 };
 
 const waypoint = {
   destination: () => getRandomArrayElement(DESTINATION),
+  price: () => RANDOM_100(),
   description: () => getRandomArrayElement(DESCRIPTION),
   photo: () => `https://loremflickr.com/248/152?random=${RANDOM_100()}`,
 };
 
-const createWaypoint = function(){
+const createWaypoint = function () {
   return {
-    day: EventDate.DATE,
+    eventDate: EventDate.DATE,
     type: offers.type(),
     destination: waypoint.destination(),
     timeStart: EventDate.START,
     timeEnd: EventDate.END,
-    price: offers.price(),
+    price: waypoint.price(),
     offers: offers.name(),
+    offersPrice: offers.offersPrice(),
     photo: waypoint.photo(),
     isFavorite: getRandomArrayElement(IS_FAVORITE),
   };
