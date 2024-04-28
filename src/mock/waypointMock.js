@@ -30,14 +30,14 @@ const DESCRIPTION = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-const OFFERS_LIST = [
-  'Add breakfast',
-  'Book tickets',
-  'Lunch in city',
-  'Add luggage',
-  'Switch to comfort',
-  'Order Uber',
-  'Rent a car',
+const offersList = [
+  { name: 'Add breakfast', price: '30' },
+  { name: 'Book tickets', price: '40' },
+  { name: 'Lunch in city', price: '50' },
+  { name: 'Add luggage', price: '60' },
+  { name: 'Switch to comfort', price: '70' },
+  { name: 'Order Uber', price: '80' },
+  { name: 'Rent a car', price: '90' },
 ];
 
 const IS_FAVORITE = [true, false];
@@ -48,10 +48,13 @@ const EventDate = {
   END: '2019-03-20T14:30',
 };
 
-const offers = {
-  type: () => getRandomArrayElement(WAYPOINT_TYPE),
-  name: () => getRandomArrayElement(OFFERS_LIST),
-  offersPrice: () => getRandomArrayElement(PRICE),
+const createOffer = () => {
+  const currentOffer = getRandomArrayElement(offersList);
+  return {
+    type: getRandomArrayElement(WAYPOINT_TYPE),
+    name: currentOffer.name,
+    offersPrice: currentOffer.price,
+  };
 };
 
 const waypoint = {
@@ -61,16 +64,19 @@ const waypoint = {
   photo: () => `https://loremflickr.com/248/152?random=${RANDOM_100()}`,
 };
 
+
 const createWaypoint = function () {
+  const offer = createOffer();
+
   return {
     eventDate: EventDate.DATE,
-    type: offers.type(),
+    type: offer.type,
     destination: waypoint.destination(),
     timeStart: EventDate.START,
     timeEnd: EventDate.END,
     price: waypoint.price(),
-    offers: offers.name(),
-    offersPrice: offers.offersPrice(),
+    offers: offer.name,
+    offersPrice: offer.price,
     photo: waypoint.photo(),
     isFavorite: getRandomArrayElement(IS_FAVORITE),
   };

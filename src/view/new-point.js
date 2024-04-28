@@ -1,6 +1,36 @@
 import { createElement } from '../render.js';
+import dayjs from 'dayjs';
+import { formatNewEventTime } from '../utils.js';
 
-function createNewPointTemplate() {
+const DEFAULT_DESTINATION = {
+  eventDate: dayjs(),
+  type: 'Flight',
+  destination: 'Amsterdam',
+  timeStart: dayjs(),
+  timeEnd: dayjs(),
+  price: '€ 200',
+  offers: 'Add breakfast',
+  offersPrice: '€ 20',
+  photo: 'https://loremflickr.com/248/152?random=100',
+  isFavorite: false,
+};
+
+function createNewPointTemplate(event) {
+  const {
+    type,
+    destination,
+    timeStart,
+    timeEnd,
+    price,
+    offers,
+    offersPrice,
+    photo,
+    isFavorite,
+  } = event;
+
+  const eventStartTime = formatNewEventTime(timeStart);
+  const eventEndTime = formatNewEventTime(timeEnd);
+
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -65,9 +95,9 @@ function createNewPointTemplate() {
 
     <div class="event__field-group  event__field-group--destination">
       <label class="event__label  event__type-output" for="event-destination-1">
-        Flight
+        ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
       <datalist id="destination-list-1">
         <option value="Amsterdam"></option>
         <option value="Geneva"></option>
@@ -77,10 +107,10 @@ function createNewPointTemplate() {
 
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
+      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${eventStartTime}">
       &mdash;
       <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${eventEndTime}">
     </div>
 
     <div class="event__field-group  event__field-group--price">
@@ -166,8 +196,12 @@ function createNewPointTemplate() {
 }
 
 export default class NewPoint {
+  constructor() {
+    this.waypoint = DEFAULT_DESTINATION;
+  }
+
   getTemplate() {
-    return createNewPointTemplate();
+    return createNewPointTemplate(this.waypoint);
   }
 
   getElement() {

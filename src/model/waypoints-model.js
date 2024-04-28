@@ -1,4 +1,4 @@
-import { getRandomWaypoint } from '../mock/waypoint.js';
+import { getRandomWaypoint } from '../mock/waypointMock.js';
 
 const WAYPOINT_COUNT = 5;
 

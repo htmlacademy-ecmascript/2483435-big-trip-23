@@ -1,7 +1,10 @@
 import dayjs from 'dayjs';
 
-const DATE_FORMAT = 'MMM DD';
-const TIME_FORMAT = 'HH:MM';
+const TimeFormat = {
+  WAYPOINT_DATE: 'MMM DD',
+  WAYPOINT_TIME: 'HH:MM',
+  CREATE_WAYPOINT_TIME: 'DD/MM/YY HH:MM',
+};
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -15,10 +18,16 @@ const getRandomInteger = (min, max) => {
 };
 
 function formatEventDate(eventDate) {
-  return eventDate ? dayjs(eventDate).format(DATE_FORMAT) : '';
+  return eventDate ? dayjs(eventDate).format(TimeFormat.WAYPOINT_DATE) : '';
 }
 function formatEventTime(eventTime) {
-  return eventTime ? dayjs(eventTime).format(TIME_FORMAT) : '';
+  return eventTime ? dayjs(eventTime).format(TimeFormat.WAYPOINT_TIME) : '';
+}
+
+function formatNewEventTime(eventTime) {
+  return eventTime
+    ? dayjs(eventTime).format(TimeFormat.CREATE_WAYPOINT_TIME)
+    : '';
 }
 
 function durationEvent(start, end) {
@@ -31,4 +40,5 @@ export {
   formatEventDate,
   formatEventTime,
   durationEvent,
+  formatNewEventTime,
 };

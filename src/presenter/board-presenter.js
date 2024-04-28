@@ -26,9 +26,9 @@ export default class BoardPresenter {
     render(new Sorting(), this.boardContainer);
     render(this.waypointList, this.boardContainer);
     // render(new PointContent(), this.waypointList.getElement());
-    // render(new NewPoint(), this.waypointList.getElement());
+    render(new NewPoint(), this.waypointList.getElement());
 
-    for (let i = 0; i < this.waypoints.length; i++) {
+    for (let i = 1; i < this.waypoints.length; i++) {
       render(
         new Waypoint({ waypoint: this.waypoints[i] }),
         this.waypointList.getElement()
