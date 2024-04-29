@@ -1,6 +1,8 @@
-import { createElement } from '../render.js';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import View from './_abstract';
 import dayjs from 'dayjs';
-import { formatNewEventTime } from '../utils.js';
+import { formatNewEventTime } from '../utils';
 
 const DEFAULT_DESTINATION = {
   eventDate: dayjs(),
@@ -15,18 +17,8 @@ const DEFAULT_DESTINATION = {
   isFavorite: false,
 };
 
-function createNewPointTemplate(event) {
-  const {
-    type,
-    destination,
-    timeStart,
-    timeEnd,
-    price,
-    offers,
-    offersPrice,
-    photo,
-    isFavorite,
-  } = event;
+function TEMPLATE() {
+  const { type, destination, timeStart, timeEnd, price, offers, offersPrice, photo, isFavorite } = DEFAULT_DESTINATION;
 
   const eventStartTime = formatNewEventTime(timeStart);
   const eventEndTime = formatNewEventTime(timeEnd);
@@ -195,24 +187,9 @@ function createNewPointTemplate(event) {
 </li>`;
 }
 
-export default class NewPoint {
-  constructor() {
-    this.waypoint = DEFAULT_DESTINATION;
-  }
+export default class NewPoint extends View<HTMLLIElement> {
 
-  getTemplate() {
-    return createNewPointTemplate(this.waypoint);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return TEMPLATE();
   }
 }

@@ -1,4 +1,4 @@
-import { getRandomArrayElement, getRandomInteger } from '../utils.js';
+import { getRandomArrayElement, getRandomInteger } from '../utils.ts';
 
 const RANDOM_10 = () => getRandomInteger(0, 10);
 const RANDOM_100 = () => getRandomInteger(0, 100);
@@ -14,7 +14,7 @@ const WAYPOINT_TYPE = [
   'Restaurant',
 ];
 const DESTINATION = ['Amsterdam', 'London', 'Chamonix', 'Geneva'];
-const PRICE = ['€ 20', '€ 30', '€ 40', '€ 50', '€ 180'];
+// const PRICE = ['€ 20', '€ 30', '€ 40', '€ 50', '€ 180'];
 
 const DESCRIPTION = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',

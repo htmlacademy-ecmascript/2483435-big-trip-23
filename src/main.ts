@@ -1,5 +1,5 @@
-import BoardPresenter from './presenter/board-presenter.js';
-import WaypointsModel from './model/waypoints-model.js';
+import BoardPresenter from './presenter/board-presenter';
+import WaypointsModel from './model/waypoints-model';
 
 const siteMainElement = document.querySelector('.trip-events');
 const waypointsModel = new WaypointsModel();

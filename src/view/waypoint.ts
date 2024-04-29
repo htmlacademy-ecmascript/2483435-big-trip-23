@@ -1,26 +1,16 @@
-import { createElement } from '../render.js';
-import { formatEventDate, formatEventTime, durationEvent } from '../utils.js';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import View from './_abstract';
+import { formatEventDate, formatEventTime, durationEvent } from '../utils';
 
-function createWaypointTemplate(event) {
-  const {
-    eventDate,
-    type,
-    destination,
-    timeStart,
-    timeEnd,
-    price,
-    offers,
-    offersPrice,
-    photo,
-    isFavorite,
-  } = event;
+function TEMPLATE(event: any) {
+  const { eventDate, type, destination, timeStart, timeEnd, price, offers, offersPrice, photo, isFavorite } = event;
 
   const date = formatEventDate(eventDate);
   const eventStartTime = formatEventTime(timeStart);
   const eventEndTime = formatEventTime(timeEnd);
   const duration = durationEvent(timeStart, timeEnd);
-  const isFavoriteEvent =
-    isFavorite ? 'event__favorite-btn--active' : '';
+  const isFavoriteEvent = isFavorite ? 'event__favorite-btn--active' : '';
 
   return `<li class="trip-events__item">
   <div class="event">
@@ -61,24 +51,14 @@ function createWaypointTemplate(event) {
 </li>`;
 }
 
-export default class Waypoint {
-  constructor({ waypoint }) {
+export default class Waypoint extends View<HTMLLIElement> {
+  waypoint:object;
+  constructor({ waypoint }: { waypoint: any }) {
+    super();
     this.waypoint = waypoint;
   }
 
-  getTemplate() {
-    return createWaypointTemplate(this.waypoint);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return TEMPLATE(this.waypoint);
   }
 }

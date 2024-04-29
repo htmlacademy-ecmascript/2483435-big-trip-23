@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 export default {
-  entry: './src/main.js',
+  entry: './src/main.ts',
   output: {
     filename: 'bundle.[contenthash].js',
     path: resolve(__dirname, 'build'),

@@ -1,7 +1,6 @@
-import { createElement } from '../render.js';
+import View from './_abstract';
 
-function createFiltersTemplate() {
-  return `
+const TEMPLATE = `
   <form class="trip-filters" action="#" method="get">
   <div class="trip-filters__filter">
     <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything">
@@ -25,22 +24,9 @@ function createFiltersTemplate() {
 
   <button class="visually-hidden" type="submit">Accept filter</button>
 </form>`;
-}
 
-export default class Filters {
-  getTemplate() {
-    return createFiltersTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+export default class Filters extends View <HTMLFormElement> {
+  get template() {
+    return TEMPLATE;
   }
 }

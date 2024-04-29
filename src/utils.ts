@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from 'dayjs';
 
 const TimeFormat = {
@@ -6,31 +7,31 @@ const TimeFormat = {
   CREATE_WAYPOINT_TIME: 'DD/MM/YY HH:MM',
 };
 
-function getRandomArrayElement(items) {
+function getRandomArrayElement(items:any) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-const getRandomInteger = (min, max) => {
+const getRandomInteger = (min:number, max:number) => {
   const lower = Math.ceil(Math.min(min, max));
   const upper = Math.floor(Math.max(min, max));
   const result = Math.random() * (upper - lower + 1) + lower;
   return Math.floor(result);
 };
 
-function formatEventDate(eventDate) {
+function formatEventDate(eventDate:any) {
   return eventDate ? dayjs(eventDate).format(TimeFormat.WAYPOINT_DATE) : '';
 }
-function formatEventTime(eventTime) {
+function formatEventTime(eventTime:any) {
   return eventTime ? dayjs(eventTime).format(TimeFormat.WAYPOINT_TIME) : '';
 }
 
-function formatNewEventTime(eventTime) {
+function formatNewEventTime(eventTime:any) {
   return eventTime
     ? dayjs(eventTime).format(TimeFormat.CREATE_WAYPOINT_TIME)
     : '';
 }
 
-function durationEvent(start, end) {
+function durationEvent(start:string, end:string) {
   return dayjs(end).diff(dayjs(start), 'hours');
 }
 
