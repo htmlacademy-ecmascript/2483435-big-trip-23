@@ -1,8 +1,10 @@
-import BoardPresenter from './presenter/board-presenter';
+import ListPresenter from './presenter/main-presenter';
 import WaypointsModel from './model/waypoints-model';
 
-const siteMainElement = document.querySelector('.trip-events');
-const waypointsModel = new WaypointsModel();
-const boardPresenter = new BoardPresenter({ boardContainer: siteMainElement, waypointsModel });
 
-boardPresenter.init();
+const siteMainElement = document.querySelector<HTMLElement>('.trip-events');
+
+const waypointsModel = new WaypointsModel();
+const listPresenter = new ListPresenter({ listContainer: siteMainElement, waypointsModel });
+listPresenter.init();
+
