@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { WayPoint } from '../../../types/way-point';
 import View from '../../_abstract';
+import { capitalLetter } from '../../../utils/utils';
 
 function TEMPLATE(event:any) {
 
   const {type, destination: {name}} = event;
 
-  const currentType = type.charAt(0).toUpperCase() + type.slice(1);
+  const correctType = capitalLetter(type);
 
-  return `<h3 class="event__title">${currentType} ${name}</h3>`;
+  return `<h3 class="event__title">${correctType} ${name}</h3>`;
 }
 
 export default class EventTitle extends View<HTMLHeadingElement> {

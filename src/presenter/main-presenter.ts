@@ -2,13 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import CurrentTrip from '../view/header/current-trip';
 import Filters from '../view/header/filters';
-import Sorting from '../view/sorting';
-import WaypointsList from '../view/waypoints-list';
-import Waypoint from '../view/waypoint';
-import NewPoint from '../view/edit-waypoint/new-waypoint';
-import PointContent from '../view/point-content';
+import Sorting from '../view/main/sorting';
+import WaypointsList from '../view/main/waypoints-list';
+import Waypoint from '../view/main/waypoint-container';
 import { render } from '../render';
 import WaypointListItemPresenter from './event-list-item-presenter';
+import EditWaypointPresenter from './edit-waypoint-presenter';
 
 
 const siteHeaderElement = document.querySelector('.trip-main');
@@ -37,8 +36,18 @@ export default class ListPresenter {
 
     render(this.waypointList, this.listContainer);
 
+    const waypoint = this.waypoints[0];
+
+    const editWaypointPresenterPresenter = new EditWaypointPresenter({
+      editWaypointContainer: this.waypointList.element,
+      waypointsModel: this.waypointsModel,
+      waypoint
+    });
+    editWaypointPresenterPresenter.init();
+
+
     for (let i = 0; i < this.waypoints.length; i++) {
-      const waypoint = this.waypoints[i];
+      const currentWaypoint = this.waypoints[i];
       render(new Waypoint(), this.waypointList.element);
 
       const siteEventListElement = document.getElementById('event_list')!;
@@ -47,7 +56,7 @@ export default class ListPresenter {
       const waypointListItemPresenter = new WaypointListItemPresenter({
         waypointItemContainer: siteCurrentEventItemElements,
         waypointsModel: this.waypointsModel,
-        waypoint
+        waypoint: currentWaypoint
       });
       waypointListItemPresenter.init();
     }

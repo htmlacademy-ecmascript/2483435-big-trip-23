@@ -1,12 +1,24 @@
+import { WayPoint } from '../../../../types/way-point';
 import View from '../../../_abstract';
+import { capitalLetter } from '../../../../utils/utils';
 
-const TEMPLATE = '<label class="event__label  event__type-output" for="event-destination-1">Flight</label>';
+function TEMPLATE(event:WayPoint) {
 
-export default class EventLabelDestination extends View<HTMLLabelElement> {
+  const {type} = event;
 
-  get template() {
-    return TEMPLATE;
-  }
+  const correctType = capitalLetter(type);
+
+  return `<label class="event__label  event__type-output" for="event-destination-1">${correctType}</label>`;
 }
 
+export default class EventLabelDestination extends View<HTMLLabelElement> {
+  event:WayPoint;
+  constructor(event:WayPoint) {
+    super();
+    this.event = event;
+  }
 
+  get template() {
+    return TEMPLATE(this.event);
+  }
+}

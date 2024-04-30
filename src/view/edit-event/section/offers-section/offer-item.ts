@@ -2,7 +2,7 @@
 import View from '../../../_abstract';
 import type { InnerOffer } from '../../../../types/offer';
 
-function TEMPLATE(offer: InnerOffer){
+function TEMPLATE(offer: any){
   const { id, title, price } = offer;
 
   return `<div class="event__offer-selector">

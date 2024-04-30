@@ -1,5 +1,4 @@
 import View from '../../_abstract';
-import dayjs from 'dayjs';
 import { WayPoint } from '../../../types/way-point';
 
 function TEMPLATE(event:WayPoint) {

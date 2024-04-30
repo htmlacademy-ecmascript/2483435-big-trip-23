@@ -1,6 +1,6 @@
 import type { WayPoint } from '../types/way-point';
 import { Randomizer } from '../utils/random';
-import { MOCK_CITIES, MOCK_OFFERS} from './const-mock';
+import { MOCK_OFFERS} from './const-mock';
 import {POINTS_TYPES} from '../const';
 import { getDates } from '../utils/time';
 import { generateMockWaypoints } from './destination-mock';
