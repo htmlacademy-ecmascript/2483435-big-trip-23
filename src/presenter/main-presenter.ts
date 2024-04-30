@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import CurrentTrip from '../view/current-trip';
-import Filters from '../view/filters';
+import CurrentTrip from '../view/header/current-trip';
+import Filters from '../view/header/filters';
 import Sorting from '../view/sorting';
 import WaypointsList from '../view/waypoints-list';
 import Waypoint from '../view/waypoint';
 import NewPoint from '../view/edit-waypoint/new-waypoint';
 import PointContent from '../view/point-content';
 import { render } from '../render';
-import WaypointListItemPresenter from './waypoint-list-item-presenter';
+import WaypointListItemPresenter from './event-list-item-presenter';
 
 
 const siteHeaderElement = document.querySelector('.trip-main');
