@@ -18,7 +18,7 @@
     "test:watch": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
     "start": "webpack serve --mode development --open",
-    "format": "prettier --write ."
+    "format": "prettier --write src/"
   },
   "devDependencies": {
     "@babel/core": "7.21.4",
@@ -43,5 +43,8 @@
   },
   "dependencies": {
     "dayjs": "1.11.10"
+  },
+  "volta": {
+    "node": "20.12.2"
   }
 }
