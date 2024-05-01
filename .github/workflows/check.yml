@@ -1,15 +1,12 @@
-name: Project check
-
 on:
-  push:
+  pull_request:
     branches:
       - master
-  pull_request:
-    branches: '*'
 
 permissions:
   contents: write
 
+name: Project check
 jobs:
   check:
     name: Check
@@ -28,14 +25,15 @@ jobs:
         run: npm ci
 
       - name: Linting 📐
-        run: npm run lintß
+        run: npm run lint
+
       - name: Format code 🎨
         run: npm run format
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: '🎨 Prettify code'
+          commit_message: 'chore: 🎨 Prettify code'
           commit_user_name: Arthur Baileys Li
           commit_user_email: arthurlitovko@gmail.com
           commit_author: Author <arthurlitovko@gmail.com>
