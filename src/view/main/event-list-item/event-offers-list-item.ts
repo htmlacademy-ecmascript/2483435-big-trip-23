@@ -1,10 +1,8 @@
 import { InnerOffer } from '../../../types/offer';
 import View from '../../_abstract';
 
-function TEMPLATE(offer:InnerOffer) {
-
-  const {title, price } = offer;
-
+function TEMPLATE(offer: InnerOffer) {
+  const { title, price } = offer;
 
   return `<li class="event__offer">
   <span class="event__offer-title">${title}</span>
@@ -14,8 +12,8 @@ function TEMPLATE(offer:InnerOffer) {
 }
 
 export default class EventOffersListItem extends View<HTMLLIElement> {
-  offer:InnerOffer;
-  constructor(offer:InnerOffer) {
+  offer: InnerOffer;
+  constructor(offer: InnerOffer) {
     super();
     this.offer = offer;
   }

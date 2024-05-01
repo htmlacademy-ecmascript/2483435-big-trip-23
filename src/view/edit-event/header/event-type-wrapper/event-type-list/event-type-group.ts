@@ -5,7 +5,6 @@ const TEMPLATE = `<fieldset class="event__type-group">
 </fieldset>`;
 
 export default class EventTypeGroup extends View<HTMLFieldSetElement> {
-
   get template() {
     return TEMPLATE;
   }

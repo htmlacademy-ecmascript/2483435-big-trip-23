@@ -1,10 +1,8 @@
 import { WayPoint } from '../../../types/way-point';
 import View from '../../_abstract';
 
-function TEMPLATE(waypoint:WayPoint) {
-
+function TEMPLATE(waypoint: WayPoint) {
   const { basePrice } = waypoint;
-
 
   return `<div class="event__field-group  event__field-group--price">
   <label class="event__label" for="event-price-1">
@@ -16,8 +14,8 @@ function TEMPLATE(waypoint:WayPoint) {
 }
 
 export default class EventPrice extends View<Element> {
-  event:WayPoint;
-  constructor(event:WayPoint) {
+  event: WayPoint;
+  constructor(event: WayPoint) {
     super();
     this.event = event;
   }

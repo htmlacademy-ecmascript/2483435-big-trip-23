@@ -23,7 +23,15 @@ export default class WaypointListItemPresenter {
   offers: any;
   eventOffersList: EventOffersList;
 
-  constructor({ waypointItemContainer, waypointsModel, waypoint }: { waypointItemContainer: HTMLElement; waypointsModel: WaypointsModel; waypoint: WayPoint }) {
+  constructor({
+    waypointItemContainer,
+    waypointsModel,
+    waypoint,
+  }: {
+    waypointItemContainer: HTMLElement;
+    waypointsModel: WaypointsModel;
+    waypoint: WayPoint;
+  }) {
     this.waypointItemContainer = waypointItemContainer;
     this.waypointsModel = waypointsModel;
     this.waypoint = waypoint;
@@ -49,6 +57,5 @@ export default class WaypointListItemPresenter {
 
     render(new EventFavorite(this.waypoint), this.eventItemContainer.element);
     render(new EventRollup(), this.eventItemContainer.element);
-
   }
 }

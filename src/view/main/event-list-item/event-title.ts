@@ -2,9 +2,8 @@ import type { WayPoint } from '../../../types/way-point';
 import View from '../../_abstract';
 import { capitalLetter } from '../../../utils/utils';
 
-function getTemplate(event:WayPoint) {
-
-  const {type, destination} = event;
+function getTemplate(event: WayPoint) {
+  const { type, destination } = event;
 
   const name = 'name' in destination ? destination.name : '';
 
@@ -14,8 +13,8 @@ function getTemplate(event:WayPoint) {
 }
 
 export default class EventTitle extends View<HTMLHeadingElement> {
-  event:WayPoint;
-  constructor(event:WayPoint) {
+  event: WayPoint;
+  constructor(event: WayPoint) {
     super();
     this.event = event;
   }

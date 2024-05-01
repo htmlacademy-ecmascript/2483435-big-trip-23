@@ -32,7 +32,6 @@ import type WaypointsModel from '../model/waypoints-model';
 import { WayPoint } from '../types/way-point';
 import { AppPicture, Destination } from '../types/destination';
 
-
 export default class EditWaypointPresenter {
   editWaypointContainer: HTMLUListElement;
   waypointsModel: WaypointsModel;
@@ -68,8 +67,15 @@ export default class EditWaypointPresenter {
   pictures: AppPicture[];
   destinationPicturesList: DestinationPicturesList;
 
-
-  constructor({ editWaypointContainer, waypointsModel, waypoint }: { editWaypointContainer: HTMLUListElement; waypointsModel: WaypointsModel; waypoint: WayPoint }) {
+  constructor({
+    editWaypointContainer,
+    waypointsModel,
+    waypoint,
+  }: {
+    editWaypointContainer: HTMLUListElement;
+    waypointsModel: WaypointsModel;
+    waypoint: WayPoint;
+  }) {
     this.editWaypointContainer = editWaypointContainer;
     this.waypointsModel = waypointsModel;
     this.waypoint = waypoint;
@@ -98,9 +104,11 @@ export default class EditWaypointPresenter {
     this.offersSection = new OffersSection();
     this.offersList = new OffersList();
     this.offers = this.waypoint.offers;
-    this.destinationDescription = new DestinationDescription(this.waypoint as unknown as {
-      destination: Destination
-    });
+    this.destinationDescription = new DestinationDescription(
+      this.waypoint as unknown as {
+        destination: Destination;
+      },
+    );
     this.picturesContainer = new PicturesContainer();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.pictures = (this.waypoint.destination as any).pictures as AppPicture[];
@@ -136,7 +144,7 @@ export default class EditWaypointPresenter {
 
     for (let i = 0; i < this.offers.length; i++) {
       const offer = this.offers[i];
-      render(new OfferItem({offer}), this.offersList.element);
+      render(new OfferItem({ offer }), this.offersList.element);
     }
 
     render(this.destinationDescription, this.eventDetails.element);
@@ -147,6 +155,5 @@ export default class EditWaypointPresenter {
       const picture = this.pictures[i];
       render(new DestinationPicture(picture), this.destinationPicturesList.element);
     }
-
   }
 }

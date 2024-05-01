@@ -1,5 +1,5 @@
-const capitalLetter = (letter:string) => letter.charAt(0).toUpperCase() + letter.slice(1);
+const capitalLetter = (letter: string) => letter.charAt(0).toUpperCase() + letter.slice(1);
 
-const checkMatch = (a:string, b:string, property: string) => a === b ? property : '';
+const checkMatch = (a: string, b: string, property: string) => (a === b ? property : '');
 
-export {capitalLetter, checkMatch};
+export { capitalLetter, checkMatch };

@@ -9,10 +9,8 @@ import EditWaypointPresenter from './edit-waypoint-presenter';
 import type WaypointsModel from '../model/waypoints-model';
 import { WayPoint } from '../types/way-point';
 
-
 const siteHeaderElement = document.querySelector('.trip-main')!;
 const siteFilterElement = document.querySelector('.trip-controls__filters')!;
-
 
 export default class ListPresenter {
   listContainer: HTMLElement;
@@ -41,10 +39,9 @@ export default class ListPresenter {
     const editWaypointPresenterPresenter = new EditWaypointPresenter({
       editWaypointContainer: this.waypointList.element,
       waypointsModel: this.waypointsModel,
-      waypoint
+      waypoint,
     });
     editWaypointPresenterPresenter.init();
-
 
     for (let i = 0; i < this.waypoints.length; i++) {
       const currentWaypoint = this.waypoints[i];
@@ -56,7 +53,7 @@ export default class ListPresenter {
       const waypointListItemPresenter = new WaypointListItemPresenter({
         waypointItemContainer: siteCurrentEventItemElements,
         waypointsModel: this.waypointsModel,
-        waypoint: currentWaypoint
+        waypoint: currentWaypoint,
       });
       waypointListItemPresenter.init();
     }

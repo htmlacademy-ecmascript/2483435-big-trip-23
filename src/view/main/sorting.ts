@@ -27,11 +27,8 @@ const TEMPLATE = `<form class="trip-events__trip-sort  trip-sort" action="#" met
   </div>
 </form>`;
 
-
-export default class Sorting extends View<HTMLFormElement>{
+export default class Sorting extends View<HTMLFormElement> {
   get template() {
     return TEMPLATE;
   }
 }
-
-

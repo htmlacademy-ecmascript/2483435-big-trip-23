@@ -1,8 +1,7 @@
 import View from '../../_abstract';
 import { WayPoint } from '../../../types/way-point';
 
-function TEMPLATE(event:WayPoint) {
-
+function TEMPLATE(event: WayPoint) {
   const { isFavorite } = event;
 
   const isFavoriteEvent = isFavorite ? 'event__favorite-btn--active' : '';
@@ -16,8 +15,8 @@ function TEMPLATE(event:WayPoint) {
 }
 
 export default class EventFavorite extends View<HTMLButtonElement> {
-  event:WayPoint;
-  constructor(event:WayPoint) {
+  event: WayPoint;
+  constructor(event: WayPoint) {
     super();
     this.event = event;
   }

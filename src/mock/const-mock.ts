@@ -22,19 +22,22 @@ const DEFAULT_DESTINATION = {
   id: '1',
   basePrice: '',
   dateFrom: dayjs(),
-  dateTo: dayjs().add(3, 'day').add(4, 'hours').add(15,'minute'),
+  dateTo: dayjs().add(3, 'day').add(4, 'hours').add(15, 'minute'),
   destination: 'Geneva',
   isFavorite: false,
-  offers: [{
-    id: 3,
-    title: 'Add breakfast',
-    price: 70
-  }, {
-    id: 2,
-    title: 'Book tickets',
-    price: 90
-  }],
-  type: 'Flight'
+  offers: [
+    {
+      id: 3,
+      title: 'Add breakfast',
+      price: 70,
+    },
+    {
+      id: 2,
+      title: 'Book tickets',
+      price: 90,
+    },
+  ],
+  type: 'Flight',
 };
 
-export { MOCK_CITIES, MOCK_DESCRIPTION, MOCK_OFFERS, DEFAULT_DESTINATION};
+export { MOCK_CITIES, MOCK_DESCRIPTION, MOCK_OFFERS, DEFAULT_DESTINATION };

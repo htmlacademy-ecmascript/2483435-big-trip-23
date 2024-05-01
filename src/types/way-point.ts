@@ -15,4 +15,4 @@ interface ServerWayPoint {
 }
 type WayPoint = WithDate<CamelizeObject<ServerWayPoint>>;
 
-export type {WayPoint, WayPointType };
+export type { WayPoint, WayPointType };

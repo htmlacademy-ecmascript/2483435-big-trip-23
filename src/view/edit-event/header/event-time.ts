@@ -2,9 +2,8 @@ import { WayPoint } from '../../../types/way-point';
 import View from '../../_abstract';
 import dayjs from 'dayjs';
 
-function TEMPLATE(waypoint:WayPoint) {
-
-  const { dateFrom, dateTo, } = waypoint;
+function TEMPLATE(waypoint: WayPoint) {
+  const { dateFrom, dateTo } = waypoint;
 
   const timeStart = dayjs(dateFrom).format('DD/MM/YY HH:mm');
   const timeEnd = dayjs(dateTo).format('DD/MM/YY HH:mm');
@@ -19,8 +18,8 @@ function TEMPLATE(waypoint:WayPoint) {
 }
 
 export default class EventTime extends View<Element> {
-  event:WayPoint;
-  constructor(event:WayPoint) {
+  event: WayPoint;
+  constructor(event: WayPoint) {
     super();
     this.event = event;
   }

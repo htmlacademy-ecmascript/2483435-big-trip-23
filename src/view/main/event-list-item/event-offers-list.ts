@@ -1,5 +1,3 @@
-
-
 import View from '../../_abstract';
 
 const TEMPLATE = '<ul class="event__selected-offers"></ul>';

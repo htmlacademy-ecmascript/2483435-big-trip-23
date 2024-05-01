@@ -3,17 +3,16 @@ import View from '../../../_abstract';
 import { MOCK_CITIES } from '../../../../mock/const-mock';
 import { checkMatch } from '../../../../utils/utils';
 
-const getTemplateName = (name:string, currentName: string) => {
-
-
+const getTemplateName = (name: string, currentName: string) => {
   const isChecked = () => checkMatch(name, currentName, 'checked');
 
   return `<option value="${name}"${isChecked}></option>`;
 };
 
-const waypointNames = (name:string) => MOCK_CITIES.reduce((accumulator, currentValue) => accumulator + getTemplateName(name, currentValue), '');
+const waypointNames = (name: string) =>
+  MOCK_CITIES.reduce((accumulator, currentValue) => accumulator + getTemplateName(name, currentValue), '');
 
-function getTemplate(event:WayPoint) {
+function getTemplate(event: WayPoint) {
   const { destination } = event;
   const name = 'name' in destination ? (destination.name as string) : '';
   return `<div>${waypointNames(name)}</div>`;

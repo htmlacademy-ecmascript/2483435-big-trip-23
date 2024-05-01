@@ -2,8 +2,7 @@ import View from '../../_abstract';
 import dayjs from 'dayjs';
 import { WayPoint } from '../../../types/way-point';
 
-function TEMPLATE(event:WayPoint) {
-
+function TEMPLATE(event: WayPoint) {
   const { dateFrom } = event;
 
   const date = dayjs(dateFrom).format('MMM DD');

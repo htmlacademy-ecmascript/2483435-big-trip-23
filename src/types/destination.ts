@@ -1,6 +1,6 @@
 interface AppPicture {
   src: string;
-  description:string;
+  description: string;
 }
 
 interface Destination {
@@ -10,4 +10,4 @@ interface Destination {
   pictures: AppPicture[];
 }
 
-export type {Destination, AppPicture};
+export type { Destination, AppPicture };

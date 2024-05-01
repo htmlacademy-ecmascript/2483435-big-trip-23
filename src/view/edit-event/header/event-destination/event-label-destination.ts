@@ -2,9 +2,8 @@ import { WayPoint } from '../../../../types/way-point';
 import View from '../../../_abstract';
 import { capitalLetter } from '../../../../utils/utils';
 
-function TEMPLATE(event:WayPoint) {
-
-  const {type} = event;
+function TEMPLATE(event: WayPoint) {
+  const { type } = event;
 
   const correctType = capitalLetter(type);
 
@@ -12,8 +11,8 @@ function TEMPLATE(event:WayPoint) {
 }
 
 export default class EventLabelDestination extends View<HTMLLabelElement> {
-  event:WayPoint;
-  constructor(event:WayPoint) {
+  event: WayPoint;
+  constructor(event: WayPoint) {
     super();
     this.event = event;
   }

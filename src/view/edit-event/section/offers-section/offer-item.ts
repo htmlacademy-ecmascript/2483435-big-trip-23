@@ -1,7 +1,7 @@
 import View from '../../../_abstract';
 import type { InnerOffer } from '../../../../types/offer';
 
-function getTemplate(offer: InnerOffer){
+function getTemplate(offer: InnerOffer) {
   const { id, title, price } = offer;
 
   return `<div class="event__offer-selector">
@@ -15,7 +15,7 @@ function getTemplate(offer: InnerOffer){
 }
 
 export default class OfferItem extends View<Element> {
-  offer:InnerOffer;
+  offer: InnerOffer;
   constructor({ offer }: { offer: InnerOffer }) {
     super();
     this.offer = offer;

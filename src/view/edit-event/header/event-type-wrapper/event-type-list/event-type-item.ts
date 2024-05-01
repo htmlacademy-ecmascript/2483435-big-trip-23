@@ -3,7 +3,7 @@ import View from '../../../../_abstract';
 import { POINTS_TYPES } from '../../../../../const';
 import { capitalLetter, checkMatch } from '../../../../../utils/utils';
 
-const template = (type:string, currentType: string) => {
+const template = (type: string, currentType: string) => {
   const correctType = capitalLetter(currentType);
 
   const isChecked = () => checkMatch(type, currentType, 'checked');
@@ -14,7 +14,7 @@ const template = (type:string, currentType: string) => {
 </div>`;
 };
 
-const waypointTypes = (type:string) => POINTS_TYPES.reduce((accumulator, currentValue) => accumulator + template(type, currentValue), '');
+const waypointTypes = (type: string) => POINTS_TYPES.reduce((accumulator, currentValue) => accumulator + template(type, currentValue), '');
 function TEMPLATE(event: WayPoint) {
   const { type } = event;
   return `<div>${waypointTypes(type)}</div>`;

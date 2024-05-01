@@ -25,7 +25,7 @@ const TEMPLATE = `
   <button class="visually-hidden" type="submit">Accept filter</button>
 </form>`;
 
-export default class Filters extends View <HTMLFormElement> {
+export default class Filters extends View<HTMLFormElement> {
   get template() {
     return TEMPLATE;
   }

@@ -1,11 +1,9 @@
-
 import { WayPoint } from '../../../../types/way-point';
 import View from '../../../_abstract';
 import { capitalLetter } from '../../../../utils/utils';
 
-function getTemplate(event:WayPoint) {
-
-  const {destination} = event;
+function getTemplate(event: WayPoint) {
+  const { destination } = event;
   const name = 'name' in destination ? (destination.name as string) : '';
   const correctName = capitalLetter(name);
 
@@ -14,8 +12,8 @@ function getTemplate(event:WayPoint) {
 }
 
 export default class EventInputDestination extends View<HTMLLabelElement> {
-  event:WayPoint;
-  constructor(event:WayPoint) {
+  event: WayPoint;
+  constructor(event: WayPoint) {
     super();
     this.event = event;
   }

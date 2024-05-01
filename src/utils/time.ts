@@ -11,7 +11,6 @@ dayjs.extend(localizedFormat);
 const appDay = dayjs;
 
 function getDates() {
-
   const dateFrom = appDay()
     .subtract(Randomizer.getInteger(0, 7), 'day')
     .subtract(Randomizer.getInteger(0, 23), 'hour')
