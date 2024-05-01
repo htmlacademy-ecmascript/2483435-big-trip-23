@@ -31,10 +31,10 @@ jobs:
         with:
           folder: build
           clean: true
-          git-config-name: "keksobot"
-          git-config-email: "github+keksobot@htmlacademy.ru"
+          git-config-name: 'keksobot'
+          git-config-email: 'github+keksobot@htmlacademy.ru'
           target-folder: ${{ env.PR }}
-          commit-message: "✔️ Сборка #${{ env.PR }}"
+          commit-message: '✔️ Сборка #${{ env.PR }}'
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2

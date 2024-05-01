@@ -1,29 +1,38 @@
-name: Project check
-
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches: '*'
 
+permissions:
+  contents: write
+
+name: Project check
 jobs:
   check:
     name: Check
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        # with:
+        #   ref: ${{ github.head_ref }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
 
-    - uses: actions/checkout@master
-      name: Checkout
+      - name: Install dependencies 📦
+        run: npm ci
 
-    - name: Install dependencies
-      run: |
-        npm install
+      - name: Linting 📐
+        run: npm run lint
 
-    - name: Run checks
-      run: |
-        npm run lint
+      - name: Format code 🎨
+        run: npm run format
+
+      # - name: Commit changes
+      #   uses: stefanzweifel/git-auto-commit-action@v5
+      #   with:
+      #     commit_message: 'chore: 🎨 Prettify code'
+      #     commit_user_name: Arthur Baileys Li
+      #     commit_user_email: arthurlitovko@gmail.com
+      #     commit_author: Author <arthurlitovko@gmail.com>
