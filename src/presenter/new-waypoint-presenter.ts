@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import EditItemContainer from '../view/edit-event/edit-item-container';
 import EventHeader from '../view/edit-event/header/event-header';
 import EventTypeWrapper from '../view/edit-event/header/event-type-wrapper/event-type-wrapper';
@@ -29,12 +28,15 @@ import DestinationPicturesList from '../view/edit-event/section/destination-sect
 import DestinationPicture from '../view/edit-event/section/destination-section/destination-picture';
 import WaypointContainer from '../view/main/waypoint-container';
 import { render } from '../render';
+import type WaypointsModel from '../model/waypoints-model';
+import { WayPoint } from '../types/way-point';
+import { AppPicture, Destination } from '../types/destination';
 
 
 export default class EditWaypointPresenter {
-  editWaypointContainer: any;
-  waypointsModel: any;
-  waypoint: any;
+  editWaypointContainer: HTMLUListElement;
+  waypointsModel: WaypointsModel;
+  waypoint: WayPoint;
   editItemContainer: EditItemContainer;
   waypointContainer: WaypointContainer;
   eventHeader: EventHeader;
@@ -59,14 +61,15 @@ export default class EditWaypointPresenter {
   eventDetails: EventDetails;
   offersSection: OffersSection;
   offersList: OffersList;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   offers: any;
   destinationDescription: DestinationDescription;
   picturesContainer: PicturesContainer;
-  pictures: any;
+  pictures: AppPicture[];
   destinationPicturesList: DestinationPicturesList;
 
 
-  constructor({ editWaypointContainer, waypointsModel, waypoint }: { editWaypointContainer: any; waypointsModel: any; waypoint: any }) {
+  constructor({ editWaypointContainer, waypointsModel, waypoint }: { editWaypointContainer: HTMLUListElement; waypointsModel: WaypointsModel; waypoint: WayPoint }) {
     this.editWaypointContainer = editWaypointContainer;
     this.waypointsModel = waypointsModel;
     this.waypoint = waypoint;
@@ -95,9 +98,10 @@ export default class EditWaypointPresenter {
     this.offersSection = new OffersSection();
     this.offersList = new OffersList();
     this.offers = this.waypoint.offers;
-    this.destinationDescription = new DestinationDescription(this.waypoint);
+    this.destinationDescription = new DestinationDescription(this.waypoint as unknown as {destination: Destination});
     this.picturesContainer = new PicturesContainer();
-    this.pictures = this.waypoint.destination.pictures;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.pictures = (this.waypoint.destination as any).pictures as AppPicture[];
     this.destinationPicturesList = new DestinationPicturesList();
   }
 

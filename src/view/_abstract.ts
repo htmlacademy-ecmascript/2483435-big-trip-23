@@ -1,7 +1,7 @@
 import { createElement } from '../render';
 
 export default abstract class View<E extends Element = HTMLDivElement>{
-  #element: Element | null = null;
+  #element: E | null = null;
 
   abstract get template(): string;
 

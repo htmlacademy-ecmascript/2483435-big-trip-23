@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { WayPoint } from '../../../../types/way-point';
 import View from '../../../_abstract';
 import { capitalLetter } from '../../../../utils/utils';
 
-function TEMPLATE(event:any) {
+function getTemplate(event:WayPoint) {
 
-  const {destination:{name}} = event;
-
+  const {destination} = event;
+  const name = 'name' in destination ? (destination.name as string) : '';
   const correctName = capitalLetter(name);
 
   return `<input class="event__input  event__input--destination" id="event-destination-1"
@@ -22,6 +21,6 @@ export default class EventInputDestination extends View<HTMLLabelElement> {
   }
 
   get template() {
-    return TEMPLATE(this.event);
+    return getTemplate(this.event);
   }
 }

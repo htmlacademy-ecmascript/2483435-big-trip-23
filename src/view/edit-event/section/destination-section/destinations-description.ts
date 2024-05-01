@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Destination } from '../../../../types/destination';
 import View from '../../../_abstract';
 
-function TEMPLATE(destination : any){
+function TEMPLATE(destination : Destination){
   const { description } = destination;
 
   return `<section class="event__section  event__section--destination">
@@ -13,8 +13,8 @@ function TEMPLATE(destination : any){
 
 
 export default class DestinationDescription extends View<HTMLTableSectionElement> {
-  destination:any;
-  constructor({ destination }: { destination: any }) {
+  destination: Destination;
+  constructor({ destination }: { destination: Destination }) {
     super();
     this.destination = destination;
   }

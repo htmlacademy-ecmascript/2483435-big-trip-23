@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const Default = {
   MIN: 0,
   MAX: 100,
@@ -12,7 +11,7 @@ export default class Randomizer {
     return Math.floor(result);
   };
 
-  static getArrayElement(items: any) {
+  static getArrayElement<El>(items: El[] | readonly El[]) {
     return items[Math.floor(Math.random() * items.length)];
   }
 

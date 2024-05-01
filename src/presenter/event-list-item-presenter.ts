@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import EventItemContainer from '../view/main/event-list-item/event-item-container';
 import EventDate from '../view/main/event-list-item/event-date';
 import EventType from '../view/main/event-list-item/event-type';
@@ -11,22 +10,24 @@ import EventOffersListItem from '../view/main/event-list-item/event-offers-list-
 import EventFavorite from '../view/main/event-list-item/event-favorite';
 import EventRollup from '../view/main/event-list-item/event-rollup';
 import { render } from '../render';
+import type WaypointsModel from '../model/waypoints-model';
+import { WayPoint } from '../types/way-point';
 
 export default class WaypointListItemPresenter {
-  waypointItemContainer: HTMLUListElement;
-  waypointsModel: any;
-  waypoint: any;
+  waypointItemContainer: HTMLElement;
+  waypointsModel: WaypointsModel;
+  waypoint: WayPoint;
   eventDate: EventDate;
-  eventItemContainer: any;
+  eventItemContainer = new EventItemContainer();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   offers: any;
   eventOffersList: EventOffersList;
 
-  constructor({ waypointItemContainer, waypointsModel, waypoint }: { waypointItemContainer: any; waypointsModel: any; waypoint: any }) {
+  constructor({ waypointItemContainer, waypointsModel, waypoint }: { waypointItemContainer: HTMLElement; waypointsModel: WaypointsModel; waypoint: WayPoint }) {
     this.waypointItemContainer = waypointItemContainer;
     this.waypointsModel = waypointsModel;
     this.waypoint = waypoint;
     this.eventDate = new EventDate(this.waypoint);
-    this.eventItemContainer = new EventItemContainer();
     this.offers = this.waypoint.offers;
     this.eventOffersList = new EventOffersList();
   }

@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { WayPoint } from '../../../types/way-point';
+import type { WayPoint } from '../../../types/way-point';
 import View from '../../_abstract';
 import { capitalLetter } from '../../../utils/utils';
 
-function TEMPLATE(event:any) {
+function getTemplate(event:WayPoint) {
 
-  const {type, destination: {name}} = event;
+  const {type, destination} = event;
+
+  const name = 'name' in destination ? destination.name : '';
 
   const correctType = capitalLetter(type);
 
@@ -20,6 +21,6 @@ export default class EventTitle extends View<HTMLHeadingElement> {
   }
 
   get template() {
-    return TEMPLATE(this.event);
+    return getTemplate(this.event);
   }
 }

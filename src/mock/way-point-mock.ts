@@ -17,6 +17,8 @@ export const generateMockWaypoint = (): WayPoint => ({
   basePrice: Randomizer.getInteger(100, 5_000),
   dateFrom: getDates().dateFrom,
   dateTo: getDates().dateTo,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore Не соблюдаешь контракт
   destination: Randomizer.getArrayElement(generateMockWaypoints()),
   isFavorite: Randomizer.boolean,
   offers: Array.from({ length: Randomizer.getInteger(0,5) }, generateOffers),

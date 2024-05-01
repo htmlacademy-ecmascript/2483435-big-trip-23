@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import View from '../../_abstract';
 import dayjs from 'dayjs';
 import { WayPoint } from '../../../types/way-point';
@@ -13,10 +12,8 @@ function TEMPLATE(event:WayPoint) {
 }
 
 export default class EventDate extends View<HTMLTimeElement> {
-  event:any;
-  constructor(event:any) {
+  constructor(private event: WayPoint) {
     super();
-    this.event = event;
   }
 
   get template() {

@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import View from '../../../_abstract';
 import type { InnerOffer } from '../../../../types/offer';
 
-function TEMPLATE(offer: any){
+function getTemplate(offer: InnerOffer){
   const { id, title, price } = offer;
 
   return `<div class="event__offer-selector">
@@ -23,6 +22,6 @@ export default class OfferItem extends View<Element> {
   }
 
   get template() {
-    return TEMPLATE(this.offer);
+    return getTemplate(this.offer);
   }
 }
