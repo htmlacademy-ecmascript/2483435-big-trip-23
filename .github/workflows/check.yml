@@ -22,6 +22,8 @@ jobs:
 
     - uses: actions/checkout@master
       name: Checkout
+      with:
+        ref: ${{ github.head_ref }}
 
     - name: Install dependencies
       run: |
