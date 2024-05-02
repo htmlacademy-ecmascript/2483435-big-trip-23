@@ -2,7 +2,7 @@ import { WayPoint } from '../../../types/way-point';
 import View from '../../_abstract';
 import dayjs from 'dayjs';
 
-function TEMPLATE(waypoint: WayPoint) {
+function getTemplate(waypoint: WayPoint) {
   const { dateFrom, dateTo } = waypoint;
 
   const timeStart = dateFrom.format('HH:mm');
@@ -37,6 +37,6 @@ export default class EventSchedule extends View<Element> {
   }
 
   get template() {
-    return TEMPLATE(this.event);
+    return getTemplate(this.event);
   }
 }

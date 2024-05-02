@@ -1,7 +1,7 @@
 import { WayPoint } from '../../../types/way-point';
 import View from '../../_abstract';
 
-function TEMPLATE(event: WayPoint) {
+function getTemplate(event: WayPoint) {
   const { basePrice } = event;
 
   return `<p class="event__price">
@@ -17,6 +17,6 @@ export default class EventPrice extends View<HTMLParagraphElement> {
   }
 
   get template() {
-    return TEMPLATE(this.event);
+    return getTemplate(this.event);
   }
 }

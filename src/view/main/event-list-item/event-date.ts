@@ -2,7 +2,7 @@ import View from '../../_abstract';
 import dayjs from 'dayjs';
 import { WayPoint } from '../../../types/way-point';
 
-function TEMPLATE(event: WayPoint) {
+function getTemplate(event: WayPoint) {
   const { dateFrom } = event;
 
   const date = dayjs(dateFrom).format('MMM DD');
@@ -16,6 +16,6 @@ export default class EventDate extends View<HTMLTimeElement> {
   }
 
   get template() {
-    return TEMPLATE(this.event);
+    return getTemplate(this.event);
   }
 }
