@@ -82,15 +82,17 @@ export default class EditWaypointPresenter {
   }: {
     editWaypointContainer: HTMLUListElement;
     waypointsModel: WaypointsModel;
+    destinationsModel: DestinationsModel;
+    offersModel: OffersModel;
     waypoint: WayPoint;
     destination: Destination;
   }) {
     this.editWaypointContainer = editWaypointContainer;
     this.destinationsModel = destinationsModel;
+    this.offersModel = offersModel;
     this.waypointsModel = waypointsModel;
-    this.waypointsModel = waypointsModel;
-    this.waypoint = waypoint;
     this.destination = destination;
+    this.waypoint = waypoint;
     this.waypointContainer = new WaypointContainer();
     this.editItemContainer = new EditItemContainer();
     this.eventHeader = new EventHeader();
@@ -115,7 +117,6 @@ export default class EditWaypointPresenter {
     this.eventDetails = new EventDetails();
     this.offersSection = new OffersSection();
     this.offersList = new OffersList();
-    this.offers = this.waypoint.offers;
     this.destinationDescription = new DestinationDescription(this.destination);
     this.picturesContainer = new PicturesContainer();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -150,8 +151,10 @@ export default class EditWaypointPresenter {
     render(this.offersSection, this.eventDetails.element);
     render(this.offersList, this.offersSection.element);
 
-    for (let i = 0; i < this.offers.length; i++) {
-      const offer = this.offers[i];
+    const accessibleOffers = this.offersModel.offers[0].offers;
+
+    for (let i = 0; i < accessibleOffers.length; i++) {
+      const offer = accessibleOffers[i];
       render(new OfferItem({ offer }), this.offersList.element);
     }
 
@@ -159,8 +162,9 @@ export default class EditWaypointPresenter {
     render(this.picturesContainer, this.eventDetails.element);
     render(this.destinationPicturesList, this.picturesContainer.element);
 
-    for (let i = 0; i < this.pictures.length; i++) {
-      const picture = this.pictures[i];
+    const pictures = this.destinationsModel.destinations[0].pictures;
+    for (let i = 0; i < pictures.length; i++) {
+      const picture = pictures[i];
       render(new DestinationPicture(picture), this.destinationPicturesList.element);
     }
   }

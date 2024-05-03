@@ -4,21 +4,30 @@ import Sorting from '../view/main/sorting';
 import WaypointsList from '../view/main/waypoints-list';
 import WaypointContainer from '../view/main/waypoint-container';
 import { render } from '../render';
-import WaypointListItemPresenter from './event-list-item-presenter';
+// import WaypointListItemPresenter from './event-list-item-presenter';
 import EditWaypointPresenter from './edit-waypoint-presenter';
 import type WaypointsModel from '../model/waypoints-model';
+import type DestinationsModel from '../model/destinations-model';
+import type OffersModel from '../model/offers-model';
 
 const siteHeaderElement = document.querySelector('.trip-main')!;
 const siteFilterElement = document.querySelector('.trip-controls__filters')!;
 
 export default class ListPresenter {
   listContainer: HTMLElement;
+  destinationsModel: DestinationsModel;
+  offersModel: OffersModel;
   waypointsModel: WaypointsModel;
   waypointList = new WaypointsList();
   waypoint: WaypointContainer;
 
-  constructor({ listContainer, waypointsModel }: { listContainer: HTMLElement; waypointsModel: WaypointsModel }) {
+  constructor({ listContainer, destinationsModel, offersModel, waypointsModel }: { listContainer: HTMLElement;
+    destinationsModel: DestinationsModel;
+    offersModel: OffersModel;
+    waypointsModel: WaypointsModel }) {
     this.listContainer = listContainer;
+    this.destinationsModel = destinationsModel;
+    this.offersModel = offersModel;
     this.waypointsModel = waypointsModel;
     this.waypoint = new WaypointContainer();
   }
@@ -30,10 +39,13 @@ export default class ListPresenter {
 
     render(this.waypointList, this.listContainer);
 
-    const waypoint = this.waypoint.waypoints[0];
+    const waypoint = this.waypointsModel.waypoints[0];
+    const destination = this.destinationsModel.destinations[0];
 
     const editWaypointPresenterPresenter = new EditWaypointPresenter({
       editWaypointContainer: this.waypointList.element,
+      destinationsModel: this.destinationsModel,
+      offersModel: this.offersModel,
       waypointsModel: this.waypointsModel,
       waypoint,
       destination
