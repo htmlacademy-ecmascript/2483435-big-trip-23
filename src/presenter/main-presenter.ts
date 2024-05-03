@@ -9,6 +9,8 @@ import EditWaypointPresenter from './edit-waypoint-presenter';
 import type WaypointsModel from '../model/waypoints-model';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
+import {Randomizer} from '../utils/random';
+
 
 const siteHeaderElement = document.querySelector('.trip-main')!;
 const siteFilterElement = document.querySelector('.trip-controls__filters')!;
@@ -39,8 +41,16 @@ export default class ListPresenter {
 
     render(this.waypointList, this.listContainer);
 
-    const waypoint = this.waypointsModel.waypoints[0];
-    const destination = this.destinationsModel.destinations[0];
+
+    const waypoints = this.waypointsModel.waypoints;
+    const currentID = Randomizer.getArrayElement(waypoints).id;
+
+    const destinations = this.destinationsModel.destinations;
+    const offers = this.offersModel.offers;
+
+    const currentsDestination = destinations.find((item) => item.id === currentID);
+    const currentOffers = offers.find((item) => item.id === currentID);
+
 
     const editWaypointPresenterPresenter = new EditWaypointPresenter({
       editWaypointContainer: this.waypointList.element,

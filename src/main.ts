@@ -13,3 +13,8 @@ const offersModel = new OffersModel(service);
 const waypointsModel = new WaypointsModel(service);
 const listPresenter = new ListPresenter({ listContainer: siteMainElement, destinationsModel, offersModel, waypointsModel});
 listPresenter.init();
+
+
+console.log(service.points);
+console.log(service.destinations);
+console.log(service.offers);
