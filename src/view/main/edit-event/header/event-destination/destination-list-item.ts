@@ -1,7 +1,7 @@
-import { WayPoint } from '../../../../../types/way-point';
 import View from '../../../../_abstract';
-import { MOCK_CITIES } from '../../../../../mock/const-mock';
+import { MOCK_CITIES } from '../../../../../mock/const';
 import { checkMatch } from '../../../../../utils/utils';
+import { Destination } from '../../../../../types/destination';
 
 const getTemplateName = (name: string, currentName: string) => {
   const isChecked = () => checkMatch(name, currentName, 'checked');
@@ -12,20 +12,22 @@ const getTemplateName = (name: string, currentName: string) => {
 const waypointNames = (name: string) =>
   MOCK_CITIES.reduce((accumulator, currentValue) => accumulator + getTemplateName(name, currentValue), '');
 
-function getTemplate(event: WayPoint) {
-  const { destination } = event;
-  const name = 'name' in destination ? (destination.name as string) : '';
-  return `<div>${waypointNames(name)}</div>`;
+function getTemplate(destination: Destination) {
+  const { name } = destination;
+
+  const currentName = 'name' in destination ? name : '';
+
+  return `<div>${waypointNames(currentName)}</div>`;
 }
 
 export default class EventDestinationListItem extends View<HTMLDivElement> {
-  event: WayPoint;
-  constructor(event: WayPoint) {
+  destination: Destination;
+  constructor(destination: Destination) {
     super();
-    this.event = event;
+    this.destination = destination;
   }
 
   get template() {
-    return getTemplate(this.event);
+    return getTemplate(this.destination);
   }
 }

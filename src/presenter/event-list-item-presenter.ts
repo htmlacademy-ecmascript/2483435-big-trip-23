@@ -12,11 +12,13 @@ import EventRollup from '../view/main/event-list-item/event-rollup';
 import { render } from '../render';
 import type WaypointsModel from '../model/waypoints-model';
 import { WayPoint } from '../types/way-point';
+import { Destination } from '../types/destination';
 
 export default class WaypointListItemPresenter {
   waypointItemContainer: HTMLElement;
   waypointsModel: WaypointsModel;
   waypoint: WayPoint;
+  destination: Destination;
   eventDate: EventDate;
   eventItemContainer = new EventItemContainer();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,14 +29,17 @@ export default class WaypointListItemPresenter {
     waypointItemContainer,
     waypointsModel,
     waypoint,
+    destination
   }: {
     waypointItemContainer: HTMLElement;
     waypointsModel: WaypointsModel;
     waypoint: WayPoint;
+    destination: Destination;
   }) {
     this.waypointItemContainer = waypointItemContainer;
     this.waypointsModel = waypointsModel;
     this.waypoint = waypoint;
+    this.destination = destination;
     this.eventDate = new EventDate(this.waypoint);
     this.offers = this.waypoint.offers;
     this.eventOffersList = new EventOffersList();
@@ -44,7 +49,7 @@ export default class WaypointListItemPresenter {
     render(this.eventItemContainer, this.waypointItemContainer);
     render(new EventDate(this.waypoint), this.eventItemContainer.element);
     render(new EventType(this.waypoint), this.eventItemContainer.element);
-    render(new EventTitle(this.waypoint), this.eventItemContainer.element);
+    render(new EventTitle(this.waypoint, this.destination), this.eventItemContainer.element);
     render(new EventSchedule(this.waypoint), this.eventItemContainer.element);
     render(new EventPrice(this.waypoint), this.eventItemContainer.element);
     render(new EventOffersTitle(), this.eventItemContainer.element);

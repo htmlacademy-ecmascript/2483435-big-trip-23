@@ -29,13 +29,18 @@ import DestinationPicture from '../view/main/edit-event/section/destination-sect
 import WaypointContainer from '../view/main/waypoint-container';
 import { render } from '../render';
 import type WaypointsModel from '../model/waypoints-model';
+import type DestinationsModel from '../model/destinations-model';
+import type OffersModel from '../model/offers-model';
 import { WayPoint } from '../types/way-point';
 import { AppPicture, Destination } from '../types/destination';
 
 export default class EditWaypointPresenter {
   editWaypointContainer: HTMLUListElement;
+  offersModel: OffersModel;
+  destinationsModel: DestinationsModel;
   waypointsModel: WaypointsModel;
   waypoint: WayPoint;
+  destination: Destination;
   editItemContainer: EditItemContainer;
   waypointContainer: WaypointContainer;
   eventHeader: EventHeader;
@@ -69,16 +74,23 @@ export default class EditWaypointPresenter {
 
   constructor({
     editWaypointContainer,
+    destinationsModel,
+    offersModel,
     waypointsModel,
     waypoint,
+    destination
   }: {
     editWaypointContainer: HTMLUListElement;
     waypointsModel: WaypointsModel;
     waypoint: WayPoint;
+    destination: Destination;
   }) {
     this.editWaypointContainer = editWaypointContainer;
+    this.destinationsModel = destinationsModel;
+    this.waypointsModel = waypointsModel;
     this.waypointsModel = waypointsModel;
     this.waypoint = waypoint;
+    this.destination = destination;
     this.waypointContainer = new WaypointContainer();
     this.editItemContainer = new EditItemContainer();
     this.eventHeader = new EventHeader();
@@ -92,9 +104,9 @@ export default class EditWaypointPresenter {
     this.eventTypeItem = new EventTypeItem(this.waypoint);
     this.eventDestination = new EventDestination();
     this.eventLabelDestination = new EventLabelDestination(this.waypoint);
-    this.eventInputDestination = new EventInputDestination(this.waypoint);
+    this.eventInputDestination = new EventInputDestination(this.destination);
     this.eventDestinationList = new EventDestinationList();
-    this.eventDestinationListItem = new EventDestinationListItem(this.waypoint);
+    this.eventDestinationListItem = new EventDestinationListItem(this.destination);
     this.eventTime = new EventTime(this.waypoint);
     this.eventPrice = new EventPrice(this.waypoint);
     this.eventSave = new EventSave();
@@ -104,11 +116,7 @@ export default class EditWaypointPresenter {
     this.offersSection = new OffersSection();
     this.offersList = new OffersList();
     this.offers = this.waypoint.offers;
-    this.destinationDescription = new DestinationDescription(
-      this.waypoint as unknown as {
-        destination: Destination;
-      },
-    );
+    this.destinationDescription = new DestinationDescription(this.destination);
     this.picturesContainer = new PicturesContainer();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.pictures = (this.waypoint.destination as any).pictures as AppPicture[];

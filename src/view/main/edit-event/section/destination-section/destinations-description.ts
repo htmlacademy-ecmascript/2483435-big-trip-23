@@ -13,7 +13,7 @@ function getTemplate(destination: Destination) {
 
 export default class DestinationDescription extends View<HTMLTableSectionElement> {
   destination: Destination;
-  constructor({ destination }: { destination: Destination }) {
+  constructor(destination: Destination) {
     super();
     this.destination = destination;
   }

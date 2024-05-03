@@ -1,4 +1,4 @@
-import { DEFAULT_DESTINATION } from '../mock/const-mock';
+import { DEFAULT_DESTINATION } from '../mock/const';
 
 export default class NewWaypointModel {
   #waypoint = DEFAULT_DESTINATION;

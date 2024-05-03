@@ -1,9 +1,15 @@
-import { generateMockWaypoint } from '../mock/way-point-mock';
-
-const WAYPOINT_COUNT = 5;
+import MockService from '../service/mock';
+import { WayPoint } from '../types/way-point';
 
 export default class WaypointsModel {
-  #waypoints = Array.from({ length: WAYPOINT_COUNT }, generateMockWaypoint);
+  #service: MockService;
+  #waypoints: WayPoint[] = [];
+
+  constructor(service: MockService) {
+    this.#service = service;
+    this.#waypoints = this.#service.points;
+  }
+
   get waypoints() {
     return this.#waypoints;
   }

@@ -16,7 +16,6 @@ const MOCK_DESCRIPTION = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-const MOCK_OFFERS = ['Add breakfast', 'Book tickets', 'Lunch in city', 'Add luggage', 'Switch to comfort', 'Order Uber', 'Rent a car'];
 
 const DEFAULT_DESTINATION = {
   id: '1',
@@ -40,4 +39,4 @@ const DEFAULT_DESTINATION = {
   type: 'Flight',
 };
 
-export { MOCK_CITIES, MOCK_DESCRIPTION, MOCK_OFFERS, DEFAULT_DESTINATION };
+export { MOCK_CITIES, MOCK_DESCRIPTION, DEFAULT_DESTINATION };
