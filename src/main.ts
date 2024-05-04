@@ -8,7 +8,10 @@ const siteMainElement = document.querySelector<HTMLElement>('.trip-events')!;
 
 const service = new MockService();
 const destinationsModel = new DestinationsModel(service);
-export const offersModel = new OffersModel(service);
+const offersModel = new OffersModel(service);
 const waypointsModel = new WaypointsModel(service);
 const listPresenter = new MainPresenter({ listContainer: siteMainElement, destinationsModel, offersModel, waypointsModel });
 listPresenter.init();
+
+
+console.log(service);

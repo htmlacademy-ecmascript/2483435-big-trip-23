@@ -1,6 +1,6 @@
 import View from '../../../../_abstract';
 import { capitalLetter } from '../../../../../utils/utils';
-import { Destination } from '../../../../../types/destination';
+import type { Destination } from '../../../../../types/destination';
 
 function getTemplate(destination: Destination) {
   const { name } = destination;

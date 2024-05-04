@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CurrentTrip from '../view/header/current-trip';
 import Filters from '../view/header/filters';
 import Sorting from '../view/main/sorting';
@@ -20,7 +21,8 @@ export default class ListPresenter {
   offersModel: OffersModel;
   waypointsModel: WaypointsModel;
   waypointList = new WaypointsList();
-  waypoint: WaypointContainer;
+  waypoint: any;
+  destination: any;
 
   constructor({
     listContainer,
@@ -37,21 +39,25 @@ export default class ListPresenter {
     this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
     this.waypointsModel = waypointsModel;
-    this.waypoint = new WaypointContainer();
   }
 
   init() {
+    const waypoints = this.waypointsModel.waypoints;
+    const waypoint = Randomizer.getArrayElement(waypoints);
+    const waypointID = waypoint.destination;
+    const destination = this.destinationsModel.getById(waypointID)!;
+    const type = this.offersModel.offers.find((item) => item.type === waypoint.type);
+
+
+
+
     render(new CurrentTrip(), siteHeaderElement, 'afterbegin');
     render(new Filters(), siteFilterElement);
     render(new Sorting(), this.listContainer);
-
     render(this.waypointList, this.listContainer);
 
-    const waypoints = this.waypointsModel.waypoints;
-    const waypoint = Randomizer.getArrayElement(waypoints);
 
-    const destination = this.destinationsModel.destinations.find((item) => item.id === waypoint.destination)!;
-    const type = this.offersModel.offers.find((item) => item.type === waypoint.type);
+
     const selectedOffers = type!.offers.filter((currentOffers) => waypoint.offers.includes(currentOffers.id));
 
     const editWaypointPresenterPresenter = new EditWaypointPresenter({

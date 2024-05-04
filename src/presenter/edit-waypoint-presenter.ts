@@ -32,8 +32,8 @@ import { render } from '../render';
 import type WaypointsModel from '../model/waypoints-model';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
-import { WayPoint } from '../types/way-point';
-import { AppPicture, Destination } from '../types/destination';
+import type { WayPoint } from '../types/way-point';
+import type { AppPicture, Destination } from '../types/destination';
 
 export default class EditWaypointPresenter {
   editWaypointContainer: HTMLUListElement;
@@ -114,7 +114,7 @@ export default class EditWaypointPresenter {
     this.eventLabelDestination = new EventLabelDestination(this.waypoint);
     this.eventInputDestination = new EventInputDestination(this.destination);
     this.eventDestinationList = new EventDestinationList();
-    this.eventDestinationListItem = new EventDestinationListItem(this.destination);
+    this.eventDestinationListItem = new EventDestinationListItem(this.destination, this.waypoint);
     this.eventTime = new EventTime(this.waypoint);
     this.eventPrice = new EventPrice(this.waypoint);
     this.eventSave = new EventSave();
@@ -149,7 +149,18 @@ export default class EditWaypointPresenter {
     render(this.eventLabelDestination, this.eventDestination.element);
     render(this.eventInputDestination, this.eventDestination.element);
     render(this.eventDestinationList, this.eventDestination.element);
-    render(this.eventDestinationListItem, this.eventDestinationList.element);
+
+    /**
+     * Селект пунктов назначения
+     */
+    const names = this.destinationsModel.allWaypointsNames;
+    const waypointID = this.waypoint.destination;
+    const waypointName = this.waypointsModel.getById(waypointID);
+    for (let i = 0; i < names.length; i++) {
+      const name = names[i];
+      render(new EventDestinationListItem(name, waypointName), this.eventDestinationList.element);
+    }
+
     render(this.eventTime, this.eventHeader.element);
     render(this.eventPrice, this.eventHeader.element);
     render(this.eventSave, this.eventHeader.element);
@@ -167,10 +178,8 @@ export default class EditWaypointPresenter {
     const currentTypeObject = this.offersModel.offers.find((item) => item.type === currentType);
     const allTypeOffers = currentTypeObject?.offers;
     const waypointOffers = this.waypoint.offers;
-
     const selectedOffers = allTypeOffers!.filter((item) => waypointOffers.includes(item.id));
     const selectedOffersIds = selectedOffers.map((item) => item.id);
-
     for (let i = 0; i < allTypeOffers!.length; i++) {
       const offer = allTypeOffers![i];
       render(new OfferItem({ offer, selectedOffersIds }), this.offersList.element);

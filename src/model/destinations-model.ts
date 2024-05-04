@@ -1,5 +1,5 @@
-import MockService from '../service/mock';
-import { Destination } from '../types/destination';
+import type MockService from '../service/mock';
+import type { Destination } from '../types/destination';
 
 export default class DestinationsModel {
   #service: MockService;
@@ -12,5 +12,14 @@ export default class DestinationsModel {
 
   get destinations() {
     return this.#destinations;
+  }
+
+  get allWaypointsNames() {
+    this.#destinations = this.#service.destinations;
+    return Array.from(this.#destinations.map((waypoint) => waypoint.name));
+  }
+
+  getById(findId: string) {
+    return this.#destinations.find((destination) => destination.id === findId);
   }
 }

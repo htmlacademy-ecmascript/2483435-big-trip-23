@@ -1,33 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import View from '../../../../_abstract';
-import { MOCK_CITIES } from '../../../../../mock/const';
 import { checkMatch } from '../../../../../utils/utils';
-import { Destination } from '../../../../../types/destination';
 
-const getTemplateName = (name: string, currentName: string) => {
-  const isChecked = () => checkMatch(name, currentName, 'checked');
 
-  return `<option value="${name}"${isChecked}></option>`;
-};
+function getTemplate(names: any) {
+  const { name, waypointName } = names;
 
-const waypointNames = (name: string) =>
-  MOCK_CITIES.reduce((accumulator, currentValue) => accumulator + getTemplateName(name, currentValue), '');
+  const isChecked = () => checkMatch(name, waypointName, 'checked');
 
-function getTemplate(destination: Destination) {
-  const { name } = destination;
-
-  const currentName = 'name' in destination ? name : '';
-
-  return `<div>${waypointNames(currentName)}</div>`;
+  return `<option value="${name}"${isChecked()}></option>`;
 }
 
 export default class EventDestinationListItem extends View<HTMLDivElement> {
-  destination: Destination;
-  constructor(destination: Destination) {
+  name: any;
+  waypointName: any;
+  names: any;
+  constructor(name: any, waypointName: any) {
     super();
-    this.destination = destination;
+    this.name = name;
+    this.waypointName = waypointName;
+    this.names = {name,waypointName};
   }
 
   get template() {
-    return getTemplate(this.destination);
+    return getTemplate(this.names);
   }
 }

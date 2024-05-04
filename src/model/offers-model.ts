@@ -13,4 +13,9 @@ export default class OffersModel {
   get offers() {
     return this.#offers;
   }
+
+  getById(offersId: string) {
+    return this.#offers.find((offers) => waypoint.id === offersId);
+  }
+
 }

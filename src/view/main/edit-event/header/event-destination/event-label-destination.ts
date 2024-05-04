@@ -1,4 +1,4 @@
-import { WayPoint } from '../../../../../types/way-point';
+import type { WayPoint } from '../../../../../types/way-point';
 import View from '../../../../_abstract';
 import { capitalLetter } from '../../../../../utils/utils';
 
