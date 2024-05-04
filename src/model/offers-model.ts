@@ -1,5 +1,5 @@
 import MockService from '../service/mock';
-import {Offer} from '../types/offer';
+import { Offer } from '../types/offer';
 
 export default class OffersModel {
   #service: MockService;

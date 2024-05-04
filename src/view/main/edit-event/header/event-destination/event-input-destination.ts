@@ -3,7 +3,7 @@ import { capitalLetter } from '../../../../../utils/utils';
 import { Destination } from '../../../../../types/destination';
 
 function getTemplate(destination: Destination) {
-  const {name} = destination;
+  const { name } = destination;
 
   const correctName = capitalLetter(name);
 

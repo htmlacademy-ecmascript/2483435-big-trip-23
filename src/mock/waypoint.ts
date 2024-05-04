@@ -7,5 +7,5 @@ export const mockWaypoint = (readyProps: Pick<WayPoint, 'destination' | 'offers'
   ...readyProps,
   ...getDates(),
   basePrice: Randomizer.getInteger(100, 5_000),
-  isFavorite: Randomizer.boolean
+  isFavorite: Randomizer.boolean,
 });

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import EventItemContainer from '../view/main/event-list-item/event-item-container';
 import EventDate from '../view/main/event-list-item/event-date';
 import EventType from '../view/main/event-list-item/event-type';
@@ -13,10 +14,12 @@ import { render } from '../render';
 import type WaypointsModel from '../model/waypoints-model';
 import { WayPoint } from '../types/way-point';
 import { Destination } from '../types/destination';
+import OffersModel from '../model/offers-model';
 
 export default class WaypointListItemPresenter {
   waypointItemContainer: HTMLElement;
   waypointsModel: WaypointsModel;
+  offersModel: OffersModel;
   waypoint: WayPoint;
   destination: Destination;
   eventDate: EventDate;
@@ -24,25 +27,32 @@ export default class WaypointListItemPresenter {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   offers: any;
   eventOffersList: EventOffersList;
+  type: any;
 
   constructor({
     waypointItemContainer,
     waypointsModel,
+    offersModel,
     waypoint,
-    destination
+    destination,
+    type,
   }: {
     waypointItemContainer: HTMLElement;
     waypointsModel: WaypointsModel;
+    offersModel: OffersModel;
     waypoint: WayPoint;
     destination: Destination;
+    type: any;
   }) {
     this.waypointItemContainer = waypointItemContainer;
     this.waypointsModel = waypointsModel;
+    this.offersModel = offersModel;
     this.waypoint = waypoint;
     this.destination = destination;
     this.eventDate = new EventDate(this.waypoint);
     this.offers = this.waypoint.offers;
     this.eventOffersList = new EventOffersList();
+    this.type = type;
   }
 
   init() {
@@ -55,8 +65,15 @@ export default class WaypointListItemPresenter {
     render(new EventOffersTitle(), this.eventItemContainer.element);
     render(this.eventOffersList, this.eventItemContainer.element);
 
-    for (let i = 0; i < this.offers.length; i++) {
-      const offer = this.offers[i];
+    const currentType = this.type.type;
+
+    const currentTypeObject = this.offersModel.offers.find((item) => item.type === currentType);
+    const allOffers = currentTypeObject?.offers;
+
+    const selectedOffers = allOffers!.filter((currentOffers) => this.waypoint.offers.includes(currentOffers.id));
+
+    for (let i = 0; i < selectedOffers.length; i++) {
+      const offer = selectedOffers[i];
       render(new EventOffersListItem(offer), this.eventOffersList.element);
     }
 

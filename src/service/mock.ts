@@ -30,7 +30,7 @@ export default class MockService {
     const destination = Randomizer.getArrayElement(this.#destinations).id;
     const offersIDs = offers.slice(0, Randomizer.getInteger(0, offers.length)).map(({ id }) => id);
 
-    return mockWaypoint({destination, offers: offersIDs, type});
+    return mockWaypoint({ destination, offers: offersIDs, type });
   };
 
   #generatePoints() {

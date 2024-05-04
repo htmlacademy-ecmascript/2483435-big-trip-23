@@ -4,13 +4,12 @@ import Sorting from '../view/main/sorting';
 import WaypointsList from '../view/main/waypoints-list';
 import WaypointContainer from '../view/main/waypoint-container';
 import { render } from '../render';
-// import WaypointListItemPresenter from './event-list-item-presenter';
+import WaypointListItemPresenter from './event-list-item-presenter';
 import EditWaypointPresenter from './edit-waypoint-presenter';
 import type WaypointsModel from '../model/waypoints-model';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
-import {Randomizer} from '../utils/random';
-
+import { Randomizer } from '../utils/random';
 
 const siteHeaderElement = document.querySelector('.trip-main')!;
 const siteFilterElement = document.querySelector('.trip-controls__filters')!;
@@ -23,10 +22,17 @@ export default class ListPresenter {
   waypointList = new WaypointsList();
   waypoint: WaypointContainer;
 
-  constructor({ listContainer, destinationsModel, offersModel, waypointsModel }: { listContainer: HTMLElement;
+  constructor({
+    listContainer,
+    destinationsModel,
+    offersModel,
+    waypointsModel,
+  }: {
+    listContainer: HTMLElement;
     destinationsModel: DestinationsModel;
     offersModel: OffersModel;
-    waypointsModel: WaypointsModel }) {
+    waypointsModel: WaypointsModel;
+  }) {
     this.listContainer = listContainer;
     this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
@@ -41,16 +47,12 @@ export default class ListPresenter {
 
     render(this.waypointList, this.listContainer);
 
-
     const waypoints = this.waypointsModel.waypoints;
-    const currentID = Randomizer.getArrayElement(waypoints).id;
+    const waypoint = Randomizer.getArrayElement(waypoints);
 
-    const destinations = this.destinationsModel.destinations;
-    const offers = this.offersModel.offers;
-
-    const currentsDestination = destinations.find((item) => item.id === currentID);
-    const currentOffers = offers.find((item) => item.id === currentID);
-
+    const destination = this.destinationsModel.destinations.find((item) => item.id === waypoint.destination)!;
+    const type = this.offersModel.offers.find((item) => item.type === waypoint.type);
+    const selectedOffers = type!.offers.filter((currentOffers) => waypoint.offers.includes(currentOffers.id));
 
     const editWaypointPresenterPresenter = new EditWaypointPresenter({
       editWaypointContainer: this.waypointList.element,
@@ -58,23 +60,28 @@ export default class ListPresenter {
       offersModel: this.offersModel,
       waypointsModel: this.waypointsModel,
       waypoint,
-      destination
+      destination,
+      type,
+      selectedOffers,
     });
     editWaypointPresenterPresenter.init();
 
-    // for (let i = 0; i < this.waypointsModel.waypoints.length; i++) {
-    //   const currentWaypoint = this.waypointsModel.waypoints[i];
-    //   render(new WaypointContainer(), this.waypointList.element);
+    for (let i = 0; i < this.waypointsModel.waypoints.length; i++) {
+      const currentWaypoint = this.waypointsModel.waypoints[i];
+      render(new WaypointContainer(), this.waypointList.element);
 
-    //   const siteEventListElement = document.getElementById('event_list')!;
-    //   const siteCurrentEventItemElements = Array.from(siteEventListElement.children)[i] as HTMLElement;
+      const siteEventListElement = document.getElementById('event_list')!;
+      const siteCurrentEventItemElements = Array.from(siteEventListElement.children)[i] as HTMLElement;
 
-    //   const waypointListItemPresenter = new WaypointListItemPresenter({
-    //     waypointItemContainer: siteCurrentEventItemElements,
-    //     waypointsModel: this.waypointsModel,
-    //     waypoint: currentWaypoint,
-    //   });
-    //   waypointListItemPresenter.init();
-    // }
+      const waypointListItemPresenter = new WaypointListItemPresenter({
+        waypointItemContainer: siteCurrentEventItemElements,
+        waypointsModel: this.waypointsModel,
+        offersModel: this.offersModel,
+        waypoint: currentWaypoint,
+        destination,
+        type,
+      });
+      waypointListItemPresenter.init();
+    }
   }
 }

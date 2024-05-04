@@ -2,20 +2,12 @@ import { POINTS_TYPES } from '../const';
 import { InnerOffer, Offer } from '../types/offer';
 import Randomizer from '../utils/random';
 
-const OFFERS = [
-  'Add breakfast',
-  'Book tickets',
-  'Lunch in city',
-  'Add luggage',
-  'Switch to comfort',
-  'Order Uber',
-  'Rent a car'
-];
+const OFFERS = ['Add breakfast', 'Book tickets', 'Lunch in city', 'Add luggage', 'Switch to comfort', 'Order Uber', 'Rent a car'];
 
 const mockItem = (): InnerOffer => ({
   id: crypto.randomUUID(),
   title: Randomizer.getArrayElement(OFFERS),
-  price: Randomizer.getInteger(20,400),
+  price: Randomizer.getInteger(20, 400),
 });
 
 const mockOffer = (type: Offer['type']): Offer => ({

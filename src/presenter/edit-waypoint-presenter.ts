@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import EditItemContainer from '../view/main/edit-event/edit-item-container';
 import EventHeader from '../view/main/edit-event/header/event-header';
 import EventTypeWrapper from '../view/main/edit-event/header/event-type-wrapper/event-type-wrapper';
@@ -66,11 +67,12 @@ export default class EditWaypointPresenter {
   offersSection: OffersSection;
   offersList: OffersList;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  offers: any;
+  selectedOffers: any;
   destinationDescription: DestinationDescription;
   picturesContainer: PicturesContainer;
   pictures: AppPicture[];
   destinationPicturesList: DestinationPicturesList;
+  type: any;
 
   constructor({
     editWaypointContainer,
@@ -78,7 +80,9 @@ export default class EditWaypointPresenter {
     offersModel,
     waypointsModel,
     waypoint,
-    destination
+    destination,
+    type,
+    selectedOffers,
   }: {
     editWaypointContainer: HTMLUListElement;
     waypointsModel: WaypointsModel;
@@ -86,6 +90,8 @@ export default class EditWaypointPresenter {
     offersModel: OffersModel;
     waypoint: WayPoint;
     destination: Destination;
+    type: any;
+    selectedOffers: any;
   }) {
     this.editWaypointContainer = editWaypointContainer;
     this.destinationsModel = destinationsModel;
@@ -122,6 +128,8 @@ export default class EditWaypointPresenter {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.pictures = (this.waypoint.destination as any).pictures as AppPicture[];
     this.destinationPicturesList = new DestinationPicturesList();
+    this.selectedOffers = selectedOffers;
+    this.type = type;
   }
 
   init() {
@@ -148,24 +156,36 @@ export default class EditWaypointPresenter {
     render(this.eventDelete, this.eventHeader.element);
     render(this.eventRollup, this.eventHeader.element);
     render(this.eventDetails, this.editItemContainer.element);
-    render(this.offersSection, this.eventDetails.element);
-    render(this.offersList, this.offersSection.element);
 
-    const accessibleOffers = this.offersModel.offers[0].offers;
-
-    for (let i = 0; i < accessibleOffers.length; i++) {
-      const offer = accessibleOffers[i];
-      render(new OfferItem({ offer }), this.offersList.element);
+    if (this.waypoint.offers.length !== 0) {
+      render(this.offersSection, this.eventDetails.element);
     }
 
-    render(this.destinationDescription, this.eventDetails.element);
-    render(this.picturesContainer, this.eventDetails.element);
-    render(this.destinationPicturesList, this.picturesContainer.element);
+    render(this.offersList, this.offersSection.element);
 
-    const pictures = this.destinationsModel.destinations[0].pictures;
-    for (let i = 0; i < pictures.length; i++) {
-      const picture = pictures[i];
-      render(new DestinationPicture(picture), this.destinationPicturesList.element);
+    const currentType = this.type.type;
+    const currentTypeObject = this.offersModel.offers.find((item) => item.type === currentType);
+    const allTypeOffers = currentTypeObject?.offers;
+    const waypointOffers = this.waypoint.offers;
+
+    const selectedOffers = allTypeOffers!.filter((item) => waypointOffers.includes(item.id));
+    const selectedOffersIds = selectedOffers.map((item) => item.id);
+
+    for (let i = 0; i < allTypeOffers!.length; i++) {
+      const offer = allTypeOffers![i];
+      render(new OfferItem({ offer, selectedOffersIds }), this.offersList.element);
+    }
+
+    if (this.destination.description.length !== 0 || this.destination.pictures.length) {
+      render(this.destinationDescription, this.eventDetails.element);
+      render(this.picturesContainer, this.eventDetails.element);
+      render(this.destinationPicturesList, this.picturesContainer.element);
+
+      const pictures = this.destination.pictures;
+      for (let i = 0; i < pictures.length; i++) {
+        const picture = pictures[i];
+        render(new DestinationPicture(picture), this.destinationPicturesList.element);
+      }
     }
   }
 }

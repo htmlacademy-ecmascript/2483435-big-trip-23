@@ -5,8 +5,8 @@ import { capitalLetter } from '../../../utils/utils';
 import { Destination } from '../../../types/destination';
 
 function getTemplate(event: WayPoint, destination: Destination) {
-  const {type} = event;
-  const {name} = destination;
+  const { type } = event;
+  const { name } = destination;
 
   const currentName = 'name' in destination ? name : '';
 

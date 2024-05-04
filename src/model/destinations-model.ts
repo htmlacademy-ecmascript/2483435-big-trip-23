@@ -1,5 +1,5 @@
 import MockService from '../service/mock';
-import {Destination} from '../types/destination';
+import { Destination } from '../types/destination';
 
 export default class DestinationsModel {
   #service: MockService;

@@ -16,7 +16,6 @@ const MOCK_DESCRIPTION = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-
 const DEFAULT_DESTINATION = {
   id: '1',
   basePrice: '',
