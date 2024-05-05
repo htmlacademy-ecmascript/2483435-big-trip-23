@@ -1,9 +1,9 @@
 import type { POINTS_TYPES } from '../const';
-import { CamelizeObject, WithDate } from '../utils/types-utils';
-import { Destination } from './destination';
-import { InnerOffer } from './offer';
+import type { CamelizeObject, WithDate } from '../utils/types-utils';
+import type { Destination } from './destination';
+import type { InnerOffer } from './offer';
 
-type WayPointType = (typeof POINTS_TYPES)[number];
+type WaypointType = (typeof POINTS_TYPES)[number];
 
 interface ServerWayPoint {
   id: string;
@@ -13,8 +13,8 @@ interface ServerWayPoint {
   destination: Destination['id'];
   is_favorite: boolean;
   offers: InnerOffer['id'][];
-  type: WayPointType;
+  type: WaypointType;
 }
-type WayPoint = WithDate<CamelizeObject<ServerWayPoint>>;
+type Waypoint = WithDate<CamelizeObject<ServerWayPoint>>;
 
-export type { WayPoint, WayPointType };
+export type { Waypoint, WaypointType };

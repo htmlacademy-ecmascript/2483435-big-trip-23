@@ -1,4 +1,4 @@
-import { WayPointType } from './way-point';
+import type { WaypointType } from './way-point';
 
 interface InnerOffer {
   id: string;
@@ -7,7 +7,7 @@ interface InnerOffer {
 }
 
 interface Offer {
-  type: WayPointType;
+  type: WaypointType;
   offers: InnerOffer[];
 }
 

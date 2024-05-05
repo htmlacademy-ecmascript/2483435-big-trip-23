@@ -1,5 +1,7 @@
-import MockService from '../service/mock';
-import { Offer } from '../types/offer';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type MockService from '../service/mock';
+import type { Offer } from '../types/offer';
+import type { Waypoint } from '../types/way-point';
 
 export default class OffersModel {
   #service: MockService;
@@ -14,8 +16,11 @@ export default class OffersModel {
     return this.#offers;
   }
 
-  getById(offersId: string) {
-    return this.#offers.find((offers) => waypoint.id === offersId);
+  getAvailableOffers(waypoint: Waypoint) {
+    return this.#offers.find((item) => item.type === waypoint.type)!.offers;
   }
 
+  getSelectedOffers(waypoint: Waypoint) {
+    return this.getAvailableOffers(waypoint)?.filter((item) => waypoint.offers.includes(item.id));
+  }
 }

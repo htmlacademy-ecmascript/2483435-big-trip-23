@@ -1,9 +1,9 @@
 import type MockService from '../service/mock';
-import type { WayPoint } from '../types/way-point';
+import type { Waypoint } from '../types/way-point';
 
 export default class WaypointsModel {
   #service: MockService;
-  #waypoints: WayPoint[] = [];
+  #waypoints: Waypoint[] = [];
 
   constructor(service: MockService) {
     this.#service = service;
@@ -17,6 +17,4 @@ export default class WaypointsModel {
   getById(id: string) {
     return this.#waypoints.find((waypoint) => waypoint.id === id);
   }
-
-
 }

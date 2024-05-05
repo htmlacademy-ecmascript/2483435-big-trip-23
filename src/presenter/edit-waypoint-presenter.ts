@@ -1,199 +1,194 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import EditItemContainer from '../view/main/edit-event/edit-item-container';
-import EventHeader from '../view/main/edit-event/header/event-header';
-import EventTypeWrapper from '../view/main/edit-event/header/event-type-wrapper/event-type-wrapper';
-import EventTypeLabel from '../view/main/edit-event/header/event-type-wrapper/event-type-label/event-type-label';
-import ChooseEventType from '../view/main/edit-event/header/event-type-wrapper/event-type-label/choose-event-type';
-import EventTypeIcon from '../view/main/edit-event/header/event-type-wrapper/event-type-label/event-type-icon';
-import EventTypeToggle from '../view/main/edit-event/header/event-type-wrapper/event-type-toggle';
-import EventTypeList from '../view/main/edit-event/header/event-type-wrapper/event-type-list/event-type-list';
-import EventTypeGroup from '../view/main/edit-event/header/event-type-wrapper/event-type-list/event-type-group';
-import EventTypeItem from '../view/main/edit-event/header/event-type-wrapper/event-type-list/event-type-item';
-import EventDestination from '../view/main/edit-event/header/event-destination/event-destination';
-import EventLabelDestination from '../view/main/edit-event/header/event-destination/event-label-destination';
-import EventInputDestination from '../view/main/edit-event/header/event-destination/event-input-destination';
-import EventDestinationList from '../view/main/edit-event/header/event-destination/destination-list';
-import EventDestinationListItem from '../view/main/edit-event/header/event-destination/destination-list-item';
-import EventTime from '../view/main/edit-event/header/event-time';
-import EventPrice from '../view/main/edit-event/header/event-price';
-import EventSave from '../view/main/edit-event/header/event-save';
-import EventDelete from '../view/main/edit-event/header/event-delete';
-import EventRollup from '../view/main/event-list-item/event-rollup';
-import EventDetails from '../view/main/edit-event/section/event-details';
-import OffersSection from '../view/main/edit-event/section/offers-section/offers-section';
-import OffersList from '../view/main/edit-event/section/offers-section/offers-lits';
-import OfferItem from '../view/main/edit-event/section/offers-section/offer-item';
-import DestinationDescription from '../view/main/edit-event/section/destination-section/destinations-description';
-import PicturesContainer from '../view/main/edit-event/section/destination-section/pictures-container';
-import DestinationPicturesList from '../view/main/edit-event/section/destination-section/destination-pictures-list';
-import DestinationPicture from '../view/main/edit-event/section/destination-section/destination-picture';
+import EditEventListItemContainer from '../view/main/edit-event/edit-item-container';
+import EventHeader from '../view/main/edit-event/header/header';
+import TypeWrapper from '../view/main/edit-event/header/event-type-wrapper/wrapper';
+import TypeLabel from '../view/main/edit-event/header/event-type-wrapper/event-type-label/label';
+import ChooseEventType from '../view/main/edit-event/header/event-type-wrapper/event-type-label/choose';
+import TypeIcon from '../view/main/edit-event/header/event-type-wrapper/event-type-label/icon';
+import TypeToggle from '../view/main/edit-event/header/event-type-wrapper/toggle';
+import TypeList from '../view/main/edit-event/header/event-type-wrapper/event-type-list/list';
+import TypeGroup from '../view/main/edit-event/header/event-type-wrapper/event-type-list/group';
+import TypeItem from '../view/main/edit-event/header/event-type-wrapper/event-type-list/item';
+import DestinationField from '../view/main/edit-event/header/destination/destination';
+import LabelDestination from '../view/main/edit-event/header/destination/label';
+import InputDestination from '../view/main/edit-event/header/destination/input';
+import DestinationList from '../view/main/edit-event/header/destination/list';
+import DestinationItem from '../view/main/edit-event/header/destination/item';
+import EventTime from '../view/main/edit-event/header/time';
+import EventPrice from '../view/main/edit-event/header/price';
+import EventSave from '../view/main/edit-event/header/save';
+import EventDelete from '../view/main/edit-event/header/delete';
+import EventRollup from '../view/main/event-list-item/rollup';
+import EventDetails from '../view/main/edit-event/section/details';
+import OffersSection from '../view/main/edit-event/section/offers/section';
+import OffersList from '../view/main/edit-event/section/offers/lits';
+import OfferItem from '../view/main/edit-event/section/offers/item';
+import Description from '../view/main/edit-event/section/destination/description';
+import PicturesContainer from '../view/main/edit-event/section/destination/container';
+import PicturesList from '../view/main/edit-event/section/destination/list';
+import DestinationPicture from '../view/main/edit-event/section/destination/picture';
 import WaypointContainer from '../view/main/waypoint-container';
 import { render } from '../render';
 import type WaypointsModel from '../model/waypoints-model';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
-import type { WayPoint } from '../types/way-point';
+import type { Waypoint } from '../types/way-point';
 import type { AppPicture, Destination } from '../types/destination';
+import type { InnerOffer } from '../types/offer';
 
 export default class EditWaypointPresenter {
-  editWaypointContainer: HTMLUListElement;
+  editContainer: HTMLUListElement;
   offersModel: OffersModel;
   destinationsModel: DestinationsModel;
   waypointsModel: WaypointsModel;
-  waypoint: WayPoint;
+  waypoint: Waypoint;
+  offers: InnerOffer['id'][];
   destination: Destination;
-  editItemContainer: EditItemContainer;
+  description: Destination['description'];
+  availableOffers: InnerOffer[];
+  selectedOffers: InnerOffer['id'][];
+  selectedOffersIds: InnerOffer['id'][];
+  editItemContainer: EditEventListItemContainer;
   waypointContainer: WaypointContainer;
-  eventHeader: EventHeader;
-  eventTypeWrapper: EventTypeWrapper;
-  eventTypeLabel: EventTypeLabel;
+  header: EventHeader;
+  typeWrapper: TypeWrapper;
+  typeLabel: TypeLabel;
   chooseEventType: ChooseEventType;
-  eventTypeIcon: EventTypeIcon;
-  eventTypeToggle: EventTypeToggle;
-  eventTypeList: EventTypeList;
-  eventTypeGroup: EventTypeGroup;
-  eventTypeItem: EventTypeItem;
-  eventDestination: EventDestination;
-  eventLabelDestination: EventLabelDestination;
-  eventInputDestination: EventInputDestination;
-  eventDestinationList: EventDestinationList;
-  eventDestinationListItem: EventDestinationListItem;
-  eventTime: EventTime;
-  eventPrice: EventPrice;
-  eventSave: EventSave;
-  eventDelete: EventDelete;
-  eventRollup: EventRollup;
-  eventDetails: EventDetails;
+  icon: TypeIcon;
+  toggle: TypeToggle;
+  typeList: TypeList;
+  typeGroup: TypeGroup;
+  typeItem: TypeItem;
+  destinationField: DestinationField;
+  labelDestination: LabelDestination;
+  inputDestination: InputDestination;
+  destinationList: DestinationList;
+  destinationItem: DestinationItem;
+  time: EventTime;
+  price: EventPrice;
+  save: EventSave;
+  delete: EventDelete;
+  rollup: EventRollup;
+  details: EventDetails;
   offersSection: OffersSection;
   offersList: OffersList;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectedOffers: any;
-  destinationDescription: DestinationDescription;
+  EventDescription: Description;
   picturesContainer: PicturesContainer;
   pictures: AppPicture[];
-  destinationPicturesList: DestinationPicturesList;
-  type: any;
+  picturesList: PicturesList;
+  destinationName: Destination['name'];
+  allDestinationsNames: Destination['name'][];
 
   constructor({
-    editWaypointContainer,
+    editContainer: editWaypointContainer,
     destinationsModel,
     offersModel,
     waypointsModel,
     waypoint,
     destination,
-    type,
+    availableOffers,
     selectedOffers,
   }: {
-    editWaypointContainer: HTMLUListElement;
+    editContainer: HTMLUListElement;
     waypointsModel: WaypointsModel;
     destinationsModel: DestinationsModel;
     offersModel: OffersModel;
-    waypoint: WayPoint;
+    waypoint: Waypoint;
     destination: Destination;
-    type: any;
+    availableOffers: InnerOffer[];
     selectedOffers: any;
   }) {
-    this.editWaypointContainer = editWaypointContainer;
+    this.editContainer = editWaypointContainer;
     this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
     this.waypointsModel = waypointsModel;
-    this.destination = destination;
     this.waypoint = waypoint;
+    this.destination = destination;
+    this.description = this.destination.description;
+    this.destinationName = this.destination.name;
+    this.allDestinationsNames = this.destinationsModel.allDestinationsNames;
+    this.availableOffers = availableOffers;
+    this.selectedOffers = selectedOffers;
+    this.selectedOffersIds = this.selectedOffers.map((item: any) => item.id);
+    this.pictures = this.destination.pictures;
+    this.offers = this.waypoint.offers;
     this.waypointContainer = new WaypointContainer();
-    this.editItemContainer = new EditItemContainer();
-    this.eventHeader = new EventHeader();
-    this.eventTypeWrapper = new EventTypeWrapper();
-    this.eventTypeLabel = new EventTypeLabel();
+    this.editItemContainer = new EditEventListItemContainer();
+    this.header = new EventHeader();
+    this.typeWrapper = new TypeWrapper();
+    this.typeLabel = new TypeLabel();
     this.chooseEventType = new ChooseEventType();
-    this.eventTypeIcon = new EventTypeIcon(this.waypoint);
-    this.eventTypeToggle = new EventTypeToggle();
-    this.eventTypeList = new EventTypeList();
-    this.eventTypeGroup = new EventTypeGroup();
-    this.eventTypeItem = new EventTypeItem(this.waypoint);
-    this.eventDestination = new EventDestination();
-    this.eventLabelDestination = new EventLabelDestination(this.waypoint);
-    this.eventInputDestination = new EventInputDestination(this.destination);
-    this.eventDestinationList = new EventDestinationList();
-    this.eventDestinationListItem = new EventDestinationListItem(this.destination, this.waypoint);
-    this.eventTime = new EventTime(this.waypoint);
-    this.eventPrice = new EventPrice(this.waypoint);
-    this.eventSave = new EventSave();
-    this.eventDelete = new EventDelete();
-    this.eventRollup = new EventRollup();
-    this.eventDetails = new EventDetails();
+    this.icon = new TypeIcon(this.waypoint);
+    this.toggle = new TypeToggle();
+    this.typeList = new TypeList();
+    this.typeGroup = new TypeGroup();
+    this.typeItem = new TypeItem(this.waypoint);
+    this.destinationField = new DestinationField();
+    this.labelDestination = new LabelDestination(this.waypoint);
+    this.inputDestination = new InputDestination(this.destination);
+    this.destinationList = new DestinationList();
+    this.destinationItem = new DestinationItem(this.destination.name, this.destinationName);
+    this.time = new EventTime(this.waypoint);
+    this.price = new EventPrice(this.waypoint);
+    this.save = new EventSave();
+    this.delete = new EventDelete();
+    this.rollup = new EventRollup();
+    this.details = new EventDetails();
     this.offersSection = new OffersSection();
     this.offersList = new OffersList();
-    this.destinationDescription = new DestinationDescription(this.destination);
+    this.EventDescription = new Description(this.destination);
     this.picturesContainer = new PicturesContainer();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.pictures = (this.waypoint.destination as any).pictures as AppPicture[];
-    this.destinationPicturesList = new DestinationPicturesList();
-    this.selectedOffers = selectedOffers;
-    this.type = type;
+    this.picturesList = new PicturesList();
   }
 
   init() {
-    render(this.waypointContainer, this.editWaypointContainer);
+    render(this.waypointContainer, this.editContainer);
     render(this.editItemContainer, this.waypointContainer.element);
-    render(this.eventHeader, this.editItemContainer.element);
-    render(this.eventTypeWrapper, this.eventHeader.element);
-    render(this.eventTypeLabel, this.eventTypeWrapper.element);
-    render(this.chooseEventType, this.eventTypeLabel.element);
-    render(this.eventTypeIcon, this.eventTypeLabel.element);
-    render(this.eventTypeToggle, this.eventTypeWrapper.element);
-    render(this.eventTypeList, this.eventTypeWrapper.element);
-    render(this.eventTypeGroup, this.eventTypeList.element);
-    render(this.eventTypeItem, this.eventTypeGroup.element);
-    render(this.eventTypeItem, this.eventTypeGroup.element);
-    render(this.eventDestination, this.eventHeader.element);
-    render(this.eventLabelDestination, this.eventDestination.element);
-    render(this.eventInputDestination, this.eventDestination.element);
-    render(this.eventDestinationList, this.eventDestination.element);
+    render(this.header, this.editItemContainer.element);
+    render(this.typeWrapper, this.header.element);
+    render(this.typeLabel, this.typeWrapper.element);
+    render(this.chooseEventType, this.typeLabel.element);
+    render(this.icon, this.typeLabel.element);
+    render(this.toggle, this.typeWrapper.element);
+    render(this.typeList, this.typeWrapper.element);
+    render(this.typeGroup, this.typeList.element);
+    render(this.typeItem, this.typeGroup.element);
+    render(this.typeItem, this.typeGroup.element);
+    render(this.destinationField, this.header.element);
+    render(this.labelDestination, this.destinationField.element);
+    render(this.inputDestination, this.destinationField.element);
+    render(this.destinationList, this.destinationField.element);
 
-    /**
-     * Селект пунктов назначения
-     */
-    const names = this.destinationsModel.allWaypointsNames;
-    const waypointID = this.waypoint.destination;
-    const waypointName = this.waypointsModel.getById(waypointID);
-    for (let i = 0; i < names.length; i++) {
-      const name = names[i];
-      render(new EventDestinationListItem(name, waypointName), this.eventDestinationList.element);
+    for (let i = 0; i < this.allDestinationsNames.length; i++) {
+      const name = this.allDestinationsNames[i];
+      render(new DestinationItem(name, this.destinationName), this.destinationList.element);
     }
 
-    render(this.eventTime, this.eventHeader.element);
-    render(this.eventPrice, this.eventHeader.element);
-    render(this.eventSave, this.eventHeader.element);
-    render(this.eventDelete, this.eventHeader.element);
-    render(this.eventRollup, this.eventHeader.element);
-    render(this.eventDetails, this.editItemContainer.element);
+    render(this.time, this.header.element);
+    render(this.price, this.header.element);
+    render(this.save, this.header.element);
+    render(this.delete, this.header.element);
+    render(this.rollup, this.header.element);
+    render(this.details, this.editItemContainer.element);
 
-    if (this.waypoint.offers.length !== 0) {
-      render(this.offersSection, this.eventDetails.element);
+    if (this.offers.length !== 0) {
+      render(this.offersSection, this.details.element);
+      render(this.offersList, this.offersSection.element);
+
+      for (let i = 0; i < this.availableOffers.length; i++) {
+        const offer = this.availableOffers[i];
+        render(new OfferItem(offer, this.selectedOffersIds), this.offersList.element);
+      }
     }
 
-    render(this.offersList, this.offersSection.element);
+    if (this.description.length !== 0 || this.pictures.length !== 0) {
+      render(this.EventDescription, this.details.element);
+      render(this.picturesContainer, this.details.element);
+      render(this.picturesList, this.picturesContainer.element);
 
-    const currentType = this.type.type;
-    const currentTypeObject = this.offersModel.offers.find((item) => item.type === currentType);
-    const allTypeOffers = currentTypeObject?.offers;
-    const waypointOffers = this.waypoint.offers;
-    const selectedOffers = allTypeOffers!.filter((item) => waypointOffers.includes(item.id));
-    const selectedOffersIds = selectedOffers.map((item) => item.id);
-    for (let i = 0; i < allTypeOffers!.length; i++) {
-      const offer = allTypeOffers![i];
-      render(new OfferItem({ offer, selectedOffersIds }), this.offersList.element);
-    }
-
-    if (this.destination.description.length !== 0 || this.destination.pictures.length) {
-      render(this.destinationDescription, this.eventDetails.element);
-      render(this.picturesContainer, this.eventDetails.element);
-      render(this.destinationPicturesList, this.picturesContainer.element);
-
-      const pictures = this.destination.pictures;
-      for (let i = 0; i < pictures.length; i++) {
-        const picture = pictures[i];
-        render(new DestinationPicture(picture), this.destinationPicturesList.element);
+      for (let i = 0; i < this.pictures.length; i++) {
+        const picture = this.pictures[i];
+        render(new DestinationPicture(picture), this.picturesList.element);
       }
     }
   }

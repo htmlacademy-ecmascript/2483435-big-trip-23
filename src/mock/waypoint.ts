@@ -1,8 +1,8 @@
-import type { WayPoint } from '../types/way-point';
+import type { Waypoint } from '../types/way-point';
 import { Randomizer } from '../utils/random';
 import { getDates } from './utils';
 
-export const mockWaypoint = (readyProps: Pick<WayPoint, 'destination' | 'offers' | 'type'>): WayPoint => ({
+export const mockWaypoint = (readyProps: Pick<Waypoint, 'destination' | 'offers' | 'type'>): Waypoint => ({
   id: crypto.randomUUID(),
   ...readyProps,
   ...getDates(),

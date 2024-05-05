@@ -1,83 +1,75 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import EventItemContainer from '../view/main/event-list-item/event-item-container';
-import EventDate from '../view/main/event-list-item/event-date';
-import EventType from '../view/main/event-list-item/event-type';
-import EventTitle from '../view/main/event-list-item/event-title';
-import EventSchedule from '../view/main/event-list-item/event-schedule';
-import EventPrice from '../view/main/event-list-item/event-price';
-import EventOffersTitle from '../view/main/event-list-item/event-offers-title';
-import EventOffersList from '../view/main/event-list-item/event-offers-list';
-import EventOffersListItem from '../view/main/event-list-item/event-offers-list-item';
-import EventFavorite from '../view/main/event-list-item/event-favorite';
-import EventRollup from '../view/main/event-list-item/event-rollup';
+import EventListItemContainer from '../view/main/event-list-item/container';
+import Date from '../view/main/event-list-item/date';
+import Type from '../view/main/event-list-item/type';
+import Title from '../view/main/event-list-item/title';
+import Schedule from '../view/main/event-list-item/schedule';
+import Price from '../view/main/event-list-item/price';
+import OffersTitle from '../view/main/event-list-item/offers-title';
+import OffersList from '../view/main/event-list-item/list';
+import OffersItem from '../view/main/event-list-item/item';
+import Favorite from '../view/main/event-list-item/favorite';
+import Rollup from '../view/main/event-list-item/rollup';
 import { render } from '../render';
 import type WaypointsModel from '../model/waypoints-model';
-import { WayPoint } from '../types/way-point';
-import { Destination } from '../types/destination';
-import OffersModel from '../model/offers-model';
+import type DestinationsModel from '../model/destinations-model';
+import type { Waypoint } from '../types/way-point';
+import type { Destination } from '../types/destination';
+import type OffersModel from '../model/offers-model';
+import type { InnerOffer } from '../types/offer';
 
 export default class WaypointListItemPresenter {
   waypointItemContainer: HTMLElement;
-  waypointsModel: WaypointsModel;
+  destinationsModel: DestinationsModel;
   offersModel: OffersModel;
-  waypoint: WayPoint;
+  waypointsModel: WaypointsModel;
+  currentWaypoint: Waypoint;
   destination: Destination;
-  eventDate: EventDate;
-  eventItemContainer = new EventItemContainer();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  offers: any;
-  eventOffersList: EventOffersList;
-  type: any;
+  date: Date;
+  eventItemContainer = new EventListItemContainer();
+  eventOffersList: OffersList;
+  selectedOffers: InnerOffer[];
 
   constructor({
     waypointItemContainer,
-    waypointsModel,
+    destinationsModel,
     offersModel,
-    waypoint,
-    destination,
-    type,
+    waypointsModel,
+    currentWaypoint,
   }: {
     waypointItemContainer: HTMLElement;
-    waypointsModel: WaypointsModel;
+    destinationsModel: DestinationsModel;
     offersModel: OffersModel;
-    waypoint: WayPoint;
-    destination: Destination;
-    type: any;
+    waypointsModel: WaypointsModel;
+    currentWaypoint: Waypoint;
   }) {
     this.waypointItemContainer = waypointItemContainer;
-    this.waypointsModel = waypointsModel;
+    this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
-    this.waypoint = waypoint;
-    this.destination = destination;
-    this.eventDate = new EventDate(this.waypoint);
-    this.offers = this.waypoint.offers;
-    this.eventOffersList = new EventOffersList();
-    this.type = type;
+    this.waypointsModel = waypointsModel;
+    this.currentWaypoint = currentWaypoint;
+    this.destination = this.destinationsModel.getDestination(this.currentWaypoint)!;
+    this.date = new Date(this.currentWaypoint);
+    this.eventOffersList = new OffersList();
+    this.selectedOffers = this.offersModel.getSelectedOffers(currentWaypoint);
   }
 
   init() {
     render(this.eventItemContainer, this.waypointItemContainer);
-    render(new EventDate(this.waypoint), this.eventItemContainer.element);
-    render(new EventType(this.waypoint), this.eventItemContainer.element);
-    render(new EventTitle(this.waypoint, this.destination), this.eventItemContainer.element);
-    render(new EventSchedule(this.waypoint), this.eventItemContainer.element);
-    render(new EventPrice(this.waypoint), this.eventItemContainer.element);
-    render(new EventOffersTitle(), this.eventItemContainer.element);
+    render(new Date(this.currentWaypoint), this.eventItemContainer.element);
+    render(new Type(this.currentWaypoint), this.eventItemContainer.element);
+    render(new Title(this.currentWaypoint, this.destination), this.eventItemContainer.element);
+    render(new Schedule(this.currentWaypoint), this.eventItemContainer.element);
+    render(new Price(this.currentWaypoint), this.eventItemContainer.element);
+    render(new OffersTitle(), this.eventItemContainer.element);
     render(this.eventOffersList, this.eventItemContainer.element);
 
-    const currentType = this.type.type;
-
-    const currentTypeObject = this.offersModel.offers.find((item) => item.type === currentType);
-    const allOffers = currentTypeObject?.offers;
-
-    const selectedOffers = allOffers!.filter((currentOffers) => this.waypoint.offers.includes(currentOffers.id));
-
-    for (let i = 0; i < selectedOffers.length; i++) {
-      const offer = selectedOffers[i];
-      render(new EventOffersListItem(offer), this.eventOffersList.element);
+    for (let i = 0; i < this.selectedOffers.length; i++) {
+      const offer = this.selectedOffers[i];
+      render(new OffersItem(offer), this.eventOffersList.element);
     }
 
-    render(new EventFavorite(this.waypoint), this.eventItemContainer.element);
-    render(new EventRollup(), this.eventItemContainer.element);
+    render(new Favorite(this.currentWaypoint), this.eventItemContainer.element);
+    render(new Rollup(), this.eventItemContainer.element);
   }
 }
