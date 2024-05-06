@@ -7,44 +7,63 @@ import { render } from '../render';
 import WaypointListItemPresenter from './event-list-item-presenter';
 import EditWaypointPresenter from './edit-waypoint-presenter';
 import type WaypointsModel from '../model/waypoints-model';
-import { WayPoint } from '../types/way-point';
+import type DestinationsModel from '../model/destinations-model';
+import type OffersModel from '../model/offers-model';
+import { Randomizer } from '../utils/random';
 
 const siteHeaderElement = document.querySelector('.trip-main')!;
 const siteFilterElement = document.querySelector('.trip-controls__filters')!;
 
 export default class ListPresenter {
   listContainer: HTMLElement;
+  destinationsModel: DestinationsModel;
+  offersModel: OffersModel;
   waypointsModel: WaypointsModel;
   waypointList = new WaypointsList();
-  waypoints: WayPoint[];
-  waypoint: WaypointContainer;
-  // offers: any;
 
-  constructor({ listContainer, waypointsModel }: { listContainer: HTMLElement; waypointsModel: WaypointsModel }) {
+  constructor({
+    listContainer,
+    destinationsModel,
+    offersModel,
+    waypointsModel,
+  }: {
+    listContainer: HTMLElement;
+    destinationsModel: DestinationsModel;
+    offersModel: OffersModel;
+    waypointsModel: WaypointsModel;
+  }) {
     this.listContainer = listContainer;
+    this.destinationsModel = destinationsModel;
+    this.offersModel = offersModel;
     this.waypointsModel = waypointsModel;
-    this.waypoints = [...this.waypointsModel.waypoints];
-    this.waypoint = new WaypointContainer();
   }
 
   init() {
     render(new CurrentTrip(), siteHeaderElement, 'afterbegin');
     render(new Filters(), siteFilterElement);
     render(new Sorting(), this.listContainer);
-
     render(this.waypointList, this.listContainer);
 
-    const waypoint = this.waypoints[0];
+    const waypoints = this.waypointsModel.waypoints;
+    const waypoint = Randomizer.getArrayElement(waypoints);
+    const destination = this.destinationsModel.getDestination(waypoint)!;
+    const availableOffers = this.offersModel.getAvailableOffers(waypoint)!;
+    const selectedOffers = this.offersModel.getSelectedOffers(waypoint);
 
-    const editWaypointPresenterPresenter = new EditWaypointPresenter({
-      editWaypointContainer: this.waypointList.element,
+    const editWaypointPresenter = new EditWaypointPresenter({
+      editContainer: this.waypointList.element,
+      destinationsModel: this.destinationsModel,
+      offersModel: this.offersModel,
       waypointsModel: this.waypointsModel,
       waypoint,
+      destination,
+      availableOffers,
+      selectedOffers,
     });
-    editWaypointPresenterPresenter.init();
+    editWaypointPresenter.init();
 
-    for (let i = 0; i < this.waypoints.length; i++) {
-      const currentWaypoint = this.waypoints[i];
+    for (let i = 1; i < waypoints.length; i++) {
+      const currentWaypoint = waypoints[i];
       render(new WaypointContainer(), this.waypointList.element);
 
       const siteEventListElement = document.getElementById('event_list')!;
@@ -52,8 +71,10 @@ export default class ListPresenter {
 
       const waypointListItemPresenter = new WaypointListItemPresenter({
         waypointItemContainer: siteCurrentEventItemElements,
+        destinationsModel: this.destinationsModel,
+        offersModel: this.offersModel,
         waypointsModel: this.waypointsModel,
-        waypoint: currentWaypoint,
+        currentWaypoint,
       });
       waypointListItemPresenter.init();
     }
