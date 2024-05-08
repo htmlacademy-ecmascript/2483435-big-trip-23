@@ -21,13 +21,13 @@ function getTemplate(event: Waypoint) {
 }
 
 export default class TypeItem extends View<Element> {
-  event: Waypoint;
+  #event: Waypoint;
   constructor(event: Waypoint) {
     super();
-    this.event = event;
+    this.#event = event;
   }
 
   get template() {
-    return getTemplate(this.event);
+    return getTemplate(this.#event);
   }
 }

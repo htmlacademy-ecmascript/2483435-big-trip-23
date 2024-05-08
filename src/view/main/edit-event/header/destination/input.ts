@@ -12,13 +12,13 @@ function getTemplate(destination: Destination) {
 }
 
 export default class InputDestination extends View<HTMLLabelElement> {
-  destination: Destination;
+  #destination: Destination;
   constructor(destination: Destination) {
     super();
-    this.destination = destination;
+    this.#destination = destination;
   }
 
   get template() {
-    return getTemplate(this.destination);
+    return getTemplate(this.#destination);
   }
 }

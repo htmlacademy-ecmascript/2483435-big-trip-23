@@ -18,16 +18,16 @@ function getTemplate(offersList: { offer: InnerOffer; selectedOffers: string[] }
 }
 
 export default class OfferItem extends View<Element> {
-  offer: InnerOffer;
-  selectedOffers: string[];
+  #offer: InnerOffer;
+  #selectedOffers: string[];
 
   constructor(offer: InnerOffer, selectedOffers: InnerOffer['id'][]) {
     super();
-    this.offer = offer;
-    this.selectedOffers = selectedOffers;
+    this.#offer = offer;
+    this.#selectedOffers = selectedOffers;
   }
 
   get template() {
-    return getTemplate({ offer: this.offer, selectedOffers: this.selectedOffers });
+    return getTemplate({ offer: this.#offer, selectedOffers: this.#selectedOffers });
   }
 }

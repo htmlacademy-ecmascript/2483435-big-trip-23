@@ -16,15 +16,15 @@ function getTemplate(event: Waypoint, destination: Destination) {
 }
 
 export default class Title extends View<HTMLHeadingElement> {
-  event: Waypoint;
-  destination: Destination;
+  #event: Waypoint;
+  #destination: Destination;
   constructor(event: Waypoint, destination: Destination) {
     super();
-    this.event = event;
-    this.destination = destination;
+    this.#event = event;
+    this.#destination = destination;
   }
 
   get template() {
-    return getTemplate(this.event, this.destination);
+    return getTemplate(this.#event, this.#destination);
   }
 }

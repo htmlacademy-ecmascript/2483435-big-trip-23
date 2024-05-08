@@ -11,16 +11,16 @@ function getTemplate(names: { name: Destination['name']; waypointName: Destinati
 }
 
 export default class DestinationItem extends View<HTMLDivElement> {
-  name: Destination['name'];
-  destinationName: Destination['name'];
+  #name: Destination['name'];
+  #destinationName: Destination['name'];
 
   constructor(name: Destination['name'], destinationName: Destination['name']) {
     super();
-    this.name = name;
-    this.destinationName = destinationName;
+    this.#name = name;
+    this.#destinationName = destinationName;
   }
 
   get template() {
-    return getTemplate({ name: this.name, waypointName: this.destinationName });
+    return getTemplate({ name: this.#name, waypointName: this.#destinationName });
   }
 }

@@ -12,13 +12,13 @@ function getTemplate(offer: InnerOffer) {
 }
 
 export default class EventOffersListItem extends View<HTMLLIElement> {
-  offer: InnerOffer;
+  #offer: InnerOffer;
   constructor(offer: InnerOffer) {
     super();
-    this.offer = offer;
+    this.#offer = offer;
   }
 
   get template() {
-    return getTemplate(this.offer);
+    return getTemplate(this.#offer);
   }
 }
