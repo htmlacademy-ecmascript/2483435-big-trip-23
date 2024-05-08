@@ -46,7 +46,7 @@ export default class EditWaypointPresenter {
   destination: Destination;
   description: Destination['description'];
   availableOffers: InnerOffer[];
-  selectedOffers: InnerOffer['id'][];
+  selectedOffers: InnerOffer[];
   selectedOffersIds: InnerOffer['id'][];
   editItemContainer: EditEventListItemContainer;
   waypointContainer: WaypointContainer;
@@ -85,30 +85,24 @@ export default class EditWaypointPresenter {
     offersModel,
     waypointsModel,
     waypoint,
-    destination,
-    availableOffers,
-    selectedOffers,
   }: {
     editContainer: HTMLUListElement;
     waypointsModel: WaypointsModel;
     destinationsModel: DestinationsModel;
     offersModel: OffersModel;
     waypoint: Waypoint;
-    destination: Destination;
-    availableOffers: InnerOffer[];
-    selectedOffers: any;
   }) {
     this.editContainer = editWaypointContainer;
     this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
     this.waypointsModel = waypointsModel;
     this.waypoint = waypoint;
-    this.destination = destination;
+    this.destination = this.destinationsModel.getDestination(waypoint)!;
     this.description = this.destination.description;
     this.destinationName = this.destination.name;
     this.allDestinationsNames = this.destinationsModel.allDestinationsNames;
-    this.availableOffers = availableOffers;
-    this.selectedOffers = selectedOffers;
+    this.availableOffers = this.offersModel.getAvailableOffers(waypoint)!;
+    this.selectedOffers = this.offersModel.getSelectedOffers(waypoint);
     this.selectedOffersIds = this.selectedOffers.map((item: any) => item.id);
     this.pictures = this.destination.pictures;
     this.offers = this.waypoint.offers;
