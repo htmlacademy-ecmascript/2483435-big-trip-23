@@ -10,6 +10,7 @@ import type WaypointsModel from '../model/waypoints-model';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
 import { Randomizer } from '../utils/random';
+import { Waypoint } from '../types/way-point';
 
 const siteHeaderElement = document.querySelector('.trip-main')!;
 const siteFilterElement = document.querySelector('.trip-controls__filters')!;
@@ -63,20 +64,24 @@ export default class ListPresenter {
     editWaypointPresenter.init();
 
     for (let i = 1; i < waypoints.length; i++) {
-      const currentWaypoint = waypoints[i];
-      render(new WaypointContainer(), this.waypointList.element);
-
-      const siteEventListElement = document.getElementById('event_list')!;
-      const siteCurrentEventItemElements = Array.from(siteEventListElement.children)[i] as HTMLElement;
-
-      const waypointListItemPresenter = new WaypointListItemPresenter({
-        waypointItemContainer: siteCurrentEventItemElements,
-        destinationsModel: this.destinationsModel,
-        offersModel: this.offersModel,
-        waypointsModel: this.waypointsModel,
-        currentWaypoint,
-      });
-      waypointListItemPresenter.init();
+      this.#renderWaypoint(waypoints[i], this.waypointList.element, i);
     }
+  }
+
+
+  #renderWaypoint(currentWaypoint: Waypoint, container: HTMLUListElement,indexNumber : number) {
+    render(new WaypointContainer(), container);
+
+    const siteEventListElement = document.getElementById('event_list')!;
+    const siteCurrentEventItemElements = Array.from(siteEventListElement.children)[indexNumber] as HTMLElement;
+
+    const waypointListItemPresenter = new WaypointListItemPresenter({
+      waypointItemContainer: siteCurrentEventItemElements,
+      destinationsModel: this.destinationsModel,
+      offersModel: this.offersModel,
+      waypointsModel: this.waypointsModel,
+      currentWaypoint,
+    });
+    waypointListItemPresenter.init();
   }
 }
