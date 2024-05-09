@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import EventListItemContainer from '../view/main/event-list-item/container';
+import WaypointContainer from '../view/main/waypoint-container';
 import Date from '../view/main/event-list-item/date';
 import Type from '../view/main/event-list-item/type';
 import Title from '../view/main/event-list-item/title';
@@ -19,7 +20,8 @@ import type OffersModel from '../model/offers-model';
 import type { InnerOffer } from '../types/offer';
 
 export default class WaypointListItemPresenter {
-  waypointItemContainer: HTMLElement;
+  container: HTMLUListElement;
+  waypointContainer: WaypointContainer;
   destinationsModel: DestinationsModel;
   offersModel: OffersModel;
   waypointsModel: WaypointsModel;
@@ -31,21 +33,23 @@ export default class WaypointListItemPresenter {
   selectedOffers: InnerOffer[];
 
   constructor({
-    waypointItemContainer,
+    container: editWaypointContainer,
     destinationsModel,
     offersModel,
     waypointsModel,
     currentWaypoint,
   }: {
-    waypointItemContainer: HTMLElement;
+    container: HTMLUListElement;
     destinationsModel: DestinationsModel;
     offersModel: OffersModel;
     waypointsModel: WaypointsModel;
     currentWaypoint: Waypoint;
   }) {
-    this.waypointItemContainer = waypointItemContainer;
+    this.container = editWaypointContainer;
+    this.waypointContainer = new WaypointContainer();
     this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
+    this.waypointContainer = new WaypointContainer();
     this.waypointsModel = waypointsModel;
     this.currentWaypoint = currentWaypoint;
     this.destination = this.destinationsModel.getDestination(this.currentWaypoint)!;
@@ -55,7 +59,8 @@ export default class WaypointListItemPresenter {
   }
 
   init() {
-    render(this.eventItemContainer, this.waypointItemContainer);
+    render(this.waypointContainer, this.container);
+    render(this.eventItemContainer, this.waypointContainer.element);
     render(new Date(this.currentWaypoint), this.eventItemContainer.element);
     render(new Type(this.currentWaypoint), this.eventItemContainer.element);
     render(new Title(this.currentWaypoint, this.destination), this.eventItemContainer.element);

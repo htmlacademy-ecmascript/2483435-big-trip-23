@@ -37,7 +37,7 @@ import type { AppPicture, Destination } from '../types/destination';
 import type { InnerOffer } from '../types/offer';
 
 export default class EditWaypointPresenter {
-  editContainer: HTMLUListElement;
+  container: HTMLUListElement;
   offersModel: OffersModel;
   destinationsModel: DestinationsModel;
   waypointsModel: WaypointsModel;
@@ -80,19 +80,19 @@ export default class EditWaypointPresenter {
   allDestinationsNames: Destination['name'][];
 
   constructor({
-    editContainer: editWaypointContainer,
+    container: editWaypointContainer,
     destinationsModel,
     offersModel,
     waypointsModel,
     waypoint,
   }: {
-    editContainer: HTMLUListElement;
+    container: HTMLUListElement;
     waypointsModel: WaypointsModel;
     destinationsModel: DestinationsModel;
     offersModel: OffersModel;
     waypoint: Waypoint;
   }) {
-    this.editContainer = editWaypointContainer;
+    this.container = editWaypointContainer;
     this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
     this.waypointsModel = waypointsModel;
@@ -136,7 +136,7 @@ export default class EditWaypointPresenter {
   }
 
   init() {
-    render(this.waypointContainer, this.editContainer);
+    render(this.waypointContainer, this.container);
     render(this.editItemContainer, this.waypointContainer.element);
     render(this.header, this.editItemContainer.element);
     render(this.typeWrapper, this.header.element);

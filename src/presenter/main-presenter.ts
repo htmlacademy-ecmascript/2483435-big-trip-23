@@ -48,21 +48,16 @@ export default class ListPresenter {
     const waypoints = this.waypointsModel.waypoints;
     const waypoint = Randomizer.getArrayElement(waypoints);
 
-    this.#editWaypoint(waypoint, this.waypointList.element);
+    this.#editWaypoint(waypoint);
 
     for (let i = 1; i < waypoints.length; i++) {
-      this.#renderWaypoint(waypoints[i], this.waypointList.element, i);
+      this.#renderWaypoint(waypoints[i]);
     }
   }
 
-  #renderWaypoint(currentWaypoint: Waypoint, container: HTMLUListElement, indexNumber: number) {
-    render(new WaypointContainer(), container);
-
-    const siteEventListElement = document.getElementById('event_list')!;
-    const siteCurrentEventItemElements = Array.from(siteEventListElement.children)[indexNumber] as HTMLElement;
-
+  #renderWaypoint(currentWaypoint: Waypoint) {
     const waypointListItemPresenter = new WaypointListItemPresenter({
-      waypointItemContainer: siteCurrentEventItemElements,
+      container: this.waypointList.element,
       destinationsModel: this.destinationsModel,
       offersModel: this.offersModel,
       waypointsModel: this.waypointsModel,
@@ -71,11 +66,9 @@ export default class ListPresenter {
     waypointListItemPresenter.init();
   }
 
-  #editWaypoint(waypoint: Waypoint, container: HTMLUListElement) {
-    render(new WaypointContainer(), container);
-
+  #editWaypoint(waypoint: Waypoint) {
     const editWaypointPresenter = new EditWaypointPresenter({
-      editContainer: this.waypointList.element,
+      container: this.waypointList.element,
       destinationsModel: this.destinationsModel,
       offersModel: this.offersModel,
       waypointsModel: this.waypointsModel,
