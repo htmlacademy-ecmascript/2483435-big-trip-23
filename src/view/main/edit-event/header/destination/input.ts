@@ -1,4 +1,4 @@
-import View from '../../../../_abstract';
+import View from '../../../../../framework/view/_abstract';
 import { capitalLetter } from '../../../../../utils/utils';
 import type { Destination } from '../../../../../types/destination';
 

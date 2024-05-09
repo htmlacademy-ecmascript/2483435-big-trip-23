@@ -1,4 +1,4 @@
-import View from '../../../../_abstract';
+import View from '../../../../../framework/view/_abstract';
 
 const TEMPLATE = '<div class="event__field-group  event__field-group--destination"></div>';
 

@@ -1,4 +1,4 @@
-import View from '../../../../../_abstract';
+import View from '../../../../../../framework/view/_abstract';
 
 const TEMPLATE = '<span class="visually-hidden">Choose event type</span>';
 

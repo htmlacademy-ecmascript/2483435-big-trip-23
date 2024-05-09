@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Waypoint } from '../../../types/way-point';
-import View from '../../_abstract';
+import View from '../../../framework/view/_abstract';
 import { capitalLetter } from '../../../utils/utils';
 import type { Destination } from '../../../types/destination';
 

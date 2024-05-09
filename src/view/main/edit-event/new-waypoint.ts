@@ -1,4 +1,4 @@
-import View from '../../_abstract';
+import View from '../../../framework/view/_abstract';
 const TEMPLATE = '<li class="trip-events__item"></li>';
 
 export default class NewWaypoint extends View<HTMLLIElement> {

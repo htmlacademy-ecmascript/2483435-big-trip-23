@@ -1,4 +1,4 @@
-import View from '../../_abstract';
+import View from '../../../framework/view/_abstract';
 
 const TEMPLATE = ' <h4 class="visually-hidden">Offers:</h4>';
 

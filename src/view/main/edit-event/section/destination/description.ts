@@ -1,5 +1,5 @@
 import type { Destination } from '../../../../../types/destination';
-import View from '../../../../_abstract';
+import View from '../../../../../framework/view/_abstract';
 
 function getTemplate(destination: Destination) {
   const { description } = destination;

@@ -1,4 +1,4 @@
-import View from '../../../_abstract';
+import View from '../../../../framework/view/_abstract';
 
 const TEMPLATE = '<header class="event__header"></header>';
 

@@ -37,11 +37,12 @@ import type { AppPicture, Destination } from '../types/destination';
 import type { InnerOffer } from '../types/offer';
 
 export default class EditWaypointPresenter {
-  container: HTMLUListElement;
+  container: HTMLLIElement;
   offersModel: OffersModel;
   destinationsModel: DestinationsModel;
   waypointsModel: WaypointsModel;
   waypoint: Waypoint;
+  handlers: any;
   offers: InnerOffer['id'][];
   destination: Destination;
   description: Destination['description'];
@@ -84,25 +85,28 @@ export default class EditWaypointPresenter {
     destinationsModel,
     offersModel,
     waypointsModel,
-    waypoint,
+    waypoint: currentWaypoint,
+    handlers,
   }: {
-    container: HTMLUListElement;
+    container: HTMLLIElement;
     waypointsModel: WaypointsModel;
     destinationsModel: DestinationsModel;
     offersModel: OffersModel;
     waypoint: Waypoint;
+    handlers: object;
   }) {
     this.container = editWaypointContainer;
     this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
     this.waypointsModel = waypointsModel;
-    this.waypoint = waypoint;
-    this.destination = this.destinationsModel.getDestination(waypoint)!;
+    this.waypoint = currentWaypoint;
+    this.handlers = handlers;
+    this.destination = this.destinationsModel.getDestination(currentWaypoint)!;
     this.description = this.destination.description;
     this.destinationName = this.destination.name;
     this.allDestinationsNames = this.destinationsModel.allDestinationsNames;
-    this.availableOffers = this.offersModel.getAvailableOffers(waypoint)!;
-    this.selectedOffers = this.offersModel.getSelectedOffers(waypoint);
+    this.availableOffers = this.offersModel.getAvailableOffers(currentWaypoint)!;
+    this.selectedOffers = this.offersModel.getSelectedOffers(currentWaypoint);
     this.selectedOffersIds = this.selectedOffers.map((item: any) => item.id);
     this.pictures = this.destination.pictures;
     this.offers = this.waypoint.offers;
@@ -124,9 +128,9 @@ export default class EditWaypointPresenter {
     this.destinationItem = new DestinationItem(this.destination.name, this.destinationName);
     this.time = new EventTime(this.waypoint);
     this.price = new EventPrice(this.waypoint);
-    this.save = new EventSave();
+    this.save = new EventSave(this.handlers.escKeyDownHandler);
     this.delete = new EventDelete();
-    this.rollup = new EventRollup();
+    this.rollup = new EventRollup(this.handlers.onClick);
     this.details = new EventDetails();
     this.offersSection = new OffersSection();
     this.offersList = new OffersList();
@@ -136,7 +140,6 @@ export default class EditWaypointPresenter {
   }
 
   init() {
-    render(this.waypointContainer, this.container);
     render(this.editItemContainer, this.waypointContainer.element);
     render(this.header, this.editItemContainer.element);
     render(this.typeWrapper, this.header.element);

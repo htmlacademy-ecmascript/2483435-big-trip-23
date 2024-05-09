@@ -1,4 +1,4 @@
-import View from '../../../../_abstract';
+import View from '../../../../../framework/view/_abstract';
 
 const TEMPLATE = '<datalist id="destination-list-1"></datalist>';
 

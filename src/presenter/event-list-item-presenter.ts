@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import EventListItemContainer from '../view/main/event-list-item/container';
-import WaypointContainer from '../view/main/waypoint-container';
 import Date from '../view/main/event-list-item/date';
 import Type from '../view/main/event-list-item/type';
 import Title from '../view/main/event-list-item/title';
@@ -20,12 +19,12 @@ import type OffersModel from '../model/offers-model';
 import type { InnerOffer } from '../types/offer';
 
 export default class WaypointListItemPresenter {
-  container: HTMLUListElement;
-  waypointContainer: WaypointContainer;
+  container: any;
   destinationsModel: DestinationsModel;
   offersModel: OffersModel;
   waypointsModel: WaypointsModel;
   currentWaypoint: Waypoint;
+  handlers: any;
   destination: Destination;
   date: Date;
   eventItemContainer = new EventListItemContainer();
@@ -38,20 +37,21 @@ export default class WaypointListItemPresenter {
     offersModel,
     waypointsModel,
     currentWaypoint,
+    handlers,
   }: {
-    container: HTMLUListElement;
+    container: HTMLLIElement;
     destinationsModel: DestinationsModel;
     offersModel: OffersModel;
     waypointsModel: WaypointsModel;
     currentWaypoint: Waypoint;
+    handlers: any;
   }) {
     this.container = editWaypointContainer;
-    this.waypointContainer = new WaypointContainer();
     this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
-    this.waypointContainer = new WaypointContainer();
     this.waypointsModel = waypointsModel;
     this.currentWaypoint = currentWaypoint;
+    this.handlers = handlers;
     this.destination = this.destinationsModel.getDestination(this.currentWaypoint)!;
     this.date = new Date(this.currentWaypoint);
     this.eventOffersList = new OffersList();
@@ -59,8 +59,7 @@ export default class WaypointListItemPresenter {
   }
 
   init() {
-    render(this.waypointContainer, this.container);
-    render(this.eventItemContainer, this.waypointContainer.element);
+    render(this.eventItemContainer, this.container);
     render(new Date(this.currentWaypoint), this.eventItemContainer.element);
     render(new Type(this.currentWaypoint), this.eventItemContainer.element);
     render(new Title(this.currentWaypoint, this.destination), this.eventItemContainer.element);
@@ -75,6 +74,6 @@ export default class WaypointListItemPresenter {
     }
 
     render(new Favorite(this.currentWaypoint), this.eventItemContainer.element);
-    render(new Rollup(), this.eventItemContainer.element);
+    render(new Rollup(this.handlers.onEditClick), this.eventItemContainer.element);
   }
 }

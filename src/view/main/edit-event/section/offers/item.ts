@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import View from '../../../../_abstract';
+import View from '../../../../../framework/view/_abstract';
 import type { InnerOffer } from '../../../../../types/offer';
 
 function getTemplate(offersList: { offer: InnerOffer; selectedOffers: string[] }) {

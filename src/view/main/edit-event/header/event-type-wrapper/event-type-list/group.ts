@@ -1,4 +1,4 @@
-import View from '../../../../../_abstract';
+import View from '../../../../../../framework/view/_abstract';
 
 const TEMPLATE = `<fieldset class="event__type-group">
 <legend class="visually-hidden">Event type</legend>

@@ -1,5 +1,5 @@
 import type { AppPicture } from '../../../../../types/destination';
-import View from '../../../../_abstract';
+import View from '../../../../../framework/view/_abstract';
 
 function getTemplate(waypoint: AppPicture) {
   const { src, description } = waypoint;

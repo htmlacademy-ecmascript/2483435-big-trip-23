@@ -1,4 +1,4 @@
-import View from '../../_abstract';
+import View from '../../../framework/view/_abstract';
 import dayjs from 'dayjs';
 import type { Waypoint } from '../../../types/way-point';
 

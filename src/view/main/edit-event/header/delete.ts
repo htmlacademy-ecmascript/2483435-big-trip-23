@@ -1,4 +1,4 @@
-import View from '../../../_abstract';
+import View from '../../../../framework/view/_abstract';
 
 const TEMPLATE = '<button class="event__reset-btn" type="reset">Delete</button>';
 

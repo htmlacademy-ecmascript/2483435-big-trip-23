@@ -1,5 +1,5 @@
 import type { InnerOffer } from '../../../types/offer';
-import View from '../../_abstract';
+import View from '../../../framework/view/_abstract';
 
 function getTemplate(offer: InnerOffer) {
   const { title, price } = offer;

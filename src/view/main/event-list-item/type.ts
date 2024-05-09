@@ -1,4 +1,4 @@
-import View from '../../_abstract';
+import View from '../../../framework/view/_abstract';
 import type { Waypoint } from '../../../types/way-point';
 
 function getTemplate(event: Waypoint) {

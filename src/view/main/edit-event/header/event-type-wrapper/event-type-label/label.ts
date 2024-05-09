@@ -1,4 +1,4 @@
-import View from '../../../../../_abstract';
+import View from '../../../../../../framework/view/_abstract';
 
 const TEMPLATE = '<label class="event__type  event__type-btn" for="event-type-toggle-1"></label>';
 

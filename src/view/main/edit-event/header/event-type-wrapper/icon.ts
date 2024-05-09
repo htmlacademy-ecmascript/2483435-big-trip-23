@@ -1,5 +1,5 @@
 import type { Waypoint } from '../../../../../types/way-point';
-import View from '../../../../_abstract';
+import View from '../../../../../framework/view/_abstract';
 
 function getTemplate(event: Waypoint) {
   const { type } = event;

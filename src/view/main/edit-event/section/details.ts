@@ -1,4 +1,4 @@
-import View from '../../../_abstract';
+import View from '../../../../framework/view/_abstract';
 
 const TEMPLATE = `
 <section class="event__details"></section>`;

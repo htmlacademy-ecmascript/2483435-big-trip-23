@@ -1,4 +1,4 @@
-import View from '../_abstract';
+import View from '../../framework/view/view';
 
 const TEMPLATE = `
   <form class="trip-filters" action="#" method="get">

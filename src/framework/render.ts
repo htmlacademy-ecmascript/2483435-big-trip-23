@@ -1,21 +1,13 @@
-import View from '../view/_abstract';
+import type View from '../framework/view/view';
 
-function createElement<El extends Element = HTMLDivElement>(template: string) {
-  const newElement = document.createElement('template');
+function createElement<E extends Element>(template: string) {
+  const newElement = document.createElement('div');
   newElement.innerHTML = template;
 
-  return newElement.content.firstElementChild as El;
+  return newElement.firstElementChild as E;
 }
 
-function render(component: View<Element>, container: HTMLElement, place: InsertPosition = 'beforeend') {
-  if (!(component instanceof View)) {
-    throw new Error('Can render only components');
-  }
-
-  if (container === null) {
-    throw new Error('Container element doesn\'t exist');
-  }
-
+function render(component: View<Element>, container: Element, place: InsertPosition = 'beforeend') {
   container.insertAdjacentElement(place, component.element);
 }
 
@@ -26,7 +18,7 @@ function replace(newComponent: View<Element>, oldComponent: View<Element>) {
   const parent = oldElement.parentElement;
 
   if (parent === null) {
-    throw new Error('Parent element doesn\'t exist');
+    throw new Error("Parent element doesn't exist");
   }
 
   parent.replaceChild(newElement, oldElement);
