@@ -56,12 +56,12 @@ export default class ListPresenter {
   #renderWaypoints(waypoints: Waypoint[]) {
     render(this.waypointList, this.listContainer);
 
-    const waypointsList = document.getElementById('event_list')!;
+    for (const waypoint of waypoints) {
+      const li = new WaypointContainer();
 
-    for (let i = 0; i < waypoints.length; i++) {
-      render(this.waypointContainer, this.waypointList.element);
-      const currentWaypointElement = waypointsList.children[i] as HTMLLIElement;
-      this.#renderWaypoint(waypoints[i], currentWaypointElement);
+      render(li, this.waypointList.element);
+
+      this.#renderWaypoint(waypoint, li.element);
     }
   }
 

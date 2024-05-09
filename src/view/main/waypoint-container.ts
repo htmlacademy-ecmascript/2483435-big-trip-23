@@ -1,4 +1,4 @@
-import View from '../../framework/view/_abstract';
+import View from '../../framework/view/view';
 
 const TEMPLATE = '<li class="trip-events__item"></li>';
 
