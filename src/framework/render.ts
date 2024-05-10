@@ -18,7 +18,7 @@ function replace(newComponent: View<Element>, oldComponent: View<Element>) {
   const parent = oldElement.parentElement;
 
   if (parent === null) {
-    throw new Error("Parent element doesn't exist");
+    throw new Error('Parent element doesn\'t exist');
   }
 
   parent.replaceChild(newElement, oldElement);

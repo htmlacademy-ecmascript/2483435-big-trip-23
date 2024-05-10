@@ -1,5 +1,5 @@
 import { POINTS_TYPES } from '../const';
-import type { InnerOffer, Offer } from '../types/offer';
+import type { InnerOffer, Offer } from '../types/offer-type';
 import Randomizer from '../utils/random';
 
 const OFFERS = ['Add breakfast', 'Book tickets', 'Lunch in city', 'Add luggage', 'Switch to comfort', 'Order Uber', 'Rent a car'];
