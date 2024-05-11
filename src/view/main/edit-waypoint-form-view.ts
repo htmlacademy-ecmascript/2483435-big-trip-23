@@ -22,12 +22,12 @@ function getTemplate(
   const timeStart = dayjs(dateFrom).format('DD/MM/YY HH:mm');
   const timeEnd = dayjs(dateTo).format('DD/MM/YY HH:mm');
 
-  const createWaypointsTypesTemplate = (waypointsType: string) => {
-    const isChecked = () => checkMatch(type, waypointsType, 'checked');
-
+  const createWaypointsTypesTemplate = (waypointType: string) => {
+    const isChecked = () => checkMatch(type, waypointType, 'checked');
+    const currentCorrectType = capitalLetter(waypointType);
     return `<div class="event__type-item">
-    <input id="event-type-${waypointsType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointsType}" ${isChecked()}>
-    <label class="event__type-label  event__type-label--${waypointsType}" for="event-type-${waypointsType}-1">${correctType}</label>
+    <input id="event-type-${waypointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" ${isChecked()}>
+    <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${currentCorrectType}</label>
   </div>`;
   };
 
@@ -85,7 +85,7 @@ function getTemplate(
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
-          ${POINTS_TYPES.map((waypointsType: string): string => createWaypointsTypesTemplate(waypointsType)).join('')}
+          ${POINTS_TYPES.map((waypointType: string): string => createWaypointsTypesTemplate(waypointType)).join('')}
         </fieldset>
       </div>
     </div>
