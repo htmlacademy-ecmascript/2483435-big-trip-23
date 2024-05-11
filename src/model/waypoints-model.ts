@@ -1,5 +1,5 @@
 import type MockService from '../service/mock';
-import type { Waypoint } from '../types/way-point';
+import type { Waypoint } from '../types/waypoint-type';
 
 export default class WaypointsModel {
   #service: MockService;

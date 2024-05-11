@@ -1,7 +1,7 @@
 import type { POINTS_TYPES } from '../const';
 import type { CamelizeObject, WithDate } from '../utils/types-utils';
-import type { Destination } from './destination';
-import type { InnerOffer } from './offer';
+import type { Destination } from './destination-type';
+import type { InnerOffer } from './offer-type';
 
 type WaypointType = (typeof POINTS_TYPES)[number];
 

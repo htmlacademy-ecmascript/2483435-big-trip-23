@@ -1,4 +1,4 @@
-import type { AppPicture, Destination } from '../types/destination';
+import type { AppPicture, Destination } from '../types/destination-type';
 import { Randomizer } from '../utils/random';
 import { MOCK_CITIES, MOCK_DESCRIPTION } from './const';
 

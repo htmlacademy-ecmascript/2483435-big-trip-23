@@ -1,4 +1,4 @@
-import View from '../_abstract';
+import View from '../../framework/view/view';
 
 const TEMPLATE = `<section class="trip-main__trip-info  trip-info">
             <div class="trip-info__main">
@@ -12,7 +12,7 @@ const TEMPLATE = `<section class="trip-main__trip-info  trip-info">
             </p>
           </section>`;
 
-export default class CurrentTrip extends View<HTMLTableSectionElement> {
+export default class MainTripView extends View<HTMLTableSectionElement> {
   get template() {
     return TEMPLATE;
   }

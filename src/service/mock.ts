@@ -1,7 +1,7 @@
 import { mockDestinations } from '../mock/destination';
 import { mockOffers } from '../mock/offers';
 import { mockWaypoint } from '../mock/waypoint';
-import type { Waypoint } from '../types/way-point';
+import type { Waypoint } from '../types/waypoint-type';
 import Randomizer from '../utils/random';
 
 export default class MockService {

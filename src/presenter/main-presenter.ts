@@ -1,82 +1,125 @@
-import CurrentTrip from '../view/header/current-trip';
-import Filters from '../view/header/filters';
-import Sorting from '../view/main/sorting';
-import WaypointsList from '../view/main/waypoints-list';
-import WaypointContainer from '../view/main/waypoint-container';
-import { render } from '../render';
-import WaypointListItemPresenter from './event-list-item-presenter';
-import EditWaypointPresenter from './edit-waypoint-presenter';
-import type WaypointsModel from '../model/waypoints-model';
+import MainTripView from '../view/header/current-trip-view';
+import FiltersView from '../view/header/filters-view';
+import SortingView from '../view/main/sorting-view';
+import WaypointView from '../view/main/waypoint-view';
+import EditWaypointFormView from '../view/main/edit-waypoint-form-view';
+import ListEmptyView from '../view/main/list-empty-view';
+// import NewWaypointFormView from '../view/main/new-waypoint-form-view';
+import { render, replace } from '../framework/render';
+import type { Waypoint } from '../types/waypoint-type';
+import type { Filters } from '../utils/filter';
+import { generateFilter } from '../utils/filter';
+import type { FilterType } from '../const';
+import { FILTER_TYPES } from '../const';
+import Randomizer from '../utils/random';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
-import { Randomizer } from '../utils/random';
+import type WaypointsModel from '../model/waypoints-model';
 
-const siteHeaderElement = document.querySelector('.trip-main')!;
-const siteFilterElement = document.querySelector('.trip-controls__filters')!;
-
-export default class ListPresenter {
-  listContainer: HTMLElement;
+export interface DataBase {
   destinationsModel: DestinationsModel;
   offersModel: OffersModel;
   waypointsModel: WaypointsModel;
-  waypointList = new WaypointsList();
+}
 
-  constructor({
-    listContainer,
-    destinationsModel,
-    offersModel,
-    waypointsModel,
-  }: {
-    listContainer: HTMLElement;
-    destinationsModel: DestinationsModel;
-    offersModel: OffersModel;
-    waypointsModel: WaypointsModel;
-  }) {
-    this.listContainer = listContainer;
-    this.destinationsModel = destinationsModel;
-    this.offersModel = offersModel;
-    this.waypointsModel = waypointsModel;
+export default class ListPresenter {
+  #tripMain: HTMLDivElement;
+  #tripFilters: HTMLDivElement;
+  #pageMain: HTMLElement;
+  #tripEvents: HTMLTableSectionElement;
+  #waypointsList: HTMLUListElement;
+  #dataBase: DataBase;
+  #waypoints: Waypoint[];
+  #filters: Filters;
+  #filtersType: FilterType;
+
+  constructor(dataBase: DataBase) {
+    this.#tripMain = document.querySelector('.trip-main')!;
+    this.#tripFilters = document.querySelector('.trip-controls__filters')!;
+    this.#pageMain = document.querySelector<HTMLElement>('.page-main')!;
+    this.#tripEvents = this.#pageMain.querySelector<HTMLTableSectionElement>('.trip-events')!;
+
+    this.#waypointsList = document.createElement('ul');
+    this.#waypointsList.classList.add('trip-events__list');
+    this.#tripEvents.appendChild(this.#waypointsList);
+
+    this.#dataBase = dataBase;
+    this.#filters = generateFilter(this.#dataBase.waypointsModel.waypoints);
+    this.#filtersType = Randomizer.getArrayElement(FILTER_TYPES);
+    this.#waypoints = this.#dataBase.waypointsModel.waypoints;
   }
 
   init() {
-    render(new CurrentTrip(), siteHeaderElement, 'afterbegin');
-    render(new Filters(), siteFilterElement);
-    render(new Sorting(), this.listContainer);
-    render(this.waypointList, this.listContainer);
+    this.#renderFilters();
+    this.#renderWaypointsList();
+  }
 
-    const waypoints = this.waypointsModel.waypoints;
-    const waypoint = Randomizer.getArrayElement(waypoints);
-    const destination = this.destinationsModel.getDestination(waypoint)!;
-    const availableOffers = this.offersModel.getAvailableOffers(waypoint)!;
-    const selectedOffers = this.offersModel.getSelectedOffers(waypoint);
+  #renderTripMain() {
+    render(new MainTripView(), this.#tripMain, 'afterbegin');
+  }
 
-    const editWaypointPresenter = new EditWaypointPresenter({
-      editContainer: this.waypointList.element,
-      destinationsModel: this.destinationsModel,
-      offersModel: this.offersModel,
-      waypointsModel: this.waypointsModel,
-      waypoint,
-      destination,
-      availableOffers,
-      selectedOffers,
+  #renderFilters() {
+    render(new FiltersView({ filters: this.#filters, currentFilter: this.#filtersType }), this.#tripFilters);
+  }
+
+  #renderSorting() {
+    render(new SortingView(), this.#tripEvents, 'afterbegin');
+  }
+
+  #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
+    const escKeyDownHandler = (evt: KeyboardEvent) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        switchToViewMode();
+      }
+    };
+
+    const onEditClick = () => switchToEditMode();
+    const onFormSubmit = () => switchToViewMode();
+    const onFormCancel = () => switchToViewMode();
+
+    const waypointComponent = new WaypointView({
+      waypointData,
+      onEditClick: onEditClick,
     });
-    editWaypointPresenter.init();
 
-    for (let i = 1; i < waypoints.length; i++) {
-      const currentWaypoint = waypoints[i];
-      render(new WaypointContainer(), this.waypointList.element);
+    const waypointEditComponent = new EditWaypointFormView({
+      waypointData,
+      onFormSubmit: onFormSubmit,
+      onFormCancel: onFormCancel,
+    });
 
-      const siteEventListElement = document.getElementById('event_list')!;
-      const siteCurrentEventItemElements = Array.from(siteEventListElement.children)[i] as HTMLElement;
+    function switchToEditMode() {
+      replace(waypointEditComponent, waypointComponent);
+      document.addEventListener('keydown', escKeyDownHandler);
+    }
 
-      const waypointListItemPresenter = new WaypointListItemPresenter({
-        waypointItemContainer: siteCurrentEventItemElements,
-        destinationsModel: this.destinationsModel,
-        offersModel: this.offersModel,
-        waypointsModel: this.waypointsModel,
-        currentWaypoint,
-      });
-      waypointListItemPresenter.init();
+    function switchToViewMode() {
+      replace(waypointComponent, waypointEditComponent);
+      document.removeEventListener('keydown', escKeyDownHandler);
+    }
+
+    render(waypointComponent, this.#waypointsList);
+  }
+
+  #renderWaypoints() {
+    for (const waypoint of this.#waypoints) {
+      const waypointData = { waypoint, dataBase: this.#dataBase };
+      this.#renderWaypoint(waypointData);
+    }
+  }
+
+  #renderListEmpty() {
+    render(new ListEmptyView(this.#filtersType), this.#waypointsList);
+  }
+
+  #renderWaypointsList() {
+    if (this.#waypoints.length > 0) {
+      this.#renderSorting();
+      this.#renderTripMain();
+      this.#renderWaypoints();
+    } else {
+      this.#renderListEmpty();
     }
   }
 }

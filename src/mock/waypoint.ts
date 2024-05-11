@@ -1,4 +1,4 @@
-import type { Waypoint } from '../types/way-point';
+import type { Waypoint } from '../types/waypoint-type';
 import { Randomizer } from '../utils/random';
 import { getDates } from './utils';
 

@@ -1,4 +1,4 @@
-import type { WaypointType } from './way-point';
+import type { WaypointType } from './waypoint-type';
 
 interface InnerOffer {
   id: string;
