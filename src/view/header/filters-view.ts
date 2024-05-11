@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import View from '../../framework/view/view';
+import type { Filters } from '../../utils/filter';
 import { capitalLetter } from '../../utils/utils';
 
-function createFilterItemTemplate(filter: any, isChecked: boolean) {
+function createFilterItemTemplate(filter: Filters[number], isChecked: boolean) {
   const { type, count } = filter;
   return `<div class="trip-filters__filter">
   <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}"
@@ -13,18 +13,18 @@ function createFilterItemTemplate(filter: any, isChecked: boolean) {
   </div>`;
 }
 
-const createFiltersTemplate = (filters: [], currentFilter: string) =>
+const createFiltersTemplate = (filters: Filters, currentFilter: string) =>
   `<form class="trip-filters" action="#" method="get">
-    ${filters.map((filter: any) => createFilterItemTemplate(filter, filter.type === currentFilter)).join('')}
+    ${filters.map((filter) => createFilterItemTemplate(filter, filter.type === currentFilter)).join('')}
     <button class="visually-hidden" type="submit">Accept filter</button>
     </form>
 `;
 
 export default class FiltersView extends View<HTMLFormElement> {
-  #filters: [];
+  #filters: Filters;
   #currentFilter: string;
 
-  constructor({ filters, currentFilter }: { filters: []; currentFilter: string }) {
+  constructor({ filters, currentFilter }: { filters: Filters; currentFilter: string }) {
     super();
     this.#filters = filters;
     this.#currentFilter = currentFilter;

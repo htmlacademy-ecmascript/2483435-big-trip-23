@@ -1,12 +1,13 @@
 import View from '../../framework/view/view';
+import type { FilterType } from '../../const';
 import { WaypointsEmptyMessages } from '../../const';
 
-const createListEmptyMessageTemplate = (filter: string) => `<p class="trip-events__msg">${WaypointsEmptyMessages[filter]}</p>`;
+const createListEmptyMessageTemplate = (filter: FilterType) => `<p class="trip-events__msg">${WaypointsEmptyMessages[filter]}</p>`;
 
 export default class ListEmptyView extends View<HTMLTableSectionElement> {
-  #filter: string;
+  #filter: FilterType;
 
-  constructor(filter: string) {
+  constructor(filter: FilterType) {
     super();
     this.#filter = filter;
   }

@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable no-multi-spaces */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import MainTripView from '../view/header/current-trip-view';
 import FiltersView from '../view/header/filters-view';
 import SortingView from '../view/main/sorting-view';
@@ -10,26 +7,37 @@ import ListEmptyView from '../view/main/list-empty-view';
 // import NewWaypointFormView from '../view/main/new-waypoint-form-view';
 import { render, replace } from '../framework/render';
 import type { Waypoint } from '../types/waypoint-type';
+import type { Filters } from '../utils/filter';
 import { generateFilter } from '../utils/filter';
-import { FilterType } from '../const';
+import type { FilterType } from '../const';
+import { FILTER_TYPES } from '../const';
 import Randomizer from '../utils/random';
+import type DestinationsModel from '../model/destinations-model';
+import type OffersModel from '../model/offers-model';
+import type WaypointsModel from '../model/waypoints-model';
+
+export interface DataBase {
+  destinationsModel: DestinationsModel;
+  offersModel: OffersModel;
+  waypointsModel: WaypointsModel;
+}
 
 export default class ListPresenter {
   #tripMain: HTMLDivElement;
   #tripFilters: HTMLDivElement;
-  #pageMain: any;
+  #pageMain: HTMLElement;
   #tripEvents: HTMLTableSectionElement;
   #waypointsList: HTMLUListElement;
-  #dataBase: any;
+  #dataBase: DataBase;
   #waypoints: Waypoint[];
-  #filters: any;
-  #filtersTypes: any;
+  #filters: Filters;
+  #filtersType: FilterType;
 
-  constructor(dataBase: any) {
+  constructor(dataBase: DataBase) {
     this.#tripMain = document.querySelector('.trip-main')!;
     this.#tripFilters = document.querySelector('.trip-controls__filters')!;
-    this.#pageMain = document.querySelector('.page-main');
-    this.#tripEvents = this.#pageMain.querySelector('.trip-events');
+    this.#pageMain = document.querySelector<HTMLElement>('.page-main')!;
+    this.#tripEvents = this.#pageMain.querySelector<HTMLTableSectionElement>('.trip-events')!;
 
     this.#waypointsList = document.createElement('ul');
     this.#waypointsList.classList.add('trip-events__list');
@@ -37,7 +45,7 @@ export default class ListPresenter {
 
     this.#dataBase = dataBase;
     this.#filters = generateFilter(this.#dataBase.waypointsModel.waypoints);
-    this.#filtersTypes = Randomizer.getArrayElement(Object.values(FilterType));
+    this.#filtersType = Randomizer.getArrayElement(FILTER_TYPES);
     this.#waypoints = this.#dataBase.waypointsModel.waypoints;
   }
 
@@ -51,14 +59,14 @@ export default class ListPresenter {
   }
 
   #renderFilters() {
-    render(new FiltersView({ filters: this.#filters, currentFilter: this.#filtersTypes }), this.#tripFilters);
+    render(new FiltersView({ filters: this.#filters, currentFilter: this.#filtersType }), this.#tripFilters);
   }
 
   #renderSorting() {
     render(new SortingView(), this.#tripEvents, 'afterbegin');
   }
 
-  #renderWaypoint(waypointData: any) {
+  #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
     const escKeyDownHandler = (evt: KeyboardEvent) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -102,7 +110,7 @@ export default class ListPresenter {
   }
 
   #renderListEmpty() {
-    render(new ListEmptyView(this.#filtersTypes), this.#waypointsList);
+    render(new ListEmptyView(this.#filtersType), this.#waypointsList);
   }
 
   #renderWaypointsList() {
