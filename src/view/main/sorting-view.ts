@@ -9,12 +9,12 @@ const createSortTemplate = (type: any): string => `
 <label class="trip-sort__btn" for="sort-${type}">${upperCaseLetter(type)}</label>
 </div>
 `;
-const TEMPLATE = `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+const getTemplate = `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
 ${SORT_TYPES.map((type: string): string => createSortTemplate(type)).join('')}
 </form>`;
 
 export default class SortingView extends View<HTMLFormElement> {
   get template() {
-    return TEMPLATE;
+    return getTemplate;
   }
 }

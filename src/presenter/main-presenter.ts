@@ -4,14 +4,15 @@ import SortingView from '../view/main/sorting-view';
 import WaypointView from '../view/main/waypoint-view';
 import EditWaypointFormView from '../view/main/edit-waypoint-form-view';
 import ListEmptyView from '../view/main/list-empty-view';
-// import NewWaypointFormView from '../view/main/new-waypoint-form-view';
+import NewWaypointFormView from '../view/main/new-waypoint-form-view';
+import MainListContainer from '../view/main/main-list-container';
+import { generateFilter } from '../utils/filter';
+import { FILTER_TYPES } from '../const';
+import Randomizer from '../utils/random';
 import { render, replace } from '../framework/render';
 import type { Waypoint } from '../types/waypoint-type';
 import type { Filters } from '../utils/filter';
-import { generateFilter } from '../utils/filter';
 import type { FilterType } from '../const';
-import { FILTER_TYPES } from '../const';
-import Randomizer from '../utils/random';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
 import type WaypointsModel from '../model/waypoints-model';
@@ -23,25 +24,20 @@ export interface DataBase {
 }
 
 export default class ListPresenter {
-  #tripMain: HTMLDivElement;
-  #tripFilters: HTMLDivElement;
-  #pageMain: HTMLElement;
-  #tripEvents: HTMLTableSectionElement;
-  #waypointsList: HTMLUListElement;
+  #tripMainContainer: HTMLDivElement;
+  #tripEventsContainer: HTMLTableSectionElement;
   #dataBase: DataBase;
   #waypoints: Waypoint[];
   #filters: Filters;
   #filtersType: FilterType;
+  #mainListContainer: MainListContainer;
+  #tripFilterContainer: HTMLDivElement;
 
   constructor(dataBase: DataBase) {
-    this.#tripMain = document.querySelector('.trip-main')!;
-    this.#tripFilters = document.querySelector('.trip-controls__filters')!;
-    this.#pageMain = document.querySelector<HTMLElement>('.page-main')!;
-    this.#tripEvents = this.#pageMain.querySelector<HTMLTableSectionElement>('.trip-events')!;
-
-    this.#waypointsList = document.createElement('ul');
-    this.#waypointsList.classList.add('trip-events__list');
-    this.#tripEvents.appendChild(this.#waypointsList);
+    this.#tripMainContainer = document.querySelector<HTMLDivElement>('.trip-main')!;
+    this.#tripFilterContainer = this.#tripMainContainer.querySelector('.trip-controls__filters')!;
+    this.#tripEventsContainer = document.querySelector<HTMLTableSectionElement>('.trip-events')!;
+    this.#mainListContainer = new MainListContainer();
 
     this.#dataBase = dataBase;
     this.#filters = generateFilter(this.#dataBase.waypointsModel.waypoints);
@@ -55,15 +51,15 @@ export default class ListPresenter {
   }
 
   #renderTripMain() {
-    render(new MainTripView(), this.#tripMain, 'afterbegin');
+    render(new MainTripView(), this.#tripMainContainer, 'afterbegin');
   }
 
   #renderFilters() {
-    render(new FiltersView({ filters: this.#filters, currentFilter: this.#filtersType }), this.#tripFilters);
+    render(new FiltersView({ filters: this.#filters, currentFilter: this.#filtersType }), this.#tripFilterContainer, 'beforeend');
   }
 
   #renderSorting() {
-    render(new SortingView(), this.#tripEvents, 'afterbegin');
+    render(new SortingView(), this.#tripEventsContainer, 'beforeend');
   }
 
   #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
@@ -99,7 +95,7 @@ export default class ListPresenter {
       document.removeEventListener('keydown', escKeyDownHandler);
     }
 
-    render(waypointComponent, this.#waypointsList);
+    render(waypointComponent, this.#mainListContainer.element);
   }
 
   #renderWaypoints() {
@@ -109,14 +105,53 @@ export default class ListPresenter {
     }
   }
 
+  #renderNewWaypoint(waypoint: Waypoint, dataBase: DataBase) {
+    const waypointData = { waypoint, dataBase };
+
+    const escKeyDownHandler = (evt: KeyboardEvent) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        switchToViewMode();
+      }
+    };
+
+    const onEditClick = () => 'заглушка';
+    const onFormSubmit = () => switchToViewMode();
+    const onFormCancel = () => switchToViewMode();
+
+    const waypointEditComponent = new NewWaypointFormView({
+      waypointData,
+      onFormSubmit: onFormSubmit,
+      onFormCancel: onFormCancel,
+    });
+
+    const waypointComponent = new WaypointView({
+      waypointData,
+      onEditClick: onEditClick,
+    });
+
+    function switchToViewMode() {
+      replace(waypointComponent, waypointEditComponent);
+      document.removeEventListener('keydown', escKeyDownHandler);
+    }
+
+    render(waypointEditComponent, this.#mainListContainer.element, 'afterbegin');
+  }
+
   #renderListEmpty() {
-    render(new ListEmptyView(this.#filtersType), this.#waypointsList);
+    render(new ListEmptyView(this.#filtersType), this.#tripEventsContainer);
+  }
+
+  #renderListContainer() {
+    render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
   }
 
   #renderWaypointsList() {
     if (this.#waypoints.length > 0) {
-      this.#renderSorting();
       this.#renderTripMain();
+      this.#renderSorting();
+      this.#renderListContainer();
+      this.#renderNewWaypoint(this.#waypoints[0], this.#dataBase);
       this.#renderWaypoints();
     } else {
       this.#renderListEmpty();

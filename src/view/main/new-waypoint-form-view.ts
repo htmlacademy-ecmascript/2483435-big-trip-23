@@ -4,8 +4,12 @@ import dayjs from 'dayjs';
 import type { Waypoint } from '../../types/waypoint-type';
 import type { Destination } from '../../types/destination-type';
 import type { InnerOffer } from '../../types/offer-type';
-import { POINTS_TYPES } from '../../const';
-import { capitalLetter, checkMatch } from '../../utils/utils';
+import { capitalLetter } from '../../utils/utils';
+import { createWaypointsTypesListTemplate } from '../../templates/new-edit-form/types-template';
+import { createDestinationsListTemplate } from '../../templates/new-edit-form/destinations-template';
+import { createOffersTemplate } from '../../templates/new-edit-form/offers-template';
+import { createDescriptionTemplate } from '../../templates/new-edit-form/description-template';
+import { createPicturesTemplate } from '../../templates/new-edit-form/pictures-template';
 
 function getTemplate(
   waypoint: Waypoint,
@@ -16,72 +20,10 @@ function getTemplate(
 ): string {
   const { type, dateFrom, dateTo } = waypoint;
   const { name, description, pictures } = destination;
-
   const correctType = capitalLetter(type);
   const correctName = capitalLetter(name);
   const timeStart = dayjs(dateFrom).format('DD/MM/YY HH:mm');
   const timeEnd = dayjs(dateTo).format('DD/MM/YY HH:mm');
-
-  const createWaypointsTypesTemplate = (waypointsType: string) => {
-    const isChecked = () => checkMatch(type, waypointsType, 'checked');
-    return `<div class="event__type-item">
-    <input id="event-type-${waypointsType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointsType}" ${isChecked()}>
-    <label class="event__type-label  event__type-label--${waypointsType}" for="event-type-${waypointsType}-1">${correctType}</label>
-  </div>`;
-  };
-
-  const createDestinationsTemplate = (currentName: string) => {
-    const isChecked = () => checkMatch(name, currentName, 'checked');
-    return `<option value="${name}"${isChecked()}></option>`;
-  };
-
-  const createAvailableOffersTemplate = (offer: InnerOffer): string => {
-    const selectedOffersIDs = selectedOffers.map((selectOffer) => selectOffer.id);
-
-    const isSelected = () => (selectedOffersIDs.includes(offer.id) ? 'checked' : '');
-
-    return `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}" ${isSelected()}>
-    <label class="event__offer-label" for="event-offer-${offer.id}-1">
-      <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-      </label>
-      </div>`;
-  };
-
-  const createOffersTemplate = () =>
-    availableOffers.length !== 0
-      ? `
-  <section class="event__section  event__section--offers">
-  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-  <div class="event__available-offers">
-  ${availableOffers.map((offer: InnerOffer): string => createAvailableOffersTemplate(offer)).join('')}
-  </div>
-  </section>`
-      : '';
-
-  const createDescriptionTemplate = () =>
-    description.length !== 0
-      ? `
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${description}</p>
-    `
-      : '';
-
-  const createOnePictureTemplate = () =>
-    pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
-
-  const createPicturesTemplate = () =>
-    pictures.length !== 0
-      ? `
-      <div class="event__photos-container">
-          <div class="event__photos-tape">
-          ${createOnePictureTemplate()}
-          </div>
-        </div>
-        `
-      : '';
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -96,21 +38,23 @@ function getTemplate(
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
-            ${POINTS_TYPES.map((waypointsType: string): string => createWaypointsTypesTemplate(waypointsType)).join('')}
+
+            ${createWaypointsTypesListTemplate(type)}
+
           </fieldset>
         </div>
       </div>
-
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">
         ${correctType}
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${correctName}" list="destination-list-1">
         <datalist id="destination-list-1">
-        ${allDestinationsNames.map((currentName: string): string => createDestinationsTemplate(currentName)).join('')}
+
+        ${createDestinationsListTemplate(name, allDestinationsNames)}
+
         </datalist>
       </div>
-
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
         <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${timeStart}">
@@ -132,14 +76,15 @@ function getTemplate(
     </header>
       <section class="event__details">
 
-      ${createOffersTemplate()}
+      ${createOffersTemplate(availableOffers, selectedOffers)}
 
       <section class="event__section  event__section--destination">
-        ${createDescriptionTemplate()}
 
-        ${createPicturesTemplate()}
+      ${createDescriptionTemplate(description)}
+
+      ${createPicturesTemplate(pictures)}
+
       </section>
-
     </section>
   </form>
   </li>
@@ -153,8 +98,9 @@ export default class NewWaypointFormView extends View<HTMLFormElement> {
   #availableOffers: InnerOffer[];
   #selectedOffers: InnerOffer[];
   #handleFormSubmit: any;
+  #handleFormCancel: any;
 
-  constructor({ waypointData, onFormSubmit }: { waypointData: any; onFormSubmit: any }) {
+  constructor({ waypointData, onFormSubmit, onFormCancel }: { waypointData: any; onFormSubmit: any; onFormCancel: any }) {
     super();
     this.#waypoint = waypointData.waypoint;
     this.#destination = waypointData.dataBase.destinationsModel.getDestination(this.#waypoint);
@@ -163,7 +109,9 @@ export default class NewWaypointFormView extends View<HTMLFormElement> {
     this.#selectedOffers = waypointData.dataBase.offersModel.getSelectedOffers(this.#waypoint);
 
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleFormCancel = onFormCancel;
     this.element.querySelector('form')!.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn')!.addEventListener('click', this.#onCancelForm);
   }
 
   get template() {
@@ -171,6 +119,11 @@ export default class NewWaypointFormView extends View<HTMLFormElement> {
   }
 
   #formSubmitHandler = (evt: any) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
+
+  #onCancelForm = (evt: any) => {
     evt.preventDefault();
     this.#handleFormSubmit();
   };

@@ -15,7 +15,7 @@ export default class DestinationsModel {
     return this.#destinations;
   }
 
-  get allDestinationsNames() {
+  get allDestinationsNames(): string[] {
     this.#destinations = this.#service.destinations;
     return Array.from(this.#destinations.map((waypoint) => waypoint.name));
   }
