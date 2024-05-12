@@ -2,7 +2,6 @@ import MainTripView from '../view/header/current-trip-view';
 import FiltersView from '../view/header/filters-view';
 import SortingView from '../view/main/sorting-view';
 import WaypointView from '../view/main/waypoint-view';
-import EditWaypointFormView from '../view/main/edit-waypoint-form-view';
 import ListEmptyView from '../view/main/list-empty-view';
 import NewWaypointFormView from '../view/main/new-waypoint-form-view';
 import MainListContainer from '../view/main/main-list-container';
@@ -16,6 +15,7 @@ import type { FilterType } from '../const';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
 import type WaypointsModel from '../model/waypoints-model';
+import WaypointPresenter from './waypoint-presenter';
 
 export interface DataBase {
   destinationsModel: DestinationsModel;
@@ -63,39 +63,8 @@ export default class ListPresenter {
   }
 
   #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
-    const escKeyDownHandler = (evt: KeyboardEvent) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        switchToViewMode();
-      }
-    };
-
-    const onEditClick = () => switchToEditMode();
-    const onFormSubmit = () => switchToViewMode();
-    const onFormCancel = () => switchToViewMode();
-
-    const waypointComponent = new WaypointView({
-      waypointData,
-      onEditClick: onEditClick,
-    });
-
-    const waypointEditComponent = new EditWaypointFormView({
-      waypointData,
-      onFormSubmit: onFormSubmit,
-      onFormCancel: onFormCancel,
-    });
-
-    function switchToEditMode() {
-      replace(waypointEditComponent, waypointComponent);
-      document.addEventListener('keydown', escKeyDownHandler);
-    }
-
-    function switchToViewMode() {
-      replace(waypointComponent, waypointEditComponent);
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }
-
-    render(waypointComponent, this.#mainListContainer.element);
+    const waypointPresenter = new WaypointPresenter(this.#mainListContainer.element);
+    waypointPresenter.init(waypointData);
   }
 
   #renderWaypoints() {
