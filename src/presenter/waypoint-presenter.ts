@@ -3,7 +3,7 @@ import EditWaypointFormView from '../view/main/edit-waypoint-form-view';
 import WaypointView from '../view/main/waypoint-view';
 import type { DataBase } from './main-presenter';
 import type { Waypoint } from '../types/waypoint-type';
-import { render, replace } from '../framework/render';
+import { render, replace, remove } from '../framework/render';
 
 export default class WaypointPresenter {
   #mainListContainer: any;
@@ -18,6 +18,9 @@ export default class WaypointPresenter {
   init(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
     this.#dataBase = waypointData.dataBase;
 
+    const prevWaypointComponent = this.#waypointComponent;
+    const prevWaypointEditComponent = this.#waypointEditComponent;
+
     this.#waypointComponent = new WaypointView({
       waypointData,
       onEditClick: this.#onEditClick,
@@ -29,7 +32,25 @@ export default class WaypointPresenter {
       onFormCancel: this.#onFormCancel,
     });
 
-    render(this.#waypointComponent, this.#mainListContainer);
+    if (prevWaypointComponent !== null || prevWaypointEditComponent !== null) {
+      render(this.#waypointComponent, this.#mainListContainer);
+      return;
+    }
+    if (this.#mainListContainer.contains(prevWaypointComponent.element)) {
+      replace(this.#waypointComponent, prevWaypointComponent);
+    }
+
+    if (this.#mainListContainer.contains(prevWaypointEditComponent.element)) {
+      replace(this.#waypointEditComponent, prevWaypointEditComponent);
+    }
+
+    remove(prevWaypointComponent);
+    remove(prevWaypointEditComponent);
+  }
+
+  destroy() {
+    remove(this.#waypointComponent);
+    remove(this.#waypointEditComponent);
   }
 
   #switchToEditMode() {
