@@ -32,6 +32,7 @@ export default class ListPresenter {
   #filtersType: FilterType;
   #mainListContainer: MainListContainer;
   #tripFilterContainer: HTMLDivElement;
+  #waypointsPresenters = new Map();
 
   constructor(dataBase: DataBase) {
     this.#tripMainContainer = document.querySelector<HTMLDivElement>('.trip-main')!;
@@ -65,6 +66,8 @@ export default class ListPresenter {
   #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
     const waypointPresenter = new WaypointPresenter(this.#mainListContainer.element);
     waypointPresenter.init(waypointData);
+
+    this.#waypointsPresenters.set(waypointData.waypoint.id, waypointPresenter);
   }
 
   #renderWaypoints() {
@@ -105,6 +108,12 @@ export default class ListPresenter {
     }
 
     render(waypointEditComponent, this.#mainListContainer.element, 'afterbegin');
+  }
+
+
+  #deleteWaypoint(waypoint: Waypoint){
+    this.#waypointsPresenters.get(waypoint.id).destroy();
+    this.#waypointsPresenters.delete(waypoint.id);
   }
 
   #renderListEmpty() {
