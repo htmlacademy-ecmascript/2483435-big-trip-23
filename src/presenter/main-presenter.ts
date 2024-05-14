@@ -16,6 +16,7 @@ import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
 import type WaypointsModel from '../model/waypoints-model';
 import WaypointPresenter from './waypoint-presenter';
+import {updateItem} from '../utils/utils';
 
 export interface DataBase {
   destinationsModel: DestinationsModel;
@@ -33,6 +34,7 @@ export default class ListPresenter {
   #mainListContainer: MainListContainer;
   #tripFilterContainer: HTMLDivElement;
   #waypointsPresenters = new Map();
+  #listWaypoints: Waypoint[];
 
   constructor(dataBase: DataBase) {
     this.#tripMainContainer = document.querySelector<HTMLDivElement>('.trip-main')!;
@@ -44,6 +46,7 @@ export default class ListPresenter {
     this.#filters = generateFilter(this.#dataBase.waypointsModel.waypoints);
     this.#filtersType = Randomizer.getArrayElement(FILTER_TYPES);
     this.#waypoints = this.#dataBase.waypointsModel.waypoints;
+    this.#listWaypoints = [...this.#waypoints];
   }
 
   init() {
@@ -51,20 +54,20 @@ export default class ListPresenter {
     this.#renderWaypointsList();
   }
 
-  #renderTripMain() {
-    render(new MainTripView(), this.#tripMainContainer, 'afterbegin');
-  }
+  #handleWaypointChange = (updatedWaypoint:Waypoint) => {
+    this.#waypoints = updateItem(this.#waypoints, updatedWaypoint);
+    this.#waypointsPresenters.get(updatedWaypoint.id).init(updatedWaypoint);
+  };
 
-  #renderFilters() {
-    render(new FiltersView({ filters: this.#filters, currentFilter: this.#filtersType }), this.#tripFilterContainer, 'beforeend');
-  }
-
-  #renderSorting() {
-    render(new SortingView(), this.#tripEventsContainer, 'beforeend');
+  #deleteWaypoint(waypoint: Waypoint){
+    this.#waypointsPresenters.get(waypoint.id).destroy();
+    this.#waypointsPresenters.delete(waypoint.id);
   }
 
   #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
-    const waypointPresenter = new WaypointPresenter(this.#mainListContainer.element);
+    const waypointPresenter = new WaypointPresenter({this.#mainListContainer.element,
+      onDataChange: this.#handleWaypointChange
+    });
     waypointPresenter.init(waypointData);
 
     this.#waypointsPresenters.set(waypointData.waypoint.id, waypointPresenter);
@@ -110,11 +113,18 @@ export default class ListPresenter {
     render(waypointEditComponent, this.#mainListContainer.element, 'afterbegin');
   }
 
-
-  #deleteWaypoint(waypoint: Waypoint){
-    this.#waypointsPresenters.get(waypoint.id).destroy();
-    this.#waypointsPresenters.delete(waypoint.id);
+  #renderTripMain() {
+    render(new MainTripView(), this.#tripMainContainer, 'afterbegin');
   }
+
+  #renderFilters() {
+    render(new FiltersView({ filters: this.#filters, currentFilter: this.#filtersType }), this.#tripFilterContainer, 'beforeend');
+  }
+
+  #renderSorting() {
+    render(new SortingView(), this.#tripEventsContainer, 'beforeend');
+  }
+
 
   #renderListEmpty() {
     render(new ListEmptyView(this.#filtersType), this.#tripEventsContainer);

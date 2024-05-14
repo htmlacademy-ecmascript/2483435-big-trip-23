@@ -10,13 +10,17 @@ export default class WaypointPresenter {
   #waypointEditComponent: any;
   #waypointComponent: any;
   #dataBase: any;
+  #waypoint: any;
+  #handleDataChange: any;
 
-  constructor(mainListContainer: HTMLUListElement) {
+  constructor({mainListContainer: HTMLUListElement, onDataChange: any}) {
     this.#mainListContainer = mainListContainer;
+    this.#handleDataChange = onDataChange;
   }
 
   init(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
     this.#dataBase = waypointData.dataBase;
+    this.#waypoint = waypointData.waypoint;
 
     const prevWaypointComponent = this.#waypointComponent;
     const prevWaypointEditComponent = this.#waypointEditComponent;
@@ -24,6 +28,7 @@ export default class WaypointPresenter {
     this.#waypointComponent = new WaypointView({
       waypointData,
       onEditClick: this.#onEditClick,
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#waypointEditComponent = new EditWaypointFormView({
@@ -70,7 +75,15 @@ export default class WaypointPresenter {
     }
   };
 
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({...this.#waypoint, isFavorite: !this.#waypoint.isFavorite});
+  };
+
   #onEditClick = () => this.#switchToEditMode();
-  #onFormSubmit = () => this.#switchToViewMode();
   #onFormCancel = () => this.#switchToViewMode();
+  #onFormSubmit = (waypoint:Waypoint) => {
+    this.#switchToViewMode();
+    this.#handleDataChange(waypoint);
+  };
+
 }

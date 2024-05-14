@@ -120,7 +120,7 @@ export default class EditWaypointFormView extends View<HTMLFormElement> {
 
   #formSubmitHandler = (evt: any) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#waypoint);
   };
 
   #onCancelForm = (evt: any) => {
