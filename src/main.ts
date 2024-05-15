@@ -11,5 +11,3 @@ const waypointsModel = new WaypointsModel(service);
 const dataBase = { destinationsModel, offersModel, waypointsModel };
 const mainPresenter = new MainPresenter(dataBase);
 mainPresenter.init();
-
-console.log(service);
