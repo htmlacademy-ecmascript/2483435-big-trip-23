@@ -4,8 +4,12 @@ import dayjs from 'dayjs';
 import type { Waypoint } from '../../types/waypoint-type';
 import type { Destination } from '../../types/destination-type';
 import type { InnerOffer } from '../../types/offer-type';
-import { POINTS_TYPES } from '../../const';
-import { capitalLetter, checkMatch } from '../../utils/utils';
+import { capitalLetter } from '../../utils/utils';
+import { createWaypointsTypesListTemplate } from '../../templates/new-edit-form/types-template';
+import { createDestinationsListTemplate } from '../../templates/new-edit-form/destinations-template';
+import { createOffersTemplate } from '../../templates/new-edit-form/offers-template';
+import { createDescriptionTemplate } from '../../templates/new-edit-form/description-template';
+import type { WaypointData } from '../../types/common';
 
 function getTemplate(
   waypoint: Waypoint,
@@ -16,61 +20,10 @@ function getTemplate(
 ): string {
   const { type, dateFrom, dateTo, basePrice } = waypoint;
   const { name, description } = destination;
-
   const correctType = capitalLetter(type);
   const correctName = capitalLetter(name);
   const timeStart = dayjs(dateFrom).format('DD/MM/YY HH:mm');
   const timeEnd = dayjs(dateTo).format('DD/MM/YY HH:mm');
-
-  const createWaypointsTypesTemplate = (waypointType: string) => {
-    const isChecked = () => checkMatch(type, waypointType, 'checked');
-    const currentCorrectType = capitalLetter(waypointType);
-    return `<div class="event__type-item">
-    <input id="event-type-${waypointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" ${isChecked()}>
-    <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${currentCorrectType}</label>
-  </div>`;
-  };
-
-  const createDestinationsTemplate = (currentName: string) => {
-    const isChecked = () => checkMatch(name, currentName, 'checked');
-
-    return `<option value="${name}"${isChecked()}></option>`;
-  };
-
-  const createAvailableOffersTemplate = (offer: InnerOffer): string => {
-    const selectedOffersIDs = selectedOffers.map((selectOffer) => selectOffer.id);
-
-    const isSelected = () => (selectedOffersIDs.includes(offer.id) ? 'checked' : '');
-
-    return `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}" ${isSelected()}>
-    <label class="event__offer-label" for="event-offer-${offer.id}-1">
-      <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-      </label>
-      </div>`;
-  };
-
-  const createOffersTemplate = () =>
-    availableOffers.length !== 0
-      ? `
-  <section class="event__section  event__section--offers">
-  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-  <div class="event__available-offers">
-  ${availableOffers.map((offer: InnerOffer): string => createAvailableOffersTemplate(offer)).join('')}
-  </div>
-  </section>`
-      : '';
-
-  const createDescriptionTemplate = () =>
-    description.length !== 0
-      ? `
-  <section class="event__section  event__section--destination">
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${description}</p>
-    </section>`
-      : '';
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -85,7 +38,9 @@ function getTemplate(
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
-          ${POINTS_TYPES.map((waypointType: string): string => createWaypointsTypesTemplate(waypointType)).join('')}
+
+          ${createWaypointsTypesListTemplate(type)}
+
         </fieldset>
       </div>
     </div>
@@ -96,7 +51,9 @@ function getTemplate(
       </label>
       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${correctName}" list="destination-list-1">
       <datalist id="destination-list-1">
-      ${allDestinationsNames.map((currentName: string): string => createDestinationsTemplate(currentName)).join('')}
+
+      ${createDestinationsListTemplate(name, allDestinationsNames)}
+
       </datalist>
     </div>
 
@@ -124,9 +81,9 @@ function getTemplate(
     </header>
     <section class="event__details">
 
-    ${createOffersTemplate()}
+    ${createOffersTemplate(availableOffers, selectedOffers)}
 
-    ${createDescriptionTemplate()}
+    ${createDescriptionTemplate(description)}
 
     </section>
     </form>
@@ -143,13 +100,13 @@ export default class EditWaypointFormView extends View<HTMLFormElement> {
   #handleFormSubmit: any;
   #handleFormCancel: any;
 
-  constructor({ waypointData, onFormSubmit, onFormCancel }: { waypointData: any; onFormSubmit: any; onFormCancel: any }) {
+  constructor({ waypoint, dataBase, onFormSubmit, onFormCancel }: WaypointData & { onFormSubmit: any; onFormCancel: any }) {
     super();
-    this.#waypoint = waypointData.waypoint;
-    this.#destination = waypointData.dataBase.destinationsModel.getDestination(this.#waypoint);
-    this.#allDestinationsNames = waypointData.dataBase.destinationsModel.allDestinationsNames;
-    this.#availableOffers = waypointData.dataBase.offersModel.getAvailableOffers(this.#waypoint);
-    this.#selectedOffers = waypointData.dataBase.offersModel.getSelectedOffers(this.#waypoint);
+    this.#waypoint = waypoint;
+    this.#destination = dataBase.destinationsModel.getDestination(this.#waypoint)!;
+    this.#allDestinationsNames = dataBase.destinationsModel.allDestinationsNames;
+    this.#availableOffers = dataBase.offersModel.getAvailableOffers(this.#waypoint);
+    this.#selectedOffers = dataBase.offersModel.getSelectedOffers(this.#waypoint);
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormCancel = onFormCancel;
@@ -164,11 +121,11 @@ export default class EditWaypointFormView extends View<HTMLFormElement> {
 
   #formSubmitHandler = (evt: any) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#waypoint);
   };
 
   #onCancelForm = (evt: any) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#waypoint);
   };
 }
