@@ -20,7 +20,7 @@ import WaypointPresenter from './waypoint-presenter';
 import { updateItem } from '../utils/utils';
 import type { SortType } from '../const';
 import { SORT_TYPES } from '../const';
-import { daySort } from '../utils/sort';
+import { priceSort, timeSort } from '../utils/sorting';
 
 export interface DataBase {
   destinationsModel: DestinationsModel;
@@ -41,7 +41,7 @@ export default class ListPresenter {
   #waypointsPresenters = new Map();
   #sortComponent: any;
   #currentSortType: SortType = SORT_TYPES[0];
-  #sourcedBoardTasks: any;
+  #sourcedWaypoints: any;
 
   constructor(dataBase: DataBase) {
     this.#tripMainContainer = document.querySelector<HTMLDivElement>('.trip-main')!;
@@ -54,59 +54,12 @@ export default class ListPresenter {
     this.#filtersType = Randomizer.getArrayElement(FILTER_TYPES);
     this.#waypoints = this.#dataBase.waypointsModel.waypoints;
     this.#waypointsList = [...this.#waypoints];
-    this.#sourcedBoardTasks = [...this.#waypoints];
+    this.#sourcedWaypoints = [...this.#waypoints];
   }
 
   init() {
     this.#renderFilters();
     this.#renderWaypointsList();
-  }
-
-  #handleModeChange = () => {
-    this.#waypointsPresenters.forEach((presenter) => presenter.resetView());
-  };
-
-  #handleWaypointChange = (updatedWaypoint: Waypoint) => {
-    this.#waypointsList = updateItem(this.#waypointsList, updatedWaypoint);
-    this.#waypointsPresenters.get(updatedWaypoint.id).init(updatedWaypoint);
-    this.#sourcedBoardTasks = updateItem(this.#sourcedBoardTasks, updatedWaypoint);
-  };
-
-  #handleSortTypeChange = (sortType: SortType) => {
-    if (this.#currentSortType === sortType) {
-      return;
-    }
-
-    this.#sortTasks(sortType);
-  };
-
-  #sortTasks(sortType: SortType) {
-    switch (sortType) {
-      case 'day':
-        this.#waypointsList.sort(daySort);
-        break;
-      case 'event':
-        this.#waypointsList.sort(sortTaskDown);
-        break;
-      case 'time':
-        this.#waypointsList.sort(sortTaskDown);
-        break;
-      case 'price':
-        this.#waypointsList.sort(sortTaskDown);
-        break;
-      case 'offers':
-        this.#waypointsList.sort(sortTaskDown);
-        break;
-      default:
-        this.#waypointsList = [...this.#sourcedBoardTasks];
-    }
-
-    this.#currentSortType = sortType;
-  }
-
-  #deleteWaypoint(waypoint: Waypoint) {
-    this.#waypointsPresenters.get(waypoint.id).destroy();
-    this.#waypointsPresenters.delete(waypoint.id);
   }
 
   #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
@@ -126,6 +79,53 @@ export default class ListPresenter {
       this.#renderWaypoint(waypointData);
     }
   }
+
+  #handleModeChange = () => {
+    this.#waypointsPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleWaypointChange = (updatedWaypoint: Waypoint) => {
+    this.#waypointsList = updateItem(this.#waypointsList, updatedWaypoint);
+    this.#waypointsPresenters.get(updatedWaypoint.id).init(updatedWaypoint);
+    this.#sourcedWaypoints = updateItem(this.#sourcedWaypoints, updatedWaypoint);
+  };
+
+  #handleSortTypeChange = (sortType: SortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortWaypoints(sortType);
+    this.#clearWaypointsList();
+    this.#renderWaypointsList();
+
+  };
+
+  #sortWaypoints(sortType: SortType) {
+    switch (sortType) {
+      case 'time':
+        this.#waypointsList.sort(priceSort);
+        break;
+      case 'price':
+        this.#waypointsList.sort(timeSort);
+        break;
+      default:
+        this.#waypointsList = [...this.#sourcedWaypoints];
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #deleteWaypoint(waypoint: Waypoint) {
+    this.#waypointsPresenters.get(waypoint.id).destroy();
+    this.#waypointsPresenters.delete(waypoint.id);
+  }
+
+  #clearWaypointsList() {
+    this.#waypointsPresenters.forEach((presenter) => presenter.destroy());
+    this.#waypointsPresenters.clear();
+  }
+
 
   // #renderNewWaypoint(waypoint: Waypoint, dataBase: DataBase) {
   //   const waypointData = { waypoint, dataBase };

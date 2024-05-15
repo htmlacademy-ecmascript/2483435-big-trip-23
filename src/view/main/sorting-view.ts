@@ -6,7 +6,7 @@ import type { SortType } from '../../const';
 
 const createSortTemplate = (type: SortType): string => `
 <div class="trip-sort__item  trip-sort__item--${type}">
-<input id="sort-${type}" class="trip-sort__input data-sort-type="${type}"  visually-hidden" type="radio" name="trip-sort" value="sort-${type}">
+<input id="sort-${type}" class="trip-sort__input visually-hidden" data-sort-type="${type}"   type="radio" name="trip-sort" value="sort-${type}" ${type === 'day' ? 'checked' : ''}>
 <label class="trip-sort__btn" for="sort-${type}">${upperCaseLetter(type)}</label>
 </div>
 `;
