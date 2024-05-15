@@ -7,6 +7,7 @@ import type { InnerOffer } from '../../types/offer-type';
 import { capitalLetter } from '../../utils/utils';
 import { getDuration } from '../../utils/time';
 import { createSelectedOffersTemplate } from '../../templates/waypoint/selected-offers-template';
+import type { WaypointData } from '../../types/common';
 
 function getTemplate(waypoint: Waypoint, destination: Destination, selectedOffers: InnerOffer[]): string {
   const { dateFrom, dateTo, type, basePrice, isFavorite } = waypoint;
@@ -61,12 +62,12 @@ export default class WaypointView extends View<HTMLTimeElement> {
   #handleEditClick: any;
   #handleFavoriteClick: any;
 
-  constructor({ waypointData, onEditClick, onFavoriteClick }: { waypointData: any; onEditClick: any; onFavoriteClick: any }) {
+  constructor({ waypoint, dataBase, onEditClick, onFavoriteClick }: WaypointData & { onEditClick: any; onFavoriteClick: any }) {
     super();
 
-    this.#waypoint = waypointData.waypoint;
-    this.#destination = waypointData.dataBase.destinationsModel.getDestination(this.#waypoint);
-    this.#selectedOffers = waypointData.dataBase.offersModel.getSelectedOffers(this.#waypoint);
+    this.#waypoint = waypoint;
+    this.#destination = dataBase.destinationsModel.getDestination(this.#waypoint)!;
+    this.#selectedOffers = dataBase.offersModel.getSelectedOffers(this.#waypoint);
 
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;

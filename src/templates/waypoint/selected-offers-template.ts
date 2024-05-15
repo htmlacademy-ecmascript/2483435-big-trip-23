@@ -1,6 +1,6 @@
 import type { InnerOffer } from '../../types/offer-type';
 
-const getTemplate = (currentOffer: InnerOffer): string => `
+const markUpOffer = (currentOffer: InnerOffer): string => `
 <li class="event__offer">
       <span class="event__offer-title">${currentOffer.title}</span>
       &plus;&euro;&nbsp;
@@ -9,6 +9,6 @@ const getTemplate = (currentOffer: InnerOffer): string => `
 `;
 
 const createSelectedOffersTemplate = (selectedOffers: InnerOffer[]): string =>
-  selectedOffers.map((currentOffer: InnerOffer): string => getTemplate(currentOffer)).join('');
+  selectedOffers.map((currentOffer: InnerOffer): string => markUpOffer(currentOffer)).join('');
 
 export { createSelectedOffersTemplate };

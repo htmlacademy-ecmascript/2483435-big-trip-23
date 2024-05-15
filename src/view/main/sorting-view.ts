@@ -17,7 +17,7 @@ ${SORT_TYPES.map((type: SortType): string => createSortTemplate(type)).join('')}
 export default class SortingView extends View<HTMLFormElement> {
   #handleSortTypeChange: any = null;
 
-  constructor({ onSortTypeChange } : { onSortTypeChange: any }) {
+  constructor({ onSortTypeChange }: { onSortTypeChange: any }) {
     super();
     this.#handleSortTypeChange = onSortTypeChange;
 
@@ -36,5 +36,4 @@ export default class SortingView extends View<HTMLFormElement> {
     evt.preventDefault();
     this.#handleSortTypeChange(evt.target.dataset.sortType);
   };
-
 }

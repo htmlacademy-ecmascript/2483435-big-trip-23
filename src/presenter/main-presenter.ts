@@ -38,7 +38,7 @@ export default class ListPresenter {
   #filtersType: FilterType;
   #mainListContainer: MainListContainer;
   #tripFilterContainer: HTMLDivElement;
-  #waypointsPresenters = new Map();
+  #waypointsPresenters = new Map<Waypoint['id'], WaypointPresenter>();
   #sortComponent: any;
   #currentSortType: SortType = SORT_TYPES[0];
   #sourcedWaypoints: any;
@@ -86,7 +86,10 @@ export default class ListPresenter {
 
   #handleWaypointChange = (updatedWaypoint: Waypoint) => {
     this.#waypointsList = updateItem(this.#waypointsList, updatedWaypoint);
-    this.#waypointsPresenters.get(updatedWaypoint.id).init(updatedWaypoint);
+    this.#waypointsPresenters.get(updatedWaypoint.id)?.init({
+      waypoint: updatedWaypoint,
+      dataBase: this.#dataBase,
+    });
     this.#sourcedWaypoints = updateItem(this.#sourcedWaypoints, updatedWaypoint);
   };
 
@@ -98,7 +101,6 @@ export default class ListPresenter {
     this.#sortWaypoints(sortType);
     this.#clearWaypointsList();
     this.#renderWaypointsList();
-
   };
 
   #sortWaypoints(sortType: SortType) {
@@ -117,7 +119,7 @@ export default class ListPresenter {
   }
 
   #deleteWaypoint(waypoint: Waypoint) {
-    this.#waypointsPresenters.get(waypoint.id).destroy();
+    this.#waypointsPresenters.get(waypoint.id)?.destroy();
     this.#waypointsPresenters.delete(waypoint.id);
   }
 
@@ -125,7 +127,6 @@ export default class ListPresenter {
     this.#waypointsPresenters.forEach((presenter) => presenter.destroy());
     this.#waypointsPresenters.clear();
   }
-
 
   // #renderNewWaypoint(waypoint: Waypoint, dataBase: DataBase) {
   //   const waypointData = { waypoint, dataBase };

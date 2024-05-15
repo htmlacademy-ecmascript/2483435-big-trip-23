@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import EditWaypointFormView from '../view/main/edit-waypoint-form-view';
 import WaypointView from '../view/main/waypoint-view';
-import type { DataBase } from './main-presenter';
 import type { Waypoint } from '../types/waypoint-type';
 import { render, replace, remove } from '../framework/render';
+import type { WaypointData } from '../types/common';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -11,14 +10,14 @@ const Mode = {
 };
 
 export default class WaypointPresenter {
-  #mainListContainer: any = null;
-  #waypointEditComponent: any = null;
-  #waypointComponent: any = null;
-  #dataBase: any = null;
-  #waypoint: any = null;
-  #handleDataChange: any = null;
-  #waypointData: any = null;
-  #handleModeChange: any = null;
+  #mainListContainer: HTMLUListElement;
+  #waypointEditComponent: EditWaypointFormView | null = null;
+  #waypointComponent: WaypointView | null = null;
+  // #dataBase: any = null;
+  #waypoint: Waypoint | null = null;
+  #handleDataChange: (point: Waypoint) => void;
+  // #waypointData: any = null;
+  #handleModeChange: () => void;
   #mode = Mode.DEFAULT;
 
   constructor({
@@ -27,30 +26,31 @@ export default class WaypointPresenter {
     onModeChange,
   }: {
     mainListContainer: HTMLUListElement;
-    onDataChange: any;
-    onModeChange: any;
+    onDataChange: (point: Waypoint) => void;
+    onModeChange: () => void;
   }) {
     this.#mainListContainer = mainListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
-  init(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
-    this.#waypointData = waypointData;
-    this.#dataBase = this.#waypointData.dataBase;
-    this.#waypoint = this.#waypointData.waypoint;
+  init({ waypoint, dataBase }: WaypointData) {
+    // this.#dataBase = dataBase;
+    this.#waypoint = waypoint;
 
     const prevWaypointComponent = this.#waypointComponent;
     const prevWaypointEditComponent = this.#waypointEditComponent;
 
     this.#waypointComponent = new WaypointView({
-      waypointData: this.#waypointData,
+      waypoint,
+      dataBase,
       onEditClick: this.#onEditClick,
       onFavoriteClick: this.#onFavoriteClick,
     });
 
     this.#waypointEditComponent = new EditWaypointFormView({
-      waypointData: this.#waypointData,
+      waypoint,
+      dataBase,
       onFormSubmit: this.#onFormSubmit,
       onFormCancel: this.#onFormCancel,
     });
@@ -84,6 +84,9 @@ export default class WaypointPresenter {
   }
 
   #switchToEditMode() {
+    if (!this.#waypointComponent || !this.#waypointEditComponent) {
+      return;
+    }
     replace(this.#waypointEditComponent, this.#waypointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
@@ -91,6 +94,9 @@ export default class WaypointPresenter {
   }
 
   #switchToViewMode() {
+    if (!this.#waypointComponent || !this.#waypointEditComponent) {
+      return;
+    }
     replace(this.#waypointComponent, this.#waypointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
@@ -104,7 +110,9 @@ export default class WaypointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({ ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
+    if (this.#waypoint) {
+      this.#handleDataChange({ ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
+    }
   };
 
   #onEditClick = () => this.#switchToEditMode();

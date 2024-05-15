@@ -9,6 +9,7 @@ import { createWaypointsTypesListTemplate } from '../../templates/new-edit-form/
 import { createDestinationsListTemplate } from '../../templates/new-edit-form/destinations-template';
 import { createOffersTemplate } from '../../templates/new-edit-form/offers-template';
 import { createDescriptionTemplate } from '../../templates/new-edit-form/description-template';
+import type { WaypointData } from '../../types/common';
 
 function getTemplate(
   waypoint: Waypoint,
@@ -99,13 +100,13 @@ export default class EditWaypointFormView extends View<HTMLFormElement> {
   #handleFormSubmit: any;
   #handleFormCancel: any;
 
-  constructor({ waypointData, onFormSubmit, onFormCancel }: { waypointData: any; onFormSubmit: any; onFormCancel: any }) {
+  constructor({ waypoint, dataBase, onFormSubmit, onFormCancel }: WaypointData & { onFormSubmit: any; onFormCancel: any }) {
     super();
-    this.#waypoint = waypointData.waypoint;
-    this.#destination = waypointData.dataBase.destinationsModel.getDestination(this.#waypoint);
-    this.#allDestinationsNames = waypointData.dataBase.destinationsModel.allDestinationsNames;
-    this.#availableOffers = waypointData.dataBase.offersModel.getAvailableOffers(this.#waypoint);
-    this.#selectedOffers = waypointData.dataBase.offersModel.getSelectedOffers(this.#waypoint);
+    this.#waypoint = waypoint;
+    this.#destination = dataBase.destinationsModel.getDestination(this.#waypoint)!;
+    this.#allDestinationsNames = dataBase.destinationsModel.allDestinationsNames;
+    this.#availableOffers = dataBase.offersModel.getAvailableOffers(this.#waypoint);
+    this.#selectedOffers = dataBase.offersModel.getSelectedOffers(this.#waypoint);
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormCancel = onFormCancel;
