@@ -3,6 +3,7 @@ import WaypointView from '../view/main/waypoint-view';
 import type { Waypoint } from '../types/waypoint-type';
 import { render, replace, remove } from '../framework/render';
 import type { WaypointData } from '../types/common';
+import type { DataBase } from './main-presenter';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -11,10 +12,12 @@ const Mode = {
 
 export default class WaypointPresenter {
   #mainListContainer: HTMLUListElement;
-  #waypointEditComponent: EditWaypointFormView | null = null;
+
   #waypointComponent: WaypointView | null = null;
-  // #dataBase: any = null;
+  #waypointEditComponent: EditWaypointFormView | null = null;
+  #dataBase: DataBase | null = null;
   #waypoint: Waypoint | null = null;
+
   #handleDataChange: (point: Waypoint) => void;
   // #waypointData: any = null;
   #handleModeChange: () => void;
@@ -35,23 +38,23 @@ export default class WaypointPresenter {
   }
 
   init({ waypoint, dataBase }: WaypointData) {
-    // this.#dataBase = dataBase;
+    this.#dataBase = dataBase;
     this.#waypoint = waypoint;
 
     const prevWaypointComponent = this.#waypointComponent;
     const prevWaypointEditComponent = this.#waypointEditComponent;
 
     this.#waypointComponent = new WaypointView({
-      waypoint,
-      dataBase,
-      onEditClick: this.#onEditClick,
-      onFavoriteClick: this.#onFavoriteClick,
+      waypoint: this.#waypoint,
+      dataBase: this.#dataBase,
+      onEditClick: this.#handleEditClick,
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#waypointEditComponent = new EditWaypointFormView({
-      waypoint,
-      dataBase,
-      onFormSubmit: this.#onFormSubmit,
+      waypoint: this.#waypoint,
+      dataBase: this.#dataBase,
+      onFormSubmit: this.#handleFormSubmit,
       onFormCancel: this.#onFormCancel,
     });
 
@@ -115,11 +118,10 @@ export default class WaypointPresenter {
     }
   };
 
-  #onEditClick = () => this.#switchToEditMode();
+  #handleEditClick = () => this.#switchToEditMode();
   #onFormCancel = () => this.#switchToViewMode();
-  #onFavoriteClick = () => this.#handleFavoriteClick();
 
-  #onFormSubmit = (waypoint: Waypoint) => {
+  #handleFormSubmit = (waypoint: Waypoint) => {
     this.#switchToViewMode();
     this.#handleDataChange(waypoint);
   };

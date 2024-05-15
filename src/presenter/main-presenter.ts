@@ -53,12 +53,13 @@ export default class ListPresenter {
     this.#filters = generateFilter(this.#dataBase.waypointsModel.waypoints);
     this.#filtersType = Randomizer.getArrayElement(FILTER_TYPES);
     this.#waypoints = this.#dataBase.waypointsModel.waypoints;
-    this.#waypointsList = [...this.#waypoints];
+    this.#waypointsList = [];
     this.#sourcedWaypoints = [...this.#waypoints];
   }
 
   init() {
     this.#renderFilters();
+    this.#waypointsList = [...this.#waypoints];
     this.#renderWaypointsList();
   }
 
