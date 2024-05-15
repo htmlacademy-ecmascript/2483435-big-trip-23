@@ -5,47 +5,66 @@ import type { DataBase } from './main-presenter';
 import type { Waypoint } from '../types/waypoint-type';
 import { render, replace, remove } from '../framework/render';
 
-export default class WaypointPresenter {
-  #mainListContainer: any;
-  #waypointEditComponent: any;
-  #waypointComponent: any;
-  #dataBase: any;
-  #waypoint: any;
-  #handleDataChange: any;
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 
-  constructor({mainListContainer: HTMLUListElement, onDataChange: any}) {
+export default class WaypointPresenter {
+  #mainListContainer: any = null;
+  #waypointEditComponent: any = null;
+  #waypointComponent: any = null;
+  #dataBase: any = null;
+  #waypoint: any = null;
+  #handleDataChange: any = null;
+  #waypointData: any = null;
+  #handleModeChange: any = null;
+  #mode = Mode.DEFAULT;
+
+  constructor({
+    mainListContainer,
+    onDataChange,
+    onModeChange,
+  }: {
+    mainListContainer: HTMLUListElement;
+    onDataChange: any;
+    onModeChange: any;
+  }) {
     this.#mainListContainer = mainListContainer;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
-    this.#dataBase = waypointData.dataBase;
-    this.#waypoint = waypointData.waypoint;
+    this.#waypointData = waypointData;
+    this.#dataBase = this.#waypointData.dataBase;
+    this.#waypoint = this.#waypointData.waypoint;
 
     const prevWaypointComponent = this.#waypointComponent;
     const prevWaypointEditComponent = this.#waypointEditComponent;
 
     this.#waypointComponent = new WaypointView({
-      waypointData,
+      waypointData: this.#waypointData,
       onEditClick: this.#onEditClick,
-      onFavoriteClick: this.#handleFavoriteClick,
+      onFavoriteClick: this.#onFavoriteClick,
     });
 
     this.#waypointEditComponent = new EditWaypointFormView({
-      waypointData,
+      waypointData: this.#waypointData,
       onFormSubmit: this.#onFormSubmit,
       onFormCancel: this.#onFormCancel,
     });
 
-    if (prevWaypointComponent !== null || prevWaypointEditComponent !== null) {
+    if (prevWaypointComponent === null || prevWaypointEditComponent === null) {
       render(this.#waypointComponent, this.#mainListContainer);
       return;
     }
-    if (this.#mainListContainer.contains(prevWaypointComponent.element)) {
+
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#waypointComponent, prevWaypointComponent);
     }
 
-    if (this.#mainListContainer.contains(prevWaypointEditComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#waypointEditComponent, prevWaypointEditComponent);
     }
 
@@ -58,14 +77,23 @@ export default class WaypointPresenter {
     remove(this.#waypointEditComponent);
   }
 
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#onFormCancel();
+    }
+  }
+
   #switchToEditMode() {
     replace(this.#waypointEditComponent, this.#waypointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #switchToViewMode() {
     replace(this.#waypointComponent, this.#waypointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeyDownHandler = (evt: KeyboardEvent) => {
@@ -76,14 +104,15 @@ export default class WaypointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#waypoint, isFavorite: !this.#waypoint.isFavorite});
+    this.#handleDataChange({ ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
   };
 
   #onEditClick = () => this.#switchToEditMode();
   #onFormCancel = () => this.#switchToViewMode();
-  #onFormSubmit = (waypoint:Waypoint) => {
+  #onFavoriteClick = () => this.#handleFavoriteClick();
+
+  #onFormSubmit = (waypoint: Waypoint) => {
     this.#switchToViewMode();
     this.#handleDataChange(waypoint);
   };
-
 }

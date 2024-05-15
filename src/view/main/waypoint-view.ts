@@ -59,8 +59,9 @@ export default class WaypointView extends View<HTMLTimeElement> {
   #destination: Destination;
   #selectedOffers: InnerOffer[];
   #handleEditClick: any;
+  #handleFavoriteClick: any;
 
-  constructor({ waypointData, onEditClick }: { waypointData: any; onEditClick: any }) {
+  constructor({ waypointData, onEditClick, onFavoriteClick }: { waypointData: any; onEditClick: any; onFavoriteClick: any }) {
     super();
 
     this.#waypoint = waypointData.waypoint;
@@ -68,7 +69,9 @@ export default class WaypointView extends View<HTMLTimeElement> {
     this.#selectedOffers = waypointData.dataBase.offersModel.getSelectedOffers(this.#waypoint);
 
     this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
     this.element.querySelector('.event__rollup-btn')!.addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn')!.addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -78,5 +81,10 @@ export default class WaypointView extends View<HTMLTimeElement> {
   #editClickHandler = (evt: any) => {
     evt.preventDefault();
     this.#handleEditClick();
+  };
+
+  #favoriteClickHandler = (evt: any) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }

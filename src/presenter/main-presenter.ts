@@ -1,14 +1,14 @@
 import MainTripView from '../view/header/current-trip-view';
 import FiltersView from '../view/header/filters-view';
 import SortingView from '../view/main/sorting-view';
-import WaypointView from '../view/main/waypoint-view';
+// import WaypointView from '../view/main/waypoint-view';
 import ListEmptyView from '../view/main/list-empty-view';
-import NewWaypointFormView from '../view/main/new-waypoint-form-view';
+// import NewWaypointFormView from '../view/main/new-waypoint-form-view';
 import MainListContainer from '../view/main/main-list-container';
 import { generateFilter } from '../utils/filter';
 import { FILTER_TYPES } from '../const';
 import Randomizer from '../utils/random';
-import { render, replace } from '../framework/render';
+import { render } from '../framework/render';
 import type { Waypoint } from '../types/waypoint-type';
 import type { Filters } from '../utils/filter';
 import type { FilterType } from '../const';
@@ -16,7 +16,7 @@ import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
 import type WaypointsModel from '../model/waypoints-model';
 import WaypointPresenter from './waypoint-presenter';
-import {updateItem} from '../utils/utils';
+import { updateItem } from '../utils/utils';
 
 export interface DataBase {
   destinationsModel: DestinationsModel;
@@ -54,19 +54,25 @@ export default class ListPresenter {
     this.#renderWaypointsList();
   }
 
-  #handleWaypointChange = (updatedWaypoint:Waypoint) => {
+  #handleModeChange = () => {
+    this.#waypointsPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleWaypointChange = (updatedWaypoint: Waypoint) => {
     this.#waypoints = updateItem(this.#waypoints, updatedWaypoint);
     this.#waypointsPresenters.get(updatedWaypoint.id).init(updatedWaypoint);
   };
 
-  #deleteWaypoint(waypoint: Waypoint){
+  #deleteWaypoint(waypoint: Waypoint) {
     this.#waypointsPresenters.get(waypoint.id).destroy();
     this.#waypointsPresenters.delete(waypoint.id);
   }
 
   #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
-    const waypointPresenter = new WaypointPresenter({this.#mainListContainer.element,
-      onDataChange: this.#handleWaypointChange
+    const waypointPresenter = new WaypointPresenter({
+      mainListContainer: this.#mainListContainer.element,
+      onDataChange: this.#handleWaypointChange,
+      onModeChange: this.#handleModeChange,
     });
     waypointPresenter.init(waypointData);
 
@@ -80,38 +86,39 @@ export default class ListPresenter {
     }
   }
 
-  #renderNewWaypoint(waypoint: Waypoint, dataBase: DataBase) {
-    const waypointData = { waypoint, dataBase };
+  // #renderNewWaypoint(waypoint: Waypoint, dataBase: DataBase) {
+  //   const waypointData = { waypoint, dataBase };
 
-    const escKeyDownHandler = (evt: KeyboardEvent) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        switchToViewMode();
-      }
-    };
+  //   const escKeyDownHandler = (evt: KeyboardEvent) => {
+  //     if (evt.key === 'Escape') {
+  //       evt.preventDefault();
+  //       switchToViewMode();
+  //     }
+  //   };
 
-    const onEditClick = () => 'заглушка';
-    const onFormSubmit = () => switchToViewMode();
-    const onFormCancel = () => switchToViewMode();
+  //   const onEditClick = () => 'заглушка';
+  //   const onFormSubmit = () => switchToViewMode();
+  //   const onFormCancel = () => switchToViewMode();
 
-    const waypointEditComponent = new NewWaypointFormView({
-      waypointData,
-      onFormSubmit: onFormSubmit,
-      onFormCancel: onFormCancel,
-    });
+  //   const waypointEditComponent = new NewWaypointFormView({
+  //     waypointData,
+  //     onFormSubmit: onFormSubmit,
+  //     onFormCancel: onFormCancel,
+  //   });
 
-    const waypointComponent = new WaypointView({
-      waypointData,
-      onEditClick: onEditClick,
-    });
+  //   const waypointComponent = new WaypointView({
+  //     waypointData,
+  //     onEditClick: onEditClick,
+  //     onFavoriteClick: onFavoriteClick,
+  //   });
 
-    function switchToViewMode() {
-      replace(waypointComponent, waypointEditComponent);
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }
+  //   function switchToViewMode() {
+  //     replace(waypointComponent, waypointEditComponent);
+  //     document.removeEventListener('keydown', escKeyDownHandler);
+  //   }
 
-    render(waypointEditComponent, this.#mainListContainer.element, 'afterbegin');
-  }
+  //   render(waypointEditComponent, this.#mainListContainer.element, 'afterbegin');
+  // }
 
   #renderTripMain() {
     render(new MainTripView(), this.#tripMainContainer, 'afterbegin');
@@ -124,7 +131,6 @@ export default class ListPresenter {
   #renderSorting() {
     render(new SortingView(), this.#tripEventsContainer, 'beforeend');
   }
-
 
   #renderListEmpty() {
     render(new ListEmptyView(this.#filtersType), this.#tripEventsContainer);
@@ -139,7 +145,7 @@ export default class ListPresenter {
       this.#renderTripMain();
       this.#renderSorting();
       this.#renderListContainer();
-      this.#renderNewWaypoint(this.#waypoints[0], this.#dataBase);
+      // this.#renderNewWaypoint(this.#waypoints[0], this.#dataBase);
       this.#renderWaypoints();
     } else {
       this.#renderListEmpty();
