@@ -39,7 +39,7 @@ export default class ListPresenter {
   #mainListContainer: MainListContainer;
   #tripFilterContainer: HTMLDivElement;
   #waypointsPresenters = new Map<Waypoint['id'], WaypointPresenter>();
-  #sortComponent: any;
+  #sortComponent: SortingView | null = null;
   #currentSortType: SortType = SORT_TYPES[0];
   #sourcedWaypoints: any;
 
@@ -53,12 +53,13 @@ export default class ListPresenter {
     this.#filters = generateFilter(this.#dataBase.waypointsModel.waypoints);
     this.#filtersType = Randomizer.getArrayElement(FILTER_TYPES);
     this.#waypoints = this.#dataBase.waypointsModel.waypoints;
-    this.#waypointsList = [...this.#waypoints];
+    this.#waypointsList = [];
     this.#sourcedWaypoints = [...this.#waypoints];
   }
 
   init() {
     this.#renderFilters();
+    this.#waypointsList = [...this.#waypoints];
     this.#renderWaypointsList();
   }
 

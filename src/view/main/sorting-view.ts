@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import View from '../../framework/view/view';
 import { SORT_TYPES } from '../../const';
 import { upperCaseLetter } from '../../utils/utils';
@@ -11,13 +10,15 @@ const createSortTemplate = (type: SortType): string => `
 </div>
 `;
 const getTemplate = `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-${SORT_TYPES.map((type: SortType): string => createSortTemplate(type)).join('')}
+${SORT_TYPES.map(createSortTemplate).join('')}
 </form>`;
 
-export default class SortingView extends View<HTMLFormElement> {
-  #handleSortTypeChange: any = null;
+export type SortHandler = (type: SortType) => void;
 
-  constructor({ onSortTypeChange }: { onSortTypeChange: any }) {
+export default class SortingView extends View<HTMLFormElement> {
+  #handleSortTypeChange: SortHandler;
+
+  constructor({ onSortTypeChange }: { onSortTypeChange: SortHandler }) {
     super();
     this.#handleSortTypeChange = onSortTypeChange;
 
@@ -28,6 +29,7 @@ export default class SortingView extends View<HTMLFormElement> {
     return getTemplate;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   #sortTypeChangeHandler = (evt: any) => {
     if (evt.target.tagName !== 'A') {
       return;

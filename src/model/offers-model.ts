@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type MockService from '../service/mock';
 import type { Offer } from '../types/offer-type';
 import type { Waypoint } from '../types/waypoint-type';

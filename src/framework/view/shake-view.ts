@@ -1,3 +1,4 @@
+import type { EmptyFn } from '../../types/common';
 import './abstract-view.css';
 import View from './view';
 
@@ -11,7 +12,7 @@ export default abstract class ShakeView<El extends Element = HTMLDivElement> ext
     super();
   }
 
-  shake(callback?: () => void) {
+  shake(callback?: EmptyFn) {
     this.element.classList.add(SnakeAnimation.CLASS_NAME);
     setTimeout(() => {
       this.element.classList.remove(SnakeAnimation.CLASS_NAME);
