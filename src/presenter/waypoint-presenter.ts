@@ -2,13 +2,15 @@ import EditWaypointFormView from '../view/main/edit-waypoint-form-view';
 import WaypointView from '../view/main/waypoint-view';
 import type { Waypoint } from '../types/waypoint-type';
 import { render, replace, remove } from '../framework/render';
-import type { WaypointData } from '../types/common';
+import type { EmptyFn, WaypointData } from '../types/common';
 import type { DataBase } from './main-presenter';
 
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
+const enum Mode {
+  DEFAULT,
+  EDITING,
+}
+
+type PointChange = (point: Waypoint) => void;
 
 export default class WaypointPresenter {
   #mainListContainer: HTMLUListElement;
@@ -18,9 +20,9 @@ export default class WaypointPresenter {
   #dataBase: DataBase | null = null;
   #waypoint: Waypoint | null = null;
 
-  #handleDataChange: (point: Waypoint) => void;
+  #handleDataChange: PointChange;
   // #waypointData: any = null;
-  #handleModeChange: () => void;
+  #handleModeChange: EmptyFn;
   #mode = Mode.DEFAULT;
 
   constructor({
@@ -29,8 +31,8 @@ export default class WaypointPresenter {
     onModeChange,
   }: {
     mainListContainer: HTMLUListElement;
-    onDataChange: (point: Waypoint) => void;
-    onModeChange: () => void;
+    onDataChange: PointChange;
+    onModeChange: EmptyFn;
   }) {
     this.#mainListContainer = mainListContainer;
     this.#handleDataChange = onDataChange;

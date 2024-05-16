@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import View from '../../framework/view/view';
 import dayjs from 'dayjs';
 import type { Waypoint } from '../../types/waypoint-type';
@@ -7,7 +6,7 @@ import type { InnerOffer } from '../../types/offer-type';
 import { capitalLetter } from '../../utils/utils';
 import { getDuration } from '../../utils/time';
 import { createSelectedOffersTemplate } from '../../templates/waypoint/selected-offers-template';
-import type { WaypointData } from '../../types/common';
+import type { EmptyFn, WaypointData } from '../../types/common';
 
 function getTemplate(waypoint: Waypoint, destination: Destination, selectedOffers: InnerOffer[]): string {
   const { dateFrom, dateTo, type, basePrice, isFavorite } = waypoint;
@@ -59,10 +58,10 @@ export default class WaypointView extends View<HTMLTimeElement> {
   #waypoint: Waypoint;
   #destination: Destination;
   #selectedOffers: InnerOffer[];
-  #handleEditClick: any;
-  #handleFavoriteClick: any;
+  #handleEditClick: EmptyFn;
+  #handleFavoriteClick: EmptyFn;
 
-  constructor({ waypoint, dataBase, onEditClick, onFavoriteClick }: WaypointData & { onEditClick: any; onFavoriteClick: any }) {
+  constructor({ waypoint, dataBase, onEditClick, onFavoriteClick }: WaypointData & { onEditClick: EmptyFn; onFavoriteClick: EmptyFn }) {
     super();
 
     this.#waypoint = waypoint;
@@ -79,12 +78,12 @@ export default class WaypointView extends View<HTMLTimeElement> {
     return getTemplate(this.#waypoint, this.#destination, this.#selectedOffers);
   }
 
-  #editClickHandler = (evt: any) => {
+  #editClickHandler: EventListener = (evt) => {
     evt.preventDefault();
     this.#handleEditClick();
   };
 
-  #favoriteClickHandler = (evt: any) => {
+  #favoriteClickHandler: EventListener = (evt) => {
     evt.preventDefault();
     this.#handleFavoriteClick();
   };

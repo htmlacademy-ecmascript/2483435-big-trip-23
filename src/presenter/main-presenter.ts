@@ -39,7 +39,7 @@ export default class ListPresenter {
   #mainListContainer: MainListContainer;
   #tripFilterContainer: HTMLDivElement;
   #waypointsPresenters = new Map<Waypoint['id'], WaypointPresenter>();
-  #sortComponent: any;
+  #sortComponent: SortingView | null = null;
   #currentSortType: SortType = SORT_TYPES[0];
   #sourcedWaypoints: any;
 
