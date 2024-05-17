@@ -9,7 +9,7 @@ const createSortTemplate = (type: SortType, activeSortType: SortType): string =>
 <label class="trip-sort__btn" for="sort-${type}">${upperCaseLetter(type)}</label>
 </div>
 `;
-const getTemplate = (activeSortType: SortType) =>`<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+const getTemplate = (activeSortType: SortType) => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
 ${SORT_TYPES.map((type) => createSortTemplate(type, activeSortType)).join('')}
 </form>`;
 
@@ -19,7 +19,7 @@ export default class SortingView extends View<HTMLFormElement> {
   #handleSortTypeChange: SortHandler;
   #activeSortType: SortType;
 
-  constructor({ onSortTypeChange, activeSortType }: { onSortTypeChange: SortHandler, activeSortType: SortType }) {
+  constructor({ onSortTypeChange, activeSortType }: { onSortTypeChange: SortHandler; activeSortType: SortType }) {
     super();
     this.#handleSortTypeChange = onSortTypeChange;
     this.#activeSortType = activeSortType;

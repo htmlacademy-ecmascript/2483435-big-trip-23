@@ -14,7 +14,6 @@ export const enum TimeDiff {
 }
 
 const correctDuration = (time: any) => {
-
   const days = time[0];
   const hours = time[1];
   const minutes = time[2];
@@ -31,7 +30,6 @@ const correctDuration = (time: any) => {
 
   return correctTime;
 };
-
 
 const findDuration = (date1: any, date2: any) => {
   const diff = Math.abs(dayjs(date2).diff(date1));
@@ -50,9 +48,8 @@ const findDuration = (date1: any, date2: any) => {
 
 const getDuration = (date1: any, date2: any) => {
   const currentDuration = findDuration(date1, date2);
-  return correctDuration (currentDuration);
+  return correctDuration(currentDuration);
 };
-
 
 const isFutureWaypoints = (dateFrom: Dayjs) => dayjs(dateFrom).isAfter(dayjs());
 

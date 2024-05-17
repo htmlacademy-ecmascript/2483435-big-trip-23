@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import MainTripView from '../view/header/current-trip-view';
 import FiltersView from '../view/header/filters-view';
 import SortingView from '../view/main/sorting-view';
@@ -42,7 +41,7 @@ export default class ListPresenter {
   #waypointsPresenters = new Map<Waypoint['id'], WaypointPresenter>();
   #sortComponent: SortingView | null = null;
   #currentSortType: SortType = SORT_TYPES[0];
-  #sourcedWaypoints: any = [];
+  #sourcedWaypoints: Waypoint[] = [];
   #wasRendered: boolean = false;
 
   constructor(dataBase: DataBase) {
@@ -72,7 +71,6 @@ export default class ListPresenter {
 
     this.#renderTripMain();
     this.#renderFilters();
-
   }
 
   #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
