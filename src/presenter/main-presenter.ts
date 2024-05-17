@@ -43,6 +43,7 @@ export default class ListPresenter {
   #sortComponent: SortingView | null = null;
   #currentSortType: SortType = SORT_TYPES[0];
   #sourcedWaypoints: any = [];
+  #wasRendered: boolean = false;
 
   constructor(dataBase: DataBase) {
     this.#tripMainContainer = document.querySelector<HTMLDivElement>('.trip-main')!;
@@ -58,11 +59,20 @@ export default class ListPresenter {
   }
 
   init() {
-    this.#renderTripMain();
-    this.#renderFilters();
     this.#waypointsList = [...this.#waypoints];
     this.#sourcedWaypoints = [...this.#waypoints];
-    this.#renderWaypointsList();
+
+    if (this.#wasRendered === false) {
+      this.#sortWaypoints(this.#currentSortType);
+      this.#renderWaypointsList(this.#currentSortType);
+      this.#wasRendered = true;
+    } else {
+      this.#renderWaypointsList(this.#currentSortType);
+    }
+
+    this.#renderTripMain();
+    this.#renderFilters();
+
   }
 
   #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
@@ -101,9 +111,9 @@ export default class ListPresenter {
       return;
     }
 
-    this.#sortWaypoints(sortType);
     this.#clearWaypointsList();
-    this.#renderWaypointsList();
+    this.#sortWaypoints(sortType);
+    this.#renderWaypointsList(sortType);
   };
 
   #sortWaypoints(sortType: SortType) {
@@ -177,9 +187,10 @@ export default class ListPresenter {
     render(new FiltersView({ filters: this.#filters, currentFilter: this.#filtersType }), this.#tripFilterContainer, 'beforeend');
   }
 
-  #renderSorting() {
+  #renderSorting(activeSortType: SortType) {
     this.#sortComponent = new SortingView({
       onSortTypeChange: this.#handleSortTypeChange,
+      activeSortType: activeSortType,
     });
 
     render(this.#sortComponent, this.#tripEventsContainer, 'afterbegin');
@@ -189,18 +200,14 @@ export default class ListPresenter {
     render(new ListEmptyView(this.#filtersType), this.#tripEventsContainer);
   }
 
-
-  #renderWaypointsList() {
+  #renderWaypointsList(sortType: SortType) {
     if (this.#waypoints.length > 0) {
       render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
 
-
-      this.#renderSorting();
+      this.#renderSorting(sortType);
 
       this.#renderWaypoints();
-
     } else {
-
       this.#renderListEmpty();
     }
   }
