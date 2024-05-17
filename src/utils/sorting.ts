@@ -1,15 +1,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import dayjs from 'dayjs';
 import type { Waypoint } from '../types/waypoint-type';
-import { getDuration } from './time';
+import { findDuration } from './time';
 
-const compare = (a: any, b: any) => (a > b ? a : b);
-
-const priceSort = (waypointA: any, waypointB: any) => compare(waypointA.price, waypointB.price);
+const priceSort = (waypointA: any, waypointB: any) => waypointB.basePrice - waypointA.basePrice;
 
 const timeSort = (waypointA: Waypoint, waypointB: Waypoint) => {
-  const a = getDuration(waypointA.dateFrom, waypointA.dateTo);
-  const b = getDuration(waypointB.dateFrom, waypointB.dateTo);
-  return compare(a, b);
+  const durationInSeconds = (time: any) => time[0] * 3600 + time[1] * 60 + time[2];
+
+  const firstWaypoint = durationInSeconds(findDuration(waypointA.dateTo, waypointA.dateFrom));
+  const secondWaypoint = durationInSeconds(findDuration(waypointB.dateTo, waypointB.dateFrom));
+
+
+  return secondWaypoint - firstWaypoint;
 };
 
-export { priceSort, timeSort };
+
+function getWeightForNullDate(waypointA: Waypoint, waypointB: Waypoint) {
+  if (waypointA.dateFrom === null && waypointB.dateFrom === null) {
+    return 0;
+  }
+
+  if (waypointA.dateFrom === null) {
+    return 1;
+  }
+
+  if (waypointB.dateFrom === null) {
+    return -1;
+  }
+
+  return null;
+}
+
+function daySort(waypointA: Waypoint, waypointB: Waypoint) {
+  const weight = getWeightForNullDate(waypointA, waypointB);
+
+  return weight ?? dayjs(waypointA.dateFrom).diff(dayjs(waypointB.dateFrom));
+}
+
+export { priceSort, timeSort, daySort };

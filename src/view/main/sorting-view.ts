@@ -10,7 +10,7 @@ const createSortTemplate = (type: SortType): string => `
 </div>
 `;
 const getTemplate = `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-${SORT_TYPES.map(createSortTemplate).join('')}
+${SORT_TYPES.map((type) => createSortTemplate(type)).join('')}
 </form>`;
 
 export type SortHandler = (type: SortType) => void;
@@ -31,7 +31,7 @@ export default class SortingView extends View<HTMLFormElement> {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   #sortTypeChangeHandler = (evt: any) => {
-    if (evt.target.tagName !== 'A') {
+    if (evt.target.tagName !== 'INPUT') {
       return;
     }
 

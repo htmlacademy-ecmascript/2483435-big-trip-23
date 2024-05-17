@@ -9,21 +9,11 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
 
-const enum TimeDiff {
+export const enum TimeDiff {
   Day = 60 * 60 * 24 * 1000,
 }
 
-function getDuration(date1: any, date2: any): string {
-  const diff = Math.abs(dayjs(date2).diff(date1));
-
-  const daysValue = Math.floor(diff / TimeDiff.Day);
-  const durationValue = dayjs.duration(diff);
-
-  const time = durationValue.format('DD HH mm').split(' ');
-
-  if (dayjs.duration(diff).get('day') !== daysValue) {
-    time[0] = `${daysValue}D`;
-  }
+const correctDuration = (time: any) => {
 
   const days = time[0];
   const hours = time[1];
@@ -40,7 +30,29 @@ function getDuration(date1: any, date2: any): string {
   }
 
   return correctTime;
-}
+};
+
+
+const findDuration = (date1: any, date2: any) => {
+  const diff = Math.abs(dayjs(date2).diff(date1));
+
+  const daysValue = Math.floor(diff / TimeDiff.Day);
+  const durationValue = dayjs.duration(diff);
+
+  const time = durationValue.format('DD HH mm').split(' ');
+
+  if (dayjs.duration(diff).get('day') !== daysValue) {
+    time[0] = `${daysValue}D`;
+  }
+
+  return time;
+};
+
+const getDuration = (date1: any, date2: any) => {
+  const currentDuration = findDuration(date1, date2);
+  return correctDuration (currentDuration);
+};
+
 
 const isFutureWaypoints = (dateFrom: Dayjs) => dayjs(dateFrom).isAfter(dayjs());
 
@@ -50,4 +62,4 @@ const isPastWaypoints = (dateTo: Dayjs) => dayjs(dateTo).isBefore(dayjs());
 
 const appDay = dayjs;
 
-export { appDay, getDuration, isFutureWaypoints, isPresentWaypoints, isPastWaypoints };
+export { appDay, getDuration, isFutureWaypoints, isPresentWaypoints, isPastWaypoints, findDuration };
