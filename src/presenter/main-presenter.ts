@@ -143,40 +143,6 @@ export default class ListPresenter {
     remove(this.#sortComponent);
   }
 
-  // #renderNewWaypoint(waypoint: Waypoint, dataBase: DataBase) {
-  //   const waypointData = { waypoint, dataBase };
-
-  //   const escKeyDownHandler = (evt: KeyboardEvent) => {
-  //     if (evt.key === 'Escape') {
-  //       evt.preventDefault();
-  //       switchToViewMode();
-  //     }
-  //   };
-
-  //   const onEditClick = () => 'заглушка';
-  //   const onFormSubmit = () => switchToViewMode();
-  //   const onFormCancel = () => switchToViewMode();
-
-  //   const waypointEditComponent = new NewWaypointFormView({
-  //     waypointData,
-  //     onFormSubmit: onFormSubmit,
-  //     onFormCancel: onFormCancel,
-  //   });
-
-  //   const waypointComponent = new WaypointView({
-  //     waypointData,
-  //     onEditClick: onEditClick,
-  //     onFavoriteClick: onFavoriteClick,
-  //   });
-
-  //   function switchToViewMode() {
-  //     replace(waypointComponent, waypointEditComponent);
-  //     document.removeEventListener('keydown', escKeyDownHandler);
-  //   }
-
-  //   render(waypointEditComponent, this.#mainListContainer.element, 'afterbegin');
-  // }
-
   #renderTripMain() {
     render(new MainTripView(), this.#tripMainContainer, 'afterbegin');
   }

@@ -20,7 +20,7 @@ export default class DestinationsModel {
     return Array.from(this.#destinations.map((waypoint) => waypoint.name));
   }
 
-  getDestination(waypoint: Waypoint) {
-    return this.#destinations.find((item) => item.id === waypoint.destination);
+  getDestination(destination: Waypoint['destination']) {
+    return this.#destinations.find((item) => item.id === destination);
   }
 }

@@ -65,7 +65,7 @@ export default class WaypointView extends View<HTMLTimeElement> {
     super();
 
     this.#waypoint = waypoint;
-    this.#destination = dataBase.destinationsModel.getDestination(this.#waypoint)!;
+    this.#destination = dataBase.destinationsModel.getDestination(this.#waypoint.destination)!;
     this.#selectedOffers = dataBase.offersModel.getSelectedOffers(this.#waypoint);
 
     this.#handleEditClick = onEditClick;

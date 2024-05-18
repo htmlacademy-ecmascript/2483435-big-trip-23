@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ShakeView from './shake-view';
+export type Partial<T> = { [P in keyof T]?: T[P] | undefined; }
 
 export default abstract class AbstractStatefulView<State extends object, El extends Element = HTMLDivElement> extends ShakeView<El> {
   _state = {} as State;
