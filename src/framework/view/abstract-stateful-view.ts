@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import ShakeView from './shake-view';
-export type Partial<T> = { [P in keyof T]?: T[P] | undefined; }
 
 export default abstract class AbstractStatefulView<State extends object, El extends Element = HTMLDivElement> extends ShakeView<El> {
   _state = {} as State;
@@ -15,7 +13,7 @@ export default abstract class AbstractStatefulView<State extends object, El exte
     this.#rerenderElement();
   }
 
-  abstract _restoreHandlers(): any;
+  abstract _restoreHandlers(): void;
 
   _setState(update: State | Partial<State>) {
     this._state = structuredClone({ ...this._state, ...update });

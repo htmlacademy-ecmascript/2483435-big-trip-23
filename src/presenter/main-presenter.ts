@@ -1,9 +1,7 @@
 import MainTripView from '../view/header/current-trip-view';
 import FiltersView from '../view/header/filters-view';
 import SortingView from '../view/main/sorting-view';
-// import WaypointView from '../view/main/waypoint-view';
 import ListEmptyView from '../view/main/list-empty-view';
-// import NewWaypointFormView from '../view/main/new-waypoint-form-view';
 import MainListContainer from '../view/main/main-list-container';
 import { generateFilter } from '../utils/filter';
 import { FILTER_TYPES } from '../const';
@@ -20,8 +18,6 @@ import { updateItem } from '../utils/utils';
 import type { SortType } from '../const';
 import { SORT_TYPES } from '../const';
 import { priceSort, timeSort, daySort } from '../utils/sorting';
-import { remove } from '../framework/render';
-
 export interface DataBase {
   destinationsModel: DestinationsModel;
   offersModel: OffersModel;
@@ -39,7 +35,7 @@ export default class ListPresenter {
   #mainListContainer: MainListContainer;
   #tripFilterContainer: HTMLDivElement;
   #waypointsPresenters = new Map<Waypoint['id'], WaypointPresenter>();
-  #sortComponent: SortingView | null = null;
+  #sortComponent: SortingView;
   #currentSortType: SortType = SORT_TYPES[0];
   #sourcedWaypoints: Waypoint[] = [];
   #wasRendered: boolean = false;
@@ -55,6 +51,7 @@ export default class ListPresenter {
     this.#filtersType = Randomizer.getArrayElement(FILTER_TYPES);
     this.#waypoints = this.#dataBase.waypointsModel.waypoints;
     this.#waypointsList = [];
+    this.#sortComponent = new SortingView({ onSortTypeChange: this.#handleSortTypeChange });
   }
 
   init() {
@@ -63,10 +60,10 @@ export default class ListPresenter {
 
     if (this.#wasRendered === false) {
       this.#sortWaypoints(this.#currentSortType);
-      this.#renderWaypointsList(this.#currentSortType);
+      this.#renderWaypointsList();
       this.#wasRendered = true;
     } else {
-      this.#renderWaypointsList(this.#currentSortType);
+      this.#renderWaypointsList();
     }
 
     this.#renderTripMain();
@@ -111,7 +108,7 @@ export default class ListPresenter {
 
     this.#clearWaypointsList();
     this.#sortWaypoints(sortType);
-    this.#renderWaypointsList(sortType);
+    this.#renderWaypointsList();
   };
 
   #sortWaypoints(sortType: SortType) {
@@ -140,7 +137,6 @@ export default class ListPresenter {
   #clearWaypointsList() {
     this.#waypointsPresenters.forEach((presenter) => presenter.destroy());
     this.#waypointsPresenters.clear();
-    remove(this.#sortComponent);
   }
 
   #renderTripMain() {
@@ -151,12 +147,7 @@ export default class ListPresenter {
     render(new FiltersView({ filters: this.#filters, currentFilter: this.#filtersType }), this.#tripFilterContainer, 'beforeend');
   }
 
-  #renderSorting(activeSortType: SortType) {
-    this.#sortComponent = new SortingView({
-      onSortTypeChange: this.#handleSortTypeChange,
-      activeSortType: activeSortType,
-    });
-
+  #renderSorting() {
     render(this.#sortComponent, this.#tripEventsContainer, 'afterbegin');
   }
 
@@ -164,11 +155,11 @@ export default class ListPresenter {
     render(new ListEmptyView(this.#filtersType), this.#tripEventsContainer);
   }
 
-  #renderWaypointsList(sortType: SortType) {
+  #renderWaypointsList() {
     if (this.#waypoints.length > 0) {
       render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
 
-      this.#renderSorting(sortType);
+      this.#renderSorting();
 
       this.#renderWaypoints();
     } else {

@@ -4,9 +4,9 @@ import type { Waypoint } from '../types/waypoint-type';
 
 const filter: Record<FilterType, (waypoints: Waypoint[]) => Waypoint[]> = {
   everything: (waypoints) => waypoints,
-  future: (waypoints) => waypoints.filter((waypoint) => isFutureWaypoints(waypoint.dateFrom)),
-  present: (waypoints) => waypoints.filter((waypoint) => isPresentWaypoints(waypoint.dateFrom, waypoint.dateTo)),
-  past: (waypoints) => waypoints.filter((waypoint) => isPastWaypoints(waypoint.dateTo)),
+  future: (waypoints) => waypoints.filter((waypoint) => isFutureWaypoints(waypoint)),
+  present: (waypoints) => waypoints.filter((waypoint) => isPresentWaypoints(waypoint)),
+  past: (waypoints) => waypoints.filter((waypoint) => isPastWaypoints(waypoint)),
 };
 
 function generateFilter(waypoints: Waypoint[]) {

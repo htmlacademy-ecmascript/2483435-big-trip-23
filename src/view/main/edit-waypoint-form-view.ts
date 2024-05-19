@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from 'dayjs';
 import { capitalLetter } from '../../utils/utils';
 import { createWaypointsTypesListTemplate } from '../../templates/new-edit-form/types-template';
@@ -8,11 +7,11 @@ import { createDescriptionTemplate } from '../../templates/new-edit-form/descrip
 import type { WaypointData } from '../../types/common';
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
 import type { State } from '../../types/state';
-import { getAvailableOffers, getSelectedOffers } from '../../utils/offers';
+import type { Waypoint } from '../../types/waypoint-type';
+import type { DataBase } from '@presenter/main-presenter';
 
-
-function getTemplate(data: State) {
-  const { dateFrom, dateTo, type, destination, basePrice, dataBase, availableOffers, selectedOffers } = data;
+function getTemplate(data: State, dataBase: DataBase) {
+  const { dateFrom, dateTo, type, destination, basePrice, selectedOffs } = data;
 
   const correctType = capitalLetter(type);
 
@@ -75,7 +74,7 @@ function getTemplate(data: State) {
     </header>
     <section class="event__details">
 
-    ${createOffersTemplate(availableOffers, selectedOffers)}
+    ${createOffersTemplate(type, selectedOffs, dataBase)}
 
     ${createDescriptionTemplate(destination, dataBase)}
 
@@ -85,55 +84,61 @@ function getTemplate(data: State) {
     `;
 }
 
-export default class EditWaypointFormView extends AbstractStatefulView<any> {
+export default class EditWaypointFormView extends AbstractStatefulView<State> {
   _restoreHandlers() {
     throw new Error('Method not implemented.');
   }
 
-  #handleFormSubmit: any;
-  #handleFormCancel: any;
+  #handleFormSubmit: (waypoint: Waypoint) => void;
+  #handleFormCancel: () => void;
   #waypointData: WaypointData;
+  #waypoint: Waypoint;
+  #dataBase: DataBase;
 
-  constructor({ waypoint, dataBase, onFormSubmit, onFormCancel }: WaypointData & { onFormSubmit: any; onFormCancel: any }) {
+  constructor({
+    waypoint,
+    dataBase,
+    onFormSubmit,
+    onFormCancel,
+  }: WaypointData & { onFormSubmit: (waypoint: Waypoint) => void; onFormCancel: () => void }) {
     super();
-    this.#waypointData = {waypoint, dataBase};
-    this._setState(EditWaypointFormView.parseTaskToState(this.#waypointData));
+    this.#waypointData = { waypoint, dataBase };
+    this.#waypoint = this.#waypointData.waypoint;
+    this.#dataBase = this.#waypointData.dataBase;
+    this._setState(this.parseTaskToState(this.#waypoint));
 
-
-    // this.#handleFormSubmit = onFormSubmit;
-    // this.#handleFormCancel = onFormCancel;
-    // this.element.querySelector('form')!.addEventListener('submit', this.#formSubmitHandler);
-    // this.element.querySelector('.event__reset-btn')!.addEventListener('click', this.#onCancelForm);
-    // this.element.querySelector('.event__rollup-btn')!.addEventListener('click', this.#onCancelForm);
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleFormCancel = onFormCancel;
+    this.element.querySelector('form')!.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn')!.addEventListener('click', this.#onCancelForm);
+    this.element.querySelector('.event__rollup-btn')!.addEventListener('click', this.#onCancelForm);
   }
 
   get template() {
-    return getTemplate(this._state);
+    return getTemplate(this._state, this.#dataBase);
   }
 
-  #formSubmitHandler = (evt: any) => {
+  #formSubmitHandler: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(EditWaypointFormView.parseStateToTask(this._state));
+    this.#handleFormSubmit(this.parseStateToTask());
   };
 
-  #onCancelForm = (evt: any) => {
+  #onCancelForm: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(EditWaypointFormView.parseStateToTask(this._state));
+    this.#handleFormSubmit(this.parseStateToTask());
   };
 
-  static parseTaskToState(waypointData: WaypointData) {
-    const {waypoint} = waypointData;
+  parseTaskToState(waypoint: Waypoint): State {
+    return {
+      ...waypoint,
 
-    return {...waypoint,
-
-      availableOffers: getAvailableOffers(waypointData),
-      selectedOffers: getSelectedOffers(waypointData),
-
+      selectedOffs: new Set(waypoint.offers),
     };
   }
 
-  static parseStateToTask(state: typeof this.parseTaskToState) {
-    const waypoint = {...state};
+  parseStateToTask(): Waypoint {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { selectedOffs, ...waypoint } = this._state;
 
     return waypoint;
   }
