@@ -22,5 +22,4 @@ export default class DestinationsModel {
 
   getDestinationByID = (destination: Waypoint['destination']) => this.#destinations.find((item) => item.id === destination);
   getDestinationByName = (name: Destination['name']) => this.#destinations.find((item) => item.name === name);
-
 }

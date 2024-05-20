@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from 'dayjs';
 import { capitalLetter } from '../../utils/utils';
 import { createWaypointsTypesListTemplate } from '../../templates/new-edit-form/types-template';
@@ -10,6 +11,8 @@ import type { State } from '../../types/state';
 import type { Waypoint, WaypointType } from '../../types/waypoint-type';
 import type { DataBase } from '@presenter/main-presenter';
 import type { Destination } from '../../types/destination-type';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 function getTemplate(data: State, dataBase: DataBase) {
   const { dateFrom, dateTo, type, destination, basePrice, selectedOffs } = data;
@@ -92,6 +95,8 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
   #waypoint: Waypoint;
   #dataBase: DataBase;
   #allDestinations: Destination['name'][];
+  #dateStart: any = null;
+  #dateFinish: any = null;
 
   constructor({
     waypoint,
@@ -116,6 +121,15 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     return getTemplate(this._state, this.#dataBase);
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this.#dateStart) {
+      this.#dateStart.destroy();
+      this.#dateStart = null;
+    }
+  }
+
   _restoreHandlers() {
     this.element.querySelector('form')!.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn')!.addEventListener('click', this.#onCancelForm);
@@ -123,6 +137,9 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     this.element.querySelector('.event__type-list')!.addEventListener('click', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination')!.addEventListener('input', this.#destinationChangeHandler);
     this.element.querySelector('.event__details')!.addEventListener('input', this.#selectedOffersHandler);
+
+    this.#setEventStart();
+    this.#setEventFinish();
   }
 
   #formSubmitHandler: EventListener = (evt) => {
@@ -143,6 +160,7 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     evt.preventDefault();
     this.updateElement({
       type: selectedType,
+      selectedOffs: new Set(this.#dataBase.offersModel.getAvailableOffersIDs(selectedType)),
     });
   };
 
@@ -180,16 +198,46 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     };
 
     this._setState({
-      selectedOffs: selectedOffers()
+      selectedOffs: selectedOffers(),
     });
   };
 
   reset(waypoint: Waypoint) {
-    this.updateElement(
-      this.parseTaskToState(waypoint),
-    );
+    this.updateElement(this.parseTaskToState(waypoint));
   }
 
+  #startDateChangeHandler = ([userDate]: any) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #finishDateChangeHandler = ([userDate]: any) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
+  #setEventStart() {
+    this.#dateStart = flatpickr(this.element.querySelectorAll('.event__input--time')[0], {
+      minDate: this.#waypoint.dateFrom,
+      enableTime: true,
+      dateFormat: 'j\\/m\\/y H\\:i',
+      defaultDate: this._state.dateFrom,
+      onChange: this.#startDateChangeHandler,
+    });
+  }
+
+  #setEventFinish() {
+    this.#dateFinish = flatpickr(this.element.querySelectorAll('.event__input--time')[1], {
+      minDate: this.#waypoint.dateFrom,
+      enableTime: true,
+      static: true,
+      dateFormat: 'j\\/m\\/y H\\:i',
+      defaultDate: this._state.dateTo,
+      onChange: this.#finishDateChangeHandler,
+    });
+  }
 
   parseTaskToState(waypoint: Waypoint): State {
     return {

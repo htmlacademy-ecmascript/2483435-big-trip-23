@@ -3,7 +3,6 @@ import { checkMatch } from '../../utils/utils';
 import type { DataBase } from '@presenter/main-presenter';
 import { capitalLetter } from '../../utils/utils';
 
-
 const correctName = (destination: Waypoint['destination'], dataBase: DataBase) => {
   const currentDestination = dataBase.destinationsModel.getDestinationByID(destination);
   return capitalLetter(currentDestination!.name);
