@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import MainTripView from '../view/header/current-trip-view';
 import FiltersView from '../view/header/filters-view';
 import SortingView from '../view/main/sorting-view';
-// import WaypointView from '../view/main/waypoint-view';
 import ListEmptyView from '../view/main/list-empty-view';
-// import NewWaypointFormView from '../view/main/new-waypoint-form-view';
 import MainListContainer from '../view/main/main-list-container';
 import { generateFilter } from '../utils/filter';
 import { FILTER_TYPES } from '../const';
@@ -20,8 +17,7 @@ import WaypointPresenter from './waypoint-presenter';
 import { updateItem } from '../utils/utils';
 import type { SortType } from '../const';
 import { SORT_TYPES } from '../const';
-import { priceSort, timeSort } from '../utils/sorting';
-
+import { priceSort, timeSort, daySort } from '../utils/sorting';
 export interface DataBase {
   destinationsModel: DestinationsModel;
   offersModel: OffersModel;
@@ -39,9 +35,10 @@ export default class ListPresenter {
   #mainListContainer: MainListContainer;
   #tripFilterContainer: HTMLDivElement;
   #waypointsPresenters = new Map<Waypoint['id'], WaypointPresenter>();
-  #sortComponent: SortingView | null = null;
+  #sortComponent: SortingView;
   #currentSortType: SortType = SORT_TYPES[0];
-  #sourcedWaypoints: any;
+  #sourcedWaypoints: Waypoint[] = [];
+  #wasRendered: boolean = false;
 
   constructor(dataBase: DataBase) {
     this.#tripMainContainer = document.querySelector<HTMLDivElement>('.trip-main')!;
@@ -54,13 +51,23 @@ export default class ListPresenter {
     this.#filtersType = Randomizer.getArrayElement(FILTER_TYPES);
     this.#waypoints = this.#dataBase.waypointsModel.waypoints;
     this.#waypointsList = [];
-    this.#sourcedWaypoints = [...this.#waypoints];
+    this.#sortComponent = new SortingView({ onSortTypeChange: this.#handleSortTypeChange });
   }
 
   init() {
-    this.#renderFilters();
     this.#waypointsList = [...this.#waypoints];
-    this.#renderWaypointsList();
+    this.#sourcedWaypoints = [...this.#waypoints];
+
+    if (this.#wasRendered === false) {
+      this.#sortWaypoints(this.#currentSortType);
+      this.#renderWaypointsList();
+      this.#wasRendered = true;
+    } else {
+      this.#renderWaypointsList();
+    }
+
+    this.#renderTripMain();
+    this.#renderFilters();
   }
 
   #renderWaypoint(waypointData: { waypoint: Waypoint; dataBase: DataBase }) {
@@ -87,11 +94,11 @@ export default class ListPresenter {
 
   #handleWaypointChange = (updatedWaypoint: Waypoint) => {
     this.#waypointsList = updateItem(this.#waypointsList, updatedWaypoint);
+    this.#sourcedWaypoints = updateItem(this.#sourcedWaypoints, updatedWaypoint);
     this.#waypointsPresenters.get(updatedWaypoint.id)?.init({
       waypoint: updatedWaypoint,
       dataBase: this.#dataBase,
     });
-    this.#sourcedWaypoints = updateItem(this.#sourcedWaypoints, updatedWaypoint);
   };
 
   #handleSortTypeChange = (sortType: SortType) => {
@@ -99,18 +106,21 @@ export default class ListPresenter {
       return;
     }
 
-    this.#sortWaypoints(sortType);
     this.#clearWaypointsList();
+    this.#sortWaypoints(sortType);
     this.#renderWaypointsList();
   };
 
   #sortWaypoints(sortType: SortType) {
     switch (sortType) {
+      case 'day':
+        this.#waypointsList.sort(daySort);
+        break;
       case 'time':
-        this.#waypointsList.sort(priceSort);
+        this.#waypointsList.sort(timeSort);
         break;
       case 'price':
-        this.#waypointsList.sort(timeSort);
+        this.#waypointsList.sort(priceSort);
         break;
       default:
         this.#waypointsList = [...this.#sourcedWaypoints];
@@ -129,40 +139,6 @@ export default class ListPresenter {
     this.#waypointsPresenters.clear();
   }
 
-  // #renderNewWaypoint(waypoint: Waypoint, dataBase: DataBase) {
-  //   const waypointData = { waypoint, dataBase };
-
-  //   const escKeyDownHandler = (evt: KeyboardEvent) => {
-  //     if (evt.key === 'Escape') {
-  //       evt.preventDefault();
-  //       switchToViewMode();
-  //     }
-  //   };
-
-  //   const onEditClick = () => 'заглушка';
-  //   const onFormSubmit = () => switchToViewMode();
-  //   const onFormCancel = () => switchToViewMode();
-
-  //   const waypointEditComponent = new NewWaypointFormView({
-  //     waypointData,
-  //     onFormSubmit: onFormSubmit,
-  //     onFormCancel: onFormCancel,
-  //   });
-
-  //   const waypointComponent = new WaypointView({
-  //     waypointData,
-  //     onEditClick: onEditClick,
-  //     onFavoriteClick: onFavoriteClick,
-  //   });
-
-  //   function switchToViewMode() {
-  //     replace(waypointComponent, waypointEditComponent);
-  //     document.removeEventListener('keydown', escKeyDownHandler);
-  //   }
-
-  //   render(waypointEditComponent, this.#mainListContainer.element, 'afterbegin');
-  // }
-
   #renderTripMain() {
     render(new MainTripView(), this.#tripMainContainer, 'afterbegin');
   }
@@ -172,27 +148,19 @@ export default class ListPresenter {
   }
 
   #renderSorting() {
-    this.#sortComponent = new SortingView({
-      onSortTypeChange: this.#handleSortTypeChange,
-    });
-
-    render(this.#sortComponent, this.#tripEventsContainer, 'beforeend');
+    render(this.#sortComponent, this.#tripEventsContainer, 'afterbegin');
   }
 
   #renderListEmpty() {
     render(new ListEmptyView(this.#filtersType), this.#tripEventsContainer);
   }
 
-  #renderListContainer() {
-    render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
-  }
-
   #renderWaypointsList() {
     if (this.#waypoints.length > 0) {
-      this.#renderTripMain();
+      render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
+
       this.#renderSorting();
-      this.#renderListContainer();
-      // this.#renderNewWaypoint(this.#waypoints[0], this.#dataBase);
+
       this.#renderWaypoints();
     } else {
       this.#renderListEmpty();

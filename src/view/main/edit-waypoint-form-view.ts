@@ -1,27 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import View from '../../framework/view/view';
 import dayjs from 'dayjs';
-import type { Waypoint } from '../../types/waypoint-type';
-import type { Destination } from '../../types/destination-type';
-import type { InnerOffer } from '../../types/offer-type';
 import { capitalLetter } from '../../utils/utils';
 import { createWaypointsTypesListTemplate } from '../../templates/new-edit-form/types-template';
-import { createDestinationsListTemplate } from '../../templates/new-edit-form/destinations-template';
+import { createDestinationsListTemplate, correctName } from '../../templates/new-edit-form/destinations-template';
 import { createOffersTemplate } from '../../templates/new-edit-form/offers-template';
 import { createDescriptionTemplate } from '../../templates/new-edit-form/description-template';
 import type { WaypointData } from '../../types/common';
+import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
+import type { State } from '../../types/state';
+import type { Waypoint } from '../../types/waypoint-type';
+import type { DataBase } from '@presenter/main-presenter';
 
-function getTemplate(
-  waypoint: Waypoint,
-  destination: Destination,
-  allDestinationsNames: string[],
-  availableOffers: InnerOffer[],
-  selectedOffers: InnerOffer[],
-): string {
-  const { type, dateFrom, dateTo, basePrice } = waypoint;
-  const { name, description } = destination;
+function getTemplate(data: State, dataBase: DataBase) {
+  const { dateFrom, dateTo, type, destination, basePrice, selectedOffs } = data;
+
   const correctType = capitalLetter(type);
-  const correctName = capitalLetter(name);
+
   const timeStart = dayjs(dateFrom).format('DD/MM/YY HH:mm');
   const timeEnd = dayjs(dateTo).format('DD/MM/YY HH:mm');
 
@@ -49,10 +42,10 @@ function getTemplate(
       <label class="event__label  event__type-output" for="event-destination-1">
       ${correctType}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${correctName}" list="destination-list-1">
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${correctName(destination, dataBase)}" list="destination-list-1">
       <datalist id="destination-list-1">
 
-      ${createDestinationsListTemplate(name, allDestinationsNames)}
+      ${createDestinationsListTemplate(destination, dataBase)}
 
       </datalist>
     </div>
@@ -81,9 +74,9 @@ function getTemplate(
     </header>
     <section class="event__details">
 
-    ${createOffersTemplate(availableOffers, selectedOffers)}
+    ${createOffersTemplate(type, selectedOffs, dataBase)}
 
-    ${createDescriptionTemplate(description)}
+    ${createDescriptionTemplate(destination, dataBase)}
 
     </section>
     </form>
@@ -91,22 +84,28 @@ function getTemplate(
     `;
 }
 
-export default class EditWaypointFormView extends View<HTMLFormElement> {
-  #waypoint: Waypoint;
-  #destination: Destination;
-  #allDestinationsNames: string[];
-  #availableOffers: InnerOffer[];
-  #selectedOffers: InnerOffer[];
-  #handleFormSubmit: any;
-  #handleFormCancel: any;
+export default class EditWaypointFormView extends AbstractStatefulView<State> {
+  _restoreHandlers() {
+    throw new Error('Method not implemented.');
+  }
 
-  constructor({ waypoint, dataBase, onFormSubmit, onFormCancel }: WaypointData & { onFormSubmit: any; onFormCancel: any }) {
+  #handleFormSubmit: (waypoint: Waypoint) => void;
+  #handleFormCancel: () => void;
+  #waypointData: WaypointData;
+  #waypoint: Waypoint;
+  #dataBase: DataBase;
+
+  constructor({
+    waypoint,
+    dataBase,
+    onFormSubmit,
+    onFormCancel,
+  }: WaypointData & { onFormSubmit: (waypoint: Waypoint) => void; onFormCancel: () => void }) {
     super();
-    this.#waypoint = waypoint;
-    this.#destination = dataBase.destinationsModel.getDestination(this.#waypoint)!;
-    this.#allDestinationsNames = dataBase.destinationsModel.allDestinationsNames;
-    this.#availableOffers = dataBase.offersModel.getAvailableOffers(this.#waypoint);
-    this.#selectedOffers = dataBase.offersModel.getSelectedOffers(this.#waypoint);
+    this.#waypointData = { waypoint, dataBase };
+    this.#waypoint = this.#waypointData.waypoint;
+    this.#dataBase = this.#waypointData.dataBase;
+    this._setState(this.parseTaskToState(this.#waypoint));
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormCancel = onFormCancel;
@@ -116,16 +115,31 @@ export default class EditWaypointFormView extends View<HTMLFormElement> {
   }
 
   get template() {
-    return getTemplate(this.#waypoint, this.#destination, this.#allDestinationsNames, this.#availableOffers, this.#selectedOffers);
+    return getTemplate(this._state, this.#dataBase);
   }
 
-  #formSubmitHandler = (evt: any) => {
+  #formSubmitHandler: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#waypoint);
+    this.#handleFormSubmit(this.parseStateToTask());
   };
 
-  #onCancelForm = (evt: any) => {
+  #onCancelForm: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#waypoint);
+    this.#handleFormSubmit(this.parseStateToTask());
   };
+
+  parseTaskToState(waypoint: Waypoint): State {
+    return {
+      ...waypoint,
+
+      selectedOffs: new Set(waypoint.offers),
+    };
+  }
+
+  parseStateToTask(): Waypoint {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { selectedOffs, ...waypoint } = this._state;
+
+    return waypoint;
+  }
 }

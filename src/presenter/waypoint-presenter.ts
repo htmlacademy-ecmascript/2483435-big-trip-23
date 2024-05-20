@@ -21,7 +21,6 @@ export default class WaypointPresenter {
   #waypoint: Waypoint | null = null;
 
   #handleDataChange: PointChange;
-  // #waypointData: any = null;
   #handleModeChange: EmptyFn;
   #mode = Mode.DEFAULT;
 

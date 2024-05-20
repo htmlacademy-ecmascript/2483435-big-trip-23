@@ -15,11 +15,11 @@ export default class OffersModel {
     return this.#offers;
   }
 
-  getAvailableOffers(waypoint: Waypoint) {
-    return this.#offers.find((item) => item.type === waypoint.type)!.offers;
+  getAvailableOffers(type: Waypoint['type']) {
+    return this.#offers.find((item) => item.type === type)!.offers;
   }
 
   getSelectedOffers(waypoint: Waypoint) {
-    return this.getAvailableOffers(waypoint)?.filter((item) => waypoint.offers.includes(item.id));
+    return this.getAvailableOffers(waypoint.type)?.filter((item) => waypoint.offers.includes(item.id));
   }
 }

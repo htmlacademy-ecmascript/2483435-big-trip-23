@@ -7,13 +7,15 @@ import { capitalLetter } from '../../utils/utils';
 import { getDuration } from '../../utils/time';
 import { createSelectedOffersTemplate } from '../../templates/waypoint/selected-offers-template';
 import type { EmptyFn, WaypointData } from '../../types/common';
+import { getDestination } from '../../templates/new-edit-form/destinations-template';
+import type { DataBase } from '@presenter/main-presenter';
 
 function getTemplate(waypoint: Waypoint, destination: Destination, selectedOffers: InnerOffer[]): string {
   const { dateFrom, dateTo, type, basePrice, isFavorite } = waypoint;
   const { name } = destination;
   const date = dayjs(dateFrom).format('MMM DD');
-  const timeStart = dateFrom.format('HH:mm');
-  const timeEnd = dateTo.format('HH:mm');
+  const timeStart = dayjs(dateFrom).format('HH:mm');
+  const timeEnd = dayjs(dateTo).format('HH:mm');
   const correctType = capitalLetter(type);
   const currentName = 'name' in destination ? name : '';
 
@@ -57,6 +59,7 @@ function getTemplate(waypoint: Waypoint, destination: Destination, selectedOffer
 export default class WaypointView extends View<HTMLTimeElement> {
   #waypoint: Waypoint;
   #destination: Destination;
+  #dataBase: DataBase;
   #selectedOffers: InnerOffer[];
   #handleEditClick: EmptyFn;
   #handleFavoriteClick: EmptyFn;
@@ -65,7 +68,8 @@ export default class WaypointView extends View<HTMLTimeElement> {
     super();
 
     this.#waypoint = waypoint;
-    this.#destination = dataBase.destinationsModel.getDestination(this.#waypoint)!;
+    this.#dataBase = dataBase;
+    this.#destination = getDestination(this.#waypoint.destination, this.#dataBase)!;
     this.#selectedOffers = dataBase.offersModel.getSelectedOffers(this.#waypoint);
 
     this.#handleEditClick = onEditClick;

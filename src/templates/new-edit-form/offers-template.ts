@@ -1,12 +1,12 @@
+import type { DataBase } from '@presenter/main-presenter';
 import type { InnerOffer } from '../../types/offer-type';
+import type { WaypointType } from '../../types/waypoint-type';
 
-const createAvailableOffersTemplate = (offer: InnerOffer, selectedOffers: InnerOffer[]): string => {
-  const selectedOffersIDs = selectedOffers.map((selectOffer) => selectOffer.id);
-
-  const isSelected = () => (selectedOffersIDs.includes(offer.id) ? 'checked' : '');
+const createAvailableOffersTemplate = (offer: InnerOffer, selectedOffers: Set<string>): string => {
+  const selected = selectedOffers.has(offer.id) ? 'checked' : '';
 
   return `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}" ${isSelected()}>
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}" ${selected}>
   <label class="event__offer-label" for="event-offer-${offer.id}-1">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
@@ -15,8 +15,10 @@ const createAvailableOffersTemplate = (offer: InnerOffer, selectedOffers: InnerO
     </div>`;
 };
 
-const createOffersTemplate = (availableOffers: InnerOffer[], selectedOffers: InnerOffer[]) =>
-  availableOffers.length !== 0
+const createOffersTemplate = (type: WaypointType, selectedOffers: Set<string>, dataBase: DataBase) => {
+  const availableOffers = dataBase.offersModel.getAvailableOffers(type);
+
+  return availableOffers.length !== 0
     ? `
     <section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -25,5 +27,6 @@ const createOffersTemplate = (availableOffers: InnerOffer[], selectedOffers: Inn
     </div>
       </section>`
     : '';
+};
 
 export { createOffersTemplate };

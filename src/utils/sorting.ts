@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import dayjs from 'dayjs';
 import type { Waypoint } from '../types/waypoint-type';
-import { getDuration } from './time';
 
-const compare = (a: any, b: any) => (a > b ? a : b);
+const priceSort = (waypointA: Waypoint, waypointB: Waypoint) => waypointB.basePrice - waypointA.basePrice;
 
-const priceSort = (waypointA: any, waypointB: any) => compare(waypointA.price, waypointB.price);
+const getDuration = ({ dateFrom, dateTo }: Waypoint) => dayjs(dateTo).diff(dayjs(dateFrom));
 
-const timeSort = (waypointA: Waypoint, waypointB: Waypoint) => {
-  const a = getDuration(waypointA.dateFrom, waypointA.dateTo);
-  const b = getDuration(waypointB.dateFrom, waypointB.dateTo);
-  return compare(a, b);
-};
+const timeSort = (waypointA: Waypoint, waypointB: Waypoint) => getDuration(waypointB) - getDuration(waypointA);
 
-export { priceSort, timeSort };
+const daySort = (waypointA: Waypoint, waypointB: Waypoint) => dayjs(waypointA.dateFrom).diff(dayjs(waypointB.dateFrom));
+
+export { priceSort, timeSort, daySort };
