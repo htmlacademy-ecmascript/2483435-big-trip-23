@@ -101,6 +101,7 @@ export default class WaypointPresenter {
     if (!this.#waypointComponent || !this.#waypointEditComponent) {
       return;
     }
+    this.#waypointEditComponent!.reset(this.#waypoint!);
     replace(this.#waypointComponent, this.#waypointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
@@ -109,6 +110,7 @@ export default class WaypointPresenter {
   #escKeyDownHandler = (evt: KeyboardEvent) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#waypointEditComponent!.reset(this.#waypoint!);
       this.#switchToViewMode();
     }
   };
