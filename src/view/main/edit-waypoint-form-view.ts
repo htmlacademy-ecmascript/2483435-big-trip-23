@@ -7,8 +7,14 @@ import { createDescriptionTemplate } from '../../templates/new-edit-form/descrip
 import type { WaypointData } from '../../types/common';
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
 import type { State } from '../../types/state';
-import type { Waypoint } from '../../types/waypoint-type';
+import type { Waypoint, WaypointType } from '../../types/waypoint-type';
 import type { DataBase } from '@presenter/main-presenter';
+import type { Destination } from '../../types/destination-type';
+import flatpickr from 'flatpickr';
+import type { Instance as Flatpickr } from 'flatpickr/dist/types/instance';
+import type { Hook as FlatpickerHook } from 'flatpickr/dist/types/options';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 function getTemplate(data: State, dataBase: DataBase) {
   const { dateFrom, dateTo, type, destination, basePrice, selectedOffs } = data;
@@ -85,15 +91,14 @@ function getTemplate(data: State, dataBase: DataBase) {
 }
 
 export default class EditWaypointFormView extends AbstractStatefulView<State> {
-  _restoreHandlers() {
-    throw new Error('Method not implemented.');
-  }
-
   #handleFormSubmit: (waypoint: Waypoint) => void;
   #handleFormCancel: () => void;
   #waypointData: WaypointData;
   #waypoint: Waypoint;
   #dataBase: DataBase;
+  #allDestinations: Destination['name'][];
+  #dateStart: Flatpickr | null = null;
+  #dateFinish: Flatpickr | null = null;
 
   constructor({
     waypoint,
@@ -105,17 +110,38 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     this.#waypointData = { waypoint, dataBase };
     this.#waypoint = this.#waypointData.waypoint;
     this.#dataBase = this.#waypointData.dataBase;
+    this.#allDestinations = this.#dataBase.destinationsModel.allDestinationsNames;
     this._setState(this.parseTaskToState(this.#waypoint));
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormCancel = onFormCancel;
-    this.element.querySelector('form')!.addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__reset-btn')!.addEventListener('click', this.#onCancelForm);
-    this.element.querySelector('.event__rollup-btn')!.addEventListener('click', this.#onCancelForm);
+
+    this._restoreHandlers();
   }
 
   get template() {
     return getTemplate(this._state, this.#dataBase);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#dateStart) {
+      this.#dateStart.destroy();
+      this.#dateStart = null;
+    }
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('form')!.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn')!.addEventListener('click', this.#onCancelForm);
+    this.element.querySelector('.event__rollup-btn')!.addEventListener('click', this.#onCancelForm);
+    this.element.querySelector('.event__type-list')!.addEventListener('click', this.#typeChangeHandler);
+    this.element.querySelector('.event__input--destination')!.addEventListener('input', this.#destinationChangeHandler);
+    this.element.querySelector('.event__details')!.addEventListener('input', this.#selectedOffersHandler);
+
+    this.#setEventStart();
+    this.#setEventFinish();
   }
 
   #formSubmitHandler: EventListener = (evt) => {
@@ -128,10 +154,96 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     this.#handleFormSubmit(this.parseStateToTask());
   };
 
+  #typeChangeHandler: EventListener = (evt) => {
+    if (!(evt.target instanceof HTMLLabelElement)) {
+      return;
+    }
+    const selectedType = ((evt.target! as HTMLLabelElement).previousElementSibling! as HTMLInputElement).value as WaypointType;
+    evt.preventDefault();
+    this.updateElement({
+      type: selectedType,
+      selectedOffs: new Set(this.#dataBase.offersModel.getAvailableOffersIDs(selectedType)),
+    });
+  };
+
+  #destinationChangeHandler: EventListener = (evt) => {
+    const select = (evt.target as HTMLInputElement).value;
+
+    if (!this.#allDestinations.includes(select)) {
+      return;
+    }
+
+    const selectedDestination = this.#dataBase.destinationsModel.getDestinationByName(select)!.id;
+    evt.preventDefault();
+    this.updateElement({
+      destination: selectedDestination,
+    });
+  };
+
+  #selectedOffersHandler: EventListener = (evt) => {
+    if (!(evt.target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    const selectedOffers = () => {
+      const offers = this._state.selectedOffs;
+      const event = evt.target as HTMLInputElement;
+      const offerID = event.id.split('-').slice(2, -1).join('-');
+
+      if (offers.has(offerID)) {
+        offers.delete(offerID);
+      } else {
+        offers.add(offerID);
+      }
+
+      return offers;
+    };
+
+    this._setState({
+      selectedOffs: selectedOffers(),
+    });
+  };
+
+  reset(waypoint: Waypoint) {
+    this.updateElement(this.parseTaskToState(waypoint));
+  }
+
+  #startDateChangeHandler: FlatpickerHook = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate.toString(),
+    });
+  };
+
+  #finishDateChangeHandler: FlatpickerHook = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate.toString(),
+    });
+  };
+
+  #setEventStart() {
+    this.#dateStart = flatpickr(this.element.querySelectorAll('.event__input--time')[0], {
+      minDate: this.#waypoint.dateFrom,
+      enableTime: true,
+      dateFormat: 'j\\/m\\/y H\\:i',
+      defaultDate: this._state.dateFrom,
+      onChange: this.#startDateChangeHandler,
+    });
+  }
+
+  #setEventFinish() {
+    this.#dateFinish = flatpickr(this.element.querySelectorAll('.event__input--time')[1], {
+      minDate: this.#waypoint.dateFrom,
+      enableTime: true,
+      static: true,
+      dateFormat: 'j\\/m\\/y H\\:i',
+      defaultDate: this._state.dateTo,
+      onChange: this.#finishDateChangeHandler,
+    });
+  }
+
   parseTaskToState(waypoint: Waypoint): State {
     return {
       ...waypoint,
-
       selectedOffs: new Set(waypoint.offers),
     };
   }
