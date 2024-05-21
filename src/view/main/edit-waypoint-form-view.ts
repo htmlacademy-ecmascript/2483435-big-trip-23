@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from 'dayjs';
 import { capitalLetter } from '../../utils/utils';
 import { createWaypointsTypesListTemplate } from '../../templates/new-edit-form/types-template';
@@ -12,6 +11,9 @@ import type { Waypoint, WaypointType } from '../../types/waypoint-type';
 import type { DataBase } from '@presenter/main-presenter';
 import type { Destination } from '../../types/destination-type';
 import flatpickr from 'flatpickr';
+import type { Instance as Flatpickr } from 'flatpickr/dist/types/instance';
+import type { Hook as FlatpickerHook } from 'flatpickr/dist/types/options';
+
 import 'flatpickr/dist/flatpickr.min.css';
 
 function getTemplate(data: State, dataBase: DataBase) {
@@ -95,8 +97,8 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
   #waypoint: Waypoint;
   #dataBase: DataBase;
   #allDestinations: Destination['name'][];
-  #dateStart: any = null;
-  #dateFinish: any = null;
+  #dateStart: Flatpickr | null = null;
+  #dateFinish: Flatpickr | null = null;
 
   constructor({
     waypoint,
@@ -206,15 +208,15 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     this.updateElement(this.parseTaskToState(waypoint));
   }
 
-  #startDateChangeHandler = ([userDate]: any) => {
+  #startDateChangeHandler: FlatpickerHook = ([userDate]) => {
     this.updateElement({
-      dateFrom: userDate,
+      dateFrom: userDate.toString(),
     });
   };
 
-  #finishDateChangeHandler = ([userDate]: any) => {
+  #finishDateChangeHandler: FlatpickerHook = ([userDate]) => {
     this.updateElement({
-      dateTo: userDate,
+      dateTo: userDate.toString(),
     });
   };
 
@@ -242,7 +244,6 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
   parseTaskToState(waypoint: Waypoint): State {
     return {
       ...waypoint,
-
       selectedOffs: new Set(waypoint.offers),
     };
   }

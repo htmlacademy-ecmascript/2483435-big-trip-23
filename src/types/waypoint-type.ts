@@ -1,5 +1,5 @@
 import type { POINTS_TYPES } from '../const';
-import type { CamelizeObject, WithDate } from '../utils/types-utils';
+import type { CamelizeObject } from '../utils/types-utils';
 import type { Destination } from './destination-type';
 import type { InnerOffer } from './offer-type';
 
@@ -15,6 +15,6 @@ interface ServerWayPoint {
   offers: InnerOffer['id'][];
   type: WaypointType;
 }
-type Waypoint = WithDate<CamelizeObject<ServerWayPoint>>;
+type Waypoint = CamelizeObject<ServerWayPoint>;
 
 export type { Waypoint, WaypointType };
