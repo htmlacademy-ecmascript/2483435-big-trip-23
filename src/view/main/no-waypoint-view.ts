@@ -4,7 +4,7 @@ import { WaypointsEmptyMessages } from '../../const';
 
 const getTemplate = (filter: FilterType) => `<p class="trip-events__msg">${WaypointsEmptyMessages[filter]}</p>`;
 
-export default class ListEmptyView extends View<HTMLTableSectionElement> {
+export default class NoWaypointView extends View<HTMLTableSectionElement> {
   #filter: FilterType;
 
   constructor(filter: FilterType) {

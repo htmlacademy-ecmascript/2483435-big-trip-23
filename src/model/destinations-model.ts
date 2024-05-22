@@ -1,12 +1,14 @@
+import Observable from '../framework/observable';
 import type MockService from '../service/mock';
 import type { Destination } from '../types/destination-type';
 import type { Waypoint } from '../types/waypoint-type';
 
-export default class DestinationsModel {
+export default class DestinationsModel extends Observable {
   #service: MockService;
   #destinations: Destination[];
 
   constructor(service: MockService) {
+    super();
     this.#service = service;
     this.#destinations = this.#service.destinations;
   }

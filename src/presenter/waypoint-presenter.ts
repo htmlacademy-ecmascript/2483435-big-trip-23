@@ -1,16 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import EditWaypointFormView from '../view/main/edit-waypoint-form-view';
 import WaypointView from '../view/main/waypoint-view';
 import type { Waypoint } from '../types/waypoint-type';
 import { render, replace, remove } from '../framework/render';
 import type { EmptyFn, WaypointData } from '../types/common';
 import type { DataBase } from './main-presenter';
+import type { UpdateType, UserAction } from '../const';
+import { isDatesEqual } from '../utils/time';
+import dayjs from 'dayjs';
 
 const enum Mode {
   DEFAULT,
   EDITING,
 }
 
-type PointChange = (point: Waypoint) => void;
+type WayPointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
 export default class WaypointPresenter {
   #mainListContainer: HTMLUListElement;
@@ -20,7 +24,7 @@ export default class WaypointPresenter {
   #dataBase: DataBase | null = null;
   #waypoint: Waypoint | null = null;
 
-  #handleDataChange: PointChange;
+  #handleDataChange: WayPointChange;
   #handleModeChange: EmptyFn;
   #mode = Mode.DEFAULT;
 
@@ -30,7 +34,7 @@ export default class WaypointPresenter {
     onModeChange,
   }: {
     mainListContainer: HTMLUListElement;
-    onDataChange: PointChange;
+    onDataChange: WayPointChange;
     onModeChange: EmptyFn;
   }) {
     this.#mainListContainer = mainListContainer;
@@ -56,7 +60,7 @@ export default class WaypointPresenter {
       waypoint: this.#waypoint,
       dataBase: this.#dataBase,
       onFormSubmit: this.#handleFormSubmit,
-      onFormCancel: this.#onFormCancel,
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     if (prevWaypointComponent === null || prevWaypointEditComponent === null) {
@@ -83,7 +87,7 @@ export default class WaypointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#onFormCancel();
+      this.#onDeleteClick();
     }
   }
 
@@ -117,15 +121,35 @@ export default class WaypointPresenter {
 
   #handleFavoriteClick = () => {
     if (this.#waypoint) {
-      this.#handleDataChange({ ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
+      this.#handleDataChange('updateWaypoint', 'minor', { ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
     }
   };
 
   #handleEditClick = () => this.#switchToEditMode();
-  #onFormCancel = () => this.#switchToViewMode();
+  #onDeleteClick = () => this.#switchToViewMode();
 
-  #handleFormSubmit = (waypoint: Waypoint) => {
+  #handleFormSubmit = (updateWaypoint: Waypoint) => {
+
+    const isMinorUpdate =
+      !isDatesEqual(dayjs(this.#waypoint!.dateFrom), dayjs(updateWaypoint.dateFrom)) ||
+      !isDatesEqual(dayjs(this.#waypoint!.dateTo), dayjs(updateWaypoint.dateTo)) ||
+      this.#waypoint?.offers !== updateWaypoint.offers;
+
+    this.#handleDataChange(
+      'updateWaypoint',
+      isMinorUpdate ? 'minor' : 'patch',
+      updateWaypoint
+    );
     this.#switchToViewMode();
-    this.#handleDataChange(waypoint);
   };
+
+  #handleDeleteClick = (waypoint: Waypoint) => {
+    this.#handleDataChange(
+      'deleteWaypoint',
+      'minor',
+      waypoint
+    );
+  };
+
+
 }

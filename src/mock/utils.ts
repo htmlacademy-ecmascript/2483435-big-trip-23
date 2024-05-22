@@ -7,7 +7,7 @@ function getDates() {
     .subtract(Randomizer.getInteger(0, 23), 'hour')
     .subtract(Randomizer.getInteger(0, 59), 'minute');
   const endDate = appDay()
-    .add(Randomizer.getInteger(0, 10), 'day')
+    .add(Randomizer.getInteger(-10, 10), 'day')
     .add(Randomizer.getInteger(0, 23), 'hour')
     .add(Randomizer.getInteger(0, 59), 'minute');
 

@@ -50,6 +50,8 @@ const isPresentWaypoints = (waypoint: Waypoint) => dayjs(waypoint.dateFrom).isBe
 
 const isPastWaypoints = (waypoint: Waypoint) => dayjs(waypoint.dateTo).isBefore(now);
 
+const isDatesEqual = (dateA: Dayjs, dateB: Dayjs) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'day');
+
 const appDay = dayjs;
 
-export { appDay, getDuration, isFutureWaypoints, isPresentWaypoints, isPastWaypoints };
+export { appDay, getDuration, isFutureWaypoints, isPresentWaypoints, isPastWaypoints, isDatesEqual };
