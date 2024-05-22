@@ -18,14 +18,14 @@ const offersModel = new OffersModel(service);
 const waypointsModel = new WaypointsModel(service);
 const dataBase = { destinationsModel, offersModel, waypointsModel };
 
-const mainPresenter = new MainPresenter({dataBase, filterModel, onNewWaypointDestroy: handleNewWaypointFormClose});
+const mainPresenter = new MainPresenter({ dataBase, filterModel, onNewWaypointDestroy: handleNewWaypointFormClose });
 const filterPresenter = new FilterPresenter({
   filterContainer: tripFilterContainer as HTMLElement,
   filterModel: filterModel,
-  waypointsModel
+  waypointsModel,
 });
 
-const newEventButtonComponent = new NewEventButtonView({onClick: handleNewEventButtonClick});
+const newEventButtonComponent = new NewEventButtonView({ onClick: handleNewEventButtonClick });
 
 function handleNewWaypointFormClose() {
   newEventButtonComponent.element.disabled = false;
@@ -38,7 +38,5 @@ function handleNewEventButtonClick() {
 
 render(newEventButtonComponent, headerContainer, 'beforeend');
 
-
 mainPresenter.init();
 filterPresenter.init();
-

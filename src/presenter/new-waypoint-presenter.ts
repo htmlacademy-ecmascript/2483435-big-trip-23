@@ -6,7 +6,6 @@ import type { EmptyFn } from '../types/common';
 import type { DataBase } from './main-presenter';
 import type { UpdateType, UserAction } from '../const';
 
-
 type WayPointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
 export default class NewWaypointPresenter {
@@ -38,7 +37,6 @@ export default class NewWaypointPresenter {
   }
 
   init() {
-
     if (this.#waypointEditComponent !== null) {
       return;
     }
@@ -54,7 +52,6 @@ export default class NewWaypointPresenter {
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
-
 
   destroy() {
     if (this.#waypointEditComponent === null) {

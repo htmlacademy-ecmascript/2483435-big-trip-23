@@ -1,5 +1,4 @@
-
-import type {FilterType, UpdateType} from '../const';
+import type { FilterType, UpdateType } from '../const';
 import Observable from '../framework/observable';
 
 export default class FilterModel extends Observable {

@@ -1,6 +1,6 @@
-import {render, replace, remove} from '../framework/render';
+import { render, replace, remove } from '../framework/render';
 import FilterView from '../view/header/filter-view';
-import {filter} from '../utils/filter';
+import { filter } from '../utils/filter';
 import type FilterModel from '../model/filter-model';
 import type WaypointsModel from '../model/waypoints-model';
 import type { FilterType } from '../const';
@@ -13,7 +13,15 @@ export default class FilterPresenter {
 
   #filterComponent: FilterView | null = null;
 
-  constructor({filterContainer, filterModel, waypointsModel} : {filterContainer: HTMLElement, filterModel: FilterModel, waypointsModel: WaypointsModel}) {
+  constructor({
+    filterContainer,
+    filterModel,
+    waypointsModel,
+  }: {
+    filterContainer: HTMLElement;
+    filterModel: FilterModel;
+    waypointsModel: WaypointsModel;
+  }) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#waypointsModel = waypointsModel;
@@ -27,7 +35,7 @@ export default class FilterPresenter {
 
     return Object.values(FILTER_TYPES).map((type) => ({
       type,
-      count: filter[type](waypoints).length
+      count: filter[type](waypoints).length,
     }));
   }
 
@@ -38,7 +46,7 @@ export default class FilterPresenter {
     this.#filterComponent = new FilterView({
       filters,
       currentFilterType: this.#filterModel!.filter,
-      onFilterTypeChange: this.#handleFilterTypeChange
+      onFilterTypeChange: this.#handleFilterTypeChange,
     });
 
     if (prevFilterComponent === null) {

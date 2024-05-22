@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import View from '../../framework/view/view';
 
-
 const getTemplate = () => '<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>';
 
 export default class NewEventButtonView extends View<HTMLFormElement> {

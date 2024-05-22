@@ -30,7 +30,15 @@ export default class FilterView extends AbstractStatefulView<HTMLFormElement> {
   #currentFilterType: FilterType;
   #handleFilterTypeChange: (filterType: FilterType) => void;
 
-  constructor({ filters, currentFilterType, onFilterTypeChange }: { filters: Filter[]; currentFilterType: FilterType, onFilterTypeChange: (filterType: FilterType) => void }) {
+  constructor({
+    filters,
+    currentFilterType,
+    onFilterTypeChange,
+  }: {
+    filters: Filter[];
+    currentFilterType: FilterType;
+    onFilterTypeChange: (filterType: FilterType) => void;
+  }) {
     super();
     this.#filters = filters;
     this.#currentFilterType = currentFilterType;
@@ -45,6 +53,6 @@ export default class FilterView extends AbstractStatefulView<HTMLFormElement> {
 
   #filterTypeChangeHandler: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleFilterTypeChange(((evt.target as HTMLInputElement).value) as FilterType);
+    this.#handleFilterTypeChange((evt.target as HTMLInputElement).value as FilterType);
   };
 }

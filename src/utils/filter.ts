@@ -24,9 +24,8 @@ function generateFilter(waypoints: Waypoint[]) {
 export type Filters = ReturnType<typeof generateFilter>;
 
 export type Filter = {
-  type: FilterType,
-  count: number
+  type: FilterType;
+  count: number;
 };
 
 export { filter };
-

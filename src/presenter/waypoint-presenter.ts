@@ -129,27 +129,16 @@ export default class WaypointPresenter {
   #onDeleteClick = () => this.#switchToViewMode();
 
   #handleFormSubmit = (updateWaypoint: Waypoint) => {
-
     const isMinorUpdate =
       !isDatesEqual(dayjs(this.#waypoint!.dateFrom), dayjs(updateWaypoint.dateFrom)) ||
       !isDatesEqual(dayjs(this.#waypoint!.dateTo), dayjs(updateWaypoint.dateTo)) ||
       this.#waypoint?.offers !== updateWaypoint.offers;
 
-    this.#handleDataChange(
-      'updateWaypoint',
-      isMinorUpdate ? 'minor' : 'patch',
-      updateWaypoint
-    );
+    this.#handleDataChange('updateWaypoint', isMinorUpdate ? 'minor' : 'patch', updateWaypoint);
     this.#switchToViewMode();
   };
 
   #handleDeleteClick = (waypoint: Waypoint) => {
-    this.#handleDataChange(
-      'deleteWaypoint',
-      'minor',
-      waypoint
-    );
+    this.#handleDataChange('deleteWaypoint', 'minor', waypoint);
   };
-
-
 }

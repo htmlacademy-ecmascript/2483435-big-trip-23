@@ -105,7 +105,7 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     waypoint,
     dataBase,
     onFormSubmit,
-    onDeleteClick
+    onDeleteClick,
   }: WaypointData & { onFormSubmit: (updateWaypoint: Waypoint) => void; onDeleteClick: (waypoint: Waypoint) => void }) {
     super();
     this.#waypointData = { waypoint, dataBase };
@@ -144,7 +144,6 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     this.#setEventStart();
     this.#setEventFinish();
   }
-
 
   #onCancelForm: EventListener = (evt) => {
     evt.preventDefault();

@@ -39,7 +39,15 @@ export default class ListPresenter {
   #wasRendered: boolean = false;
   #newWaypointPresenter: NewWaypointPresenter;
 
-  constructor({dataBase, filterModel, onNewWaypointDestroy }:{dataBase: DataBase, filterModel: FilterModel, onNewWaypointDestroy: any}) {
+  constructor({
+    dataBase,
+    filterModel,
+    onNewWaypointDestroy,
+  }: {
+    dataBase: DataBase;
+    filterModel: FilterModel;
+    onNewWaypointDestroy: any;
+  }) {
     this.#tripMainContainer = document.querySelector<HTMLDivElement>('.trip-main')!;
     this.#tripEventsContainer = document.querySelector<HTMLTableSectionElement>('.trip-events')!;
     this.#mainListContainer = new MainListContainer();
@@ -55,8 +63,8 @@ export default class ListPresenter {
       waypoint: this.#dataBase.waypointsModel.waypoints[0],
       dataBase,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewWaypointDestroy}
-    );
+      onDestroy: onNewWaypointDestroy,
+    });
 
     this.#waypointsModel.addObserver(this.#handleWaypointsModelEvent);
     this.#filterModel.addObserver(this.#handleWaypointsModelEvent);

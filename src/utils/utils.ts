@@ -4,5 +4,4 @@ const upperCaseLetter = (letter: string) => letter.toUpperCase();
 
 const checkMatch = (a: string, b: string, property: string) => (a === b ? property : '');
 
-
-export { capitalLetter, checkMatch, upperCaseLetter};
+export { capitalLetter, checkMatch, upperCaseLetter };
