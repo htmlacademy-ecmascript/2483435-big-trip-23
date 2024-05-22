@@ -34,6 +34,6 @@ export default class MockService {
   };
 
   #generatePoints() {
-    return Array.from({ length: 5 }, this.#generatePoint);
+    return Array.from({ length: 1 }, this.#generatePoint);
   }
 }
