@@ -4,7 +4,8 @@ import type { Waypoint } from '../types/waypoint-type';
 import { render, remove } from '../framework/render';
 import type { EmptyFn } from '../types/common';
 import type { DataBase } from './main-presenter';
-import type { UpdateType, UserAction } from '../const';
+import type { UserAction } from '../const';
+import { UpdateType } from '../const';
 
 type WayPointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
@@ -67,7 +68,7 @@ export default class NewWaypointPresenter {
   }
 
   #handleFormSubmit = (newWaypoint: Waypoint) => {
-    this.#handleDataChange('addWaypoint', 'minor', { ...newWaypoint });
+    this.#handleDataChange('addWaypoint', UpdateType.MINOR, { ...newWaypoint });
     this.destroy();
   };
 

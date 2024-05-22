@@ -5,13 +5,13 @@ import MainListContainer from '../view/main/main-list-container';
 import { render, remove } from '../framework/render';
 import type { Waypoint } from '../types/waypoint-type';
 import { filter } from '../utils/filter';
-import type { UpdateType, UserAction, FilterType } from '../const';
+import type { UserAction, FilterType } from '../const';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
 import type WaypointsModel from '../model/waypoints-model';
 import WaypointPresenter from './waypoint-presenter';
 import type { SortType } from '../const';
-import { SORT_TYPES } from '../const';
+import { SORT_TYPES, UpdateType } from '../const';
 import { priceSort, timeSort, daySort } from '../utils/sorting';
 import type FilterModel from '../model/filter-model';
 import NoWaypointView from '../view/main/no-waypoint-view';
@@ -67,7 +67,7 @@ export default class ListPresenter {
     });
 
     this.#waypointsModel.addObserver(this.#handleWaypointsModelEvent);
-    this.#filterModel.addObserver(this.#handleWaypointsModelEvent);
+    this.#filterModel.addObserver(this.#onChange);
   }
 
   get waypoints() {
@@ -134,18 +134,21 @@ export default class ListPresenter {
     }
   };
 
-  #handleWaypointsModelEvent = (updateType: UpdateType, data: any) => {
+  #onChange = () => {
+    this.#clearWaypointsList();
+    this.#renderWaypointsList();
+  };
+
+  #handleWaypointsModelEvent = (updateType: UpdateType, waypoint: Waypoint) => {
     switch (updateType) {
-      case 'patch':
-        this.#waypointsPresenters.get(data.id)!.init(data);
+      case UpdateType.PATCH:
+        this.#waypointsPresenters.get(waypoint.id)!.init({
+          waypoint,
+          dataBase: this.#dataBase,
+        });
         break;
-      case 'minor':
-        this.#clearWaypointsList();
-        this.#renderWaypointsList();
-        break;
-      case 'major':
-        this.#clearWaypointsList();
-        this.#renderWaypointsList();
+      default:
+        this.#onChange();
         break;
     }
   };
@@ -185,7 +188,7 @@ export default class ListPresenter {
 
   createWaypoint() {
     this.#currentSortType = 'day';
-    this.#filterModel!.setFilter('major', 'everything');
+    this.#filterModel!.setFilter(UpdateType.MAJOR, 'everything');
     this.#newWaypointPresenter!.init();
   }
 

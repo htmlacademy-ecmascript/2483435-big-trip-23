@@ -3,7 +3,7 @@ import Observable from '../framework/observable';
 import type MockService from '../service/mock';
 import type { Waypoint } from '../types/waypoint-type';
 
-export default class WaypointsModel extends Observable {
+export default class WaypointsModel extends Observable<UpdateType, Waypoint> {
   #service: MockService;
   #waypoints: Waypoint[] = [];
 

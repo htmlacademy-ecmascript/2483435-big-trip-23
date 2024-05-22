@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+type Observer<E = string, P = any> = (event: E, payload: P) => void;
 
-export default class Observable {
-  #observers = new Set();
+export default class Observable<E = string, P = any> {
+  #observers = new Set<Observer<E, P>>();
 
-  addObserver(observer: any) {
+  addObserver(observer: Observer<E, P>) {
     this.#observers.add(observer);
+
+    return () => this.removeObserver(observer);
   }
 
-  removeObserver(observer: any) {
+  removeObserver(observer: Observer<E, P>) {
     this.#observers.delete(observer);
   }
 
-  _notify(event: any, payload: any) {
-    this.#observers.forEach((observer: any) => observer(event, payload));
+  _notify(event: E, payload: P) {
+    this.#observers.forEach((observer) => observer(event, payload));
   }
 }

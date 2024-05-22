@@ -4,7 +4,7 @@ import { filter } from '../utils/filter';
 import type FilterModel from '../model/filter-model';
 import type WaypointsModel from '../model/waypoints-model';
 import type { FilterType } from '../const';
-import { FILTER_TYPES } from '../const';
+import { FILTER_TYPES, UpdateType } from '../const';
 
 export default class FilterPresenter {
   #filterContainer: HTMLElement | null = null;
@@ -67,6 +67,6 @@ export default class FilterPresenter {
       return;
     }
 
-    this.#filterModel!.setFilter('major', filterType);
+    this.#filterModel!.setFilter(UpdateType.MAJOR, filterType);
   };
 }

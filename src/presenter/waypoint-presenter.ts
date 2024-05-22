@@ -5,7 +5,8 @@ import type { Waypoint } from '../types/waypoint-type';
 import { render, replace, remove } from '../framework/render';
 import type { EmptyFn, WaypointData } from '../types/common';
 import type { DataBase } from './main-presenter';
-import type { UpdateType, UserAction } from '../const';
+import type { UserAction } from '../const';
+import { UpdateType } from '../const';
 import { isDatesEqual } from '../utils/time';
 import dayjs from 'dayjs';
 
@@ -121,7 +122,7 @@ export default class WaypointPresenter {
 
   #handleFavoriteClick = () => {
     if (this.#waypoint) {
-      this.#handleDataChange('updateWaypoint', 'minor', { ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
+      this.#handleDataChange('updateWaypoint', UpdateType.MINOR, { ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
     }
   };
 
@@ -134,11 +135,11 @@ export default class WaypointPresenter {
       !isDatesEqual(dayjs(this.#waypoint!.dateTo), dayjs(updateWaypoint.dateTo)) ||
       this.#waypoint?.offers !== updateWaypoint.offers;
 
-    this.#handleDataChange('updateWaypoint', isMinorUpdate ? 'minor' : 'patch', updateWaypoint);
+    this.#handleDataChange('updateWaypoint', isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updateWaypoint);
     this.#switchToViewMode();
   };
 
   #handleDeleteClick = (waypoint: Waypoint) => {
-    this.#handleDataChange('deleteWaypoint', 'minor', waypoint);
+    this.#handleDataChange('deleteWaypoint', UpdateType.MINOR, waypoint);
   };
 }
