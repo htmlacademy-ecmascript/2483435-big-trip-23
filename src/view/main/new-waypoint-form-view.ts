@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from 'dayjs';
 import { capitalLetter } from '../../utils/utils';
 import { createWaypointsTypesListTemplate } from '../../templates/new-edit-form/types-template';
@@ -24,8 +23,8 @@ function getTemplate(data: State, dataBase: DataBase) {
 
   const correctType = capitalLetter(type);
 
-  const timeStart = dayjs(dateFrom).format('DD/MM/YY HH:mm');
-  const timeEnd = dayjs(dateTo).format('DD/MM/YY HH:mm');
+  const timeStart = dateFrom === '' ? '' : dayjs(dateFrom).format('DD/MM/YY HH:mm');
+  const timeEnd = dateTo === '' ? '' : dayjs(dateTo).format('DD/MM/YY HH:mm');
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -51,7 +50,7 @@ function getTemplate(data: State, dataBase: DataBase) {
       <label class="event__label  event__type-output" for="event-destination-1">
       ${correctType}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${correctName(destination, dataBase)}" list="destination-list-1">
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination ? correctName(destination, dataBase) : ''}" list="destination-list-1" required>
       <datalist id="destination-list-1">
 
       ${createDestinationsListTemplate(destination, dataBase)}
@@ -72,18 +71,17 @@ function getTemplate(data: State, dataBase: DataBase) {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice ?? null}">
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-    <button class="event__reset-btn" type="reset">Delete</button>
-    <button class="event__rollup-btn" type="button">
+    <button class="event__reset-btn" type="reset">Cancel</button>
     <span class="visually-hidden">Open event</span>
     </button>
     </header>
     <section class="event__details">
 
-    ${createOffersTemplate(type, selectedOffs, dataBase)}
+    ${createOffersTemplate(type, selectedOffs, dataBase) ?? null}
 
     ${createDescriptionTemplate(destination, dataBase)}
 
@@ -95,7 +93,7 @@ function getTemplate(data: State, dataBase: DataBase) {
     `;
 }
 
-export default class EditWaypointFormView extends AbstractStatefulView<State> {
+export default class NewWaypointFormView extends AbstractStatefulView<State> {
   #handleFormSubmit: (updateWaypoint: Waypoint) => void;
   #handleDeleteClick: (waypoint: Waypoint) => void;
   #waypointData: WaypointData;
@@ -142,7 +140,6 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
   _restoreHandlers() {
     this.element.querySelector('form')!.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn')!.addEventListener('click', this.#formDeleteClickHandler);
-    this.element.querySelector('.event__rollup-btn')!.addEventListener('click', this.#onCancelForm);
     this.element.querySelector('.event__type-list')!.addEventListener('click', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination')!.addEventListener('input', this.#destinationChangeHandler);
     this.element.querySelector('.event__details')!.addEventListener('input', this.#selectedOffersHandler);
@@ -213,6 +210,8 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
   #formSubmitHandler: EventListener = (evt) => {
     evt.preventDefault();
     if (
+      this._state.dateFrom !== '' &&
+      this._state.dateTo !== '' &&
       this.#allDestinationsIDs.includes(this._state.destination) &&
       isSameWaypoints(this.#dataBase.waypointsModel.waypoints, this.parseStateToWaypoint())
     ) {

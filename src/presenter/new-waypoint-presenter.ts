@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import EditWaypointFormView from '../view/main/edit-waypoint-form-view';
 import type { Waypoint } from '../types/waypoint-type';
 import { render, remove } from '../framework/render';
 import type { EmptyFn } from '../types/common';
 import type { DataBase } from './main-presenter';
-import type { UserAction } from '../const';
+import { UserAction } from '../const';
 import { UpdateType } from '../const';
+import NewWaypointFormView from '../view/main/new-waypoint-form-view';
 
 type WayPointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
@@ -13,7 +13,7 @@ export default class NewWaypointPresenter {
   #mainListContainer: any;
   #handleDataChange: WayPointChange;
   #handleDestroy: EmptyFn;
-  #waypointEditComponent: EditWaypointFormView | null = null;
+  #waypointNewComponent: NewWaypointFormView | null = null;
   #dataBase: DataBase;
   #waypoint: Waypoint;
 
@@ -38,37 +38,37 @@ export default class NewWaypointPresenter {
   }
 
   init() {
-    if (this.#waypointEditComponent !== null) {
+    if (this.#waypointNewComponent !== null) {
       return;
     }
 
-    this.#waypointEditComponent = new EditWaypointFormView({
+    this.#waypointNewComponent = new NewWaypointFormView({
       waypoint: this.#waypoint,
       dataBase: this.#dataBase,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
     });
 
-    render(this.#waypointEditComponent, this.#mainListContainer, 'afterbegin');
+    render(this.#waypointNewComponent, this.#mainListContainer, 'afterbegin');
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   destroy() {
-    if (this.#waypointEditComponent === null) {
+    if (this.#waypointNewComponent === null) {
       return;
     }
 
     this.#handleDestroy();
 
-    remove(this.#waypointEditComponent);
-    this.#waypointEditComponent = null;
+    remove(this.#waypointNewComponent);
+    this.#waypointNewComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #handleFormSubmit = (newWaypoint: Waypoint) => {
-    this.#handleDataChange('addWaypoint', UpdateType.MINOR, { ...newWaypoint });
+    this.#handleDataChange(UserAction.addWaypoint, UpdateType.MINOR, { ...newWaypoint });
     this.destroy();
   };
 

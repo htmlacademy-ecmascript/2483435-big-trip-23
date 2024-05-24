@@ -2,18 +2,22 @@ const POINTS_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-
 
 const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'] as const;
 const FILTER_TYPES = ['everything', 'future', 'present', 'past'] as const;
-const USER_ACTION = ['updateWaypoint', 'addWaypoint', 'deleteWaypoint'] as const;
 type FilterType = (typeof FILTER_TYPES)[number];
 type SortType = (typeof SORT_TYPES)[number];
-type UserAction = (typeof USER_ACTION)[number];
 
 const enum UpdateType {
   /** Перерисовывает всю страницу */
   MAJOR,
   /** Список меняется */
-  MINOR ,
+  MINOR,
   /** В пределах одной точки*/
   PATCH,
+}
+
+const enum UserAction {
+  'updateWaypoint',
+  'addWaypoint',
+  'deleteWaypoint',
 }
 
 const WaypointsEmptyMessages = {

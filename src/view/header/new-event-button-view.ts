@@ -6,7 +6,7 @@ const getTemplate = () => '<button class="trip-main__event-add-btn  btn  btn--bi
 export default class NewEventButtonView extends View<HTMLFormElement> {
   #handleClick: any;
 
-  constructor({onClick}: {onClick: any}) {
+  constructor({ onClick }: { onClick: any }) {
     super();
     this.#handleClick = onClick;
     this.element.addEventListener('click', this.#clickHandler);

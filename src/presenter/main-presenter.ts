@@ -5,17 +5,18 @@ import MainListContainer from '../view/main/main-list-container';
 import { render, remove } from '../framework/render';
 import type { Waypoint } from '../types/waypoint-type';
 import { filter } from '../utils/filter';
-import type { UserAction, FilterType } from '../const';
+import { UserAction } from '../const';
 import type DestinationsModel from '../model/destinations-model';
 import type OffersModel from '../model/offers-model';
 import type WaypointsModel from '../model/waypoints-model';
 import WaypointPresenter from './waypoint-presenter';
-import type { SortType } from '../const';
+import type { SortType, FilterType } from '../const';
 import { SORT_TYPES, UpdateType } from '../const';
 import { priceSort, timeSort, daySort } from '../utils/sorting';
 import type FilterModel from '../model/filter-model';
 import NoWaypointView from '../view/main/no-waypoint-view';
 import NewWaypointPresenter from './new-waypoint-presenter';
+import { DEFAULT_WAYPOINT } from '../mock/const';
 
 export interface DataBase {
   destinationsModel: DestinationsModel;
@@ -60,7 +61,7 @@ export default class ListPresenter {
 
     this.#newWaypointPresenter = new NewWaypointPresenter({
       mainListContainer: this.#mainListContainer.element,
-      waypoint: this.#dataBase.waypointsModel.waypoints[0],
+      waypoint: DEFAULT_WAYPOINT,
       dataBase,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewWaypointDestroy,
@@ -122,13 +123,13 @@ export default class ListPresenter {
 
   #handleViewAction = (actionType: UserAction, updateType: UpdateType, updateWaypoint: any) => {
     switch (actionType) {
-      case 'updateWaypoint':
+      case UserAction.updateWaypoint:
         this.#waypointsModel.updateWaypoint(updateType, updateWaypoint);
         break;
-      case 'addWaypoint':
+      case UserAction.addWaypoint:
         this.#waypointsModel.addWaypoint(updateType, updateWaypoint);
         break;
-      case 'deleteWaypoint':
+      case UserAction.deleteWaypoint:
         this.#waypointsModel.deleteWaypoint(updateType, updateWaypoint);
         break;
     }
