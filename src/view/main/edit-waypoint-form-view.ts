@@ -226,6 +226,9 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
   };
 
   #startDateChangeHandler: FlatpickerHook = ([userDate]) => {
+    if (new Date(userDate) > new Date(this._state.dateTo)) {
+      this._state.dateTo = userDate.toString();
+    }
     this.updateElement({
       dateFrom: userDate.toString(),
     });
@@ -240,19 +243,21 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
   #setEventStart() {
     this.#dateStart = flatpickr(this.element.querySelectorAll('.event__input--time')[0], {
       enableTime: true,
+      'time_24hr': true,
       dateFormat: 'j\\/m\\/y H\\:i',
-      defaultDate: this._state.dateFrom,
       onChange: this.#startDateChangeHandler,
     });
   }
 
   #setEventFinish() {
+    const currentStartDate = new Date(this._state.dateFrom);
+
     this.#dateFinish = flatpickr(this.element.querySelectorAll('.event__input--time')[1], {
-      minDate: this._state.dateFrom,
+      minDate: currentStartDate,
       enableTime: true,
+      'time_24hr': true,
       static: true,
       dateFormat: 'j\\/m\\/y H\\:i',
-      defaultDate: this._state.dateTo,
       onChange: this.#finishDateChangeHandler,
     });
   }

@@ -194,9 +194,9 @@ export default class ListPresenter {
   }
 
   #renderWaypointsList() {
-    if (this.waypoints.length > 0) {
-      render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
+    render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
 
+    if (this.waypoints.length > 0) {
       this.#renderSorting();
 
       this.#renderWaypoints(this.waypoints);
