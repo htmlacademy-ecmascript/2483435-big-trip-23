@@ -16,7 +16,6 @@ import { priceSort, timeSort, daySort } from '../utils/sorting';
 import type FilterModel from '../model/filter-model';
 import NoWaypointView from '../view/main/no-waypoint-view';
 import NewWaypointPresenter from './new-waypoint-presenter';
-import { DEFAULT_WAYPOINT } from '../mock/const';
 
 export interface DataBase {
   destinationsModel: DestinationsModel;
@@ -61,7 +60,6 @@ export default class ListPresenter {
 
     this.#newWaypointPresenter = new NewWaypointPresenter({
       mainListContainer: this.#mainListContainer.element,
-      waypoint: DEFAULT_WAYPOINT,
       dataBase,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewWaypointDestroy,
@@ -172,7 +170,7 @@ export default class ListPresenter {
     render(this.#sortComponent, this.#tripEventsContainer, 'afterbegin');
   }
 
-  #renderNoWaypoint() {
+  #renderNoWaypoints() {
     this.#noWaypointComponent = new NoWaypointView(this.#filterType);
     render(this.#noWaypointComponent, this.#tripEventsContainer);
   }
@@ -195,13 +193,12 @@ export default class ListPresenter {
 
   #renderWaypointsList() {
     render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
-
     if (this.waypoints.length > 0) {
       this.#renderSorting();
 
       this.#renderWaypoints(this.waypoints);
     } else {
-      this.#renderNoWaypoint();
+      this.#renderNoWaypoints();
     }
   }
 }

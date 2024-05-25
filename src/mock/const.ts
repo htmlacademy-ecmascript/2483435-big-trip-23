@@ -17,7 +17,7 @@ const MOCK_DESCRIPTION = [
 ];
 
 const DEFAULT_WAYPOINT: Waypoint = {
-  id: crypto.randomUUID(),
+  id: '',
   basePrice: Number(''),
   dateFrom: '',
   dateTo: '',

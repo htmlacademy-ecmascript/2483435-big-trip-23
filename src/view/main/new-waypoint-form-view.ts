@@ -148,11 +148,6 @@ export default class NewWaypointFormView extends AbstractStatefulView<State> {
     this.#setEventFinish();
   }
 
-  #onCancelForm: EventListener = (evt) => {
-    evt.preventDefault();
-    this.#handleFormSubmit(this.parseStateToWaypoint());
-  };
-
   #typeChangeHandler: EventListener = (evt) => {
     if (!(evt.target instanceof HTMLLabelElement)) {
       return;

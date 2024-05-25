@@ -6,6 +6,7 @@ import type { DataBase } from './main-presenter';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
 import NewWaypointFormView from '../view/main/new-waypoint-form-view';
+import { DEFAULT_WAYPOINT } from '../mock/const';
 
 type WayPointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
@@ -19,25 +20,24 @@ export default class NewWaypointPresenter {
 
   constructor({
     mainListContainer,
-    waypoint,
     dataBase,
     onDataChange,
     onDestroy,
   }: {
     mainListContainer: HTMLUListElement;
-    waypoint: Waypoint;
     dataBase: DataBase;
     onDataChange: WayPointChange;
     onDestroy: EmptyFn;
   }) {
     this.#mainListContainer = mainListContainer;
     this.#dataBase = dataBase;
-    this.#waypoint = waypoint;
+    this.#waypoint = DEFAULT_WAYPOINT;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
   }
 
   init() {
+    this.#waypoint.id = crypto.randomUUID();
     if (this.#waypointNewComponent !== null) {
       return;
     }
@@ -48,7 +48,6 @@ export default class NewWaypointPresenter {
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
     });
-
     render(this.#waypointNewComponent, this.#mainListContainer, 'afterbegin');
 
     document.addEventListener('keydown', this.#escKeyDownHandler);

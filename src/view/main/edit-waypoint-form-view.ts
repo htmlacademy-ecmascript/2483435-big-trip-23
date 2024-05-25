@@ -98,6 +98,7 @@ function getTemplate(data: State, dataBase: DataBase) {
 export default class EditWaypointFormView extends AbstractStatefulView<State> {
   #handleFormSubmit: (updateWaypoint: Waypoint) => void;
   #handleDeleteClick: (waypoint: Waypoint) => void;
+  #handleFormClose: () => void;
   #waypointData: WaypointData;
   #waypoint: Waypoint;
   #dataBase: DataBase;
@@ -111,7 +112,8 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     dataBase,
     onFormSubmit,
     onDeleteClick,
-  }: WaypointData & { onFormSubmit: (updateWaypoint: Waypoint) => void; onDeleteClick: (waypoint: Waypoint) => void }) {
+    onFormClose
+  }: WaypointData & { onFormSubmit: (updateWaypoint: Waypoint) => void; onDeleteClick: (waypoint: Waypoint) => void; onFormClose: () => void }) {
     super();
     this.#waypointData = { waypoint, dataBase };
     this.#waypoint = this.#waypointData.waypoint;
@@ -122,6 +124,7 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
+    this.#handleFormClose = onFormClose;
 
     this._restoreHandlers();
   }
@@ -142,7 +145,7 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
   _restoreHandlers() {
     this.element.querySelector('form')!.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn')!.addEventListener('click', this.#formDeleteClickHandler);
-    this.element.querySelector('.event__rollup-btn')!.addEventListener('click', this.#onCancelForm);
+    this.element.querySelector('.event__rollup-btn')!.addEventListener('click', this.#formCloseHandler);
     this.element.querySelector('.event__type-list')!.addEventListener('click', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination')!.addEventListener('input', this.#destinationChangeHandler);
     this.element.querySelector('.event__details')!.addEventListener('input', this.#selectedOffersHandler);
@@ -150,11 +153,6 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
     this.#setEventStart();
     this.#setEventFinish();
   }
-
-  #onCancelForm: EventListener = (evt) => {
-    evt.preventDefault();
-    this.#handleFormSubmit(this.parseStateToWaypoint());
-  };
 
   #typeChangeHandler: EventListener = (evt) => {
     if (!(evt.target instanceof HTMLLabelElement)) {
@@ -223,6 +221,11 @@ export default class EditWaypointFormView extends AbstractStatefulView<State> {
   #formDeleteClickHandler: EventListener = (evt) => {
     evt.preventDefault();
     this.#handleDeleteClick(this.parseStateToWaypoint());
+  };
+
+  #formCloseHandler: EventListener = (evt) => {
+    evt.preventDefault();
+    this.#handleFormClose();
   };
 
   #startDateChangeHandler: FlatpickerHook = ([userDate]) => {

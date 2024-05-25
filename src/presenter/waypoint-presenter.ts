@@ -62,6 +62,7 @@ export default class WaypointPresenter {
       dataBase: this.#dataBase,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
+      onFormClose: this.#handleFormClose
     });
 
     if (prevWaypointComponent === null || prevWaypointEditComponent === null) {
@@ -128,6 +129,7 @@ export default class WaypointPresenter {
 
   #handleEditClick = () => this.#switchToEditMode();
   #onDeleteClick = () => this.#switchToViewMode();
+  #handleFormClose = () => this.#switchToViewMode();
 
   #handleFormSubmit = (updateWaypoint: Waypoint) => {
     const isMinorUpdate =
