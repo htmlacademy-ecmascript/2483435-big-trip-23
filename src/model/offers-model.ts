@@ -1,7 +1,7 @@
 import Observable from '../framework/observable';
 import type MockService from '../service/mock';
 import type { Offer } from '../types/offer-type';
-import type { Waypoint } from '../types/waypoint-type';
+import type { Point } from '../types/point-type';
 
 export default class OffersModel extends Observable {
   #service: MockService;
@@ -17,15 +17,15 @@ export default class OffersModel extends Observable {
     return this.#offers;
   }
 
-  getAvailableOffers(type: Waypoint['type']) {
+  getAvailableOffers(type: Point['type']) {
     return this.#offers.find((item) => item.type === type)!.offers;
   }
 
-  getAvailableOffersIDs(type: Waypoint['type']): string[] {
+  getAvailableOffersIDs(type: Point['type']): string[] {
     return this.#offers.find((item) => item.type === type)!.offers.map((item) => item.id);
   }
 
-  getSelectedOffers(waypoint: Waypoint) {
-    return this.getAvailableOffers(waypoint.type)?.filter((item) => waypoint.offers.includes(item.id));
+  getSelectedOffers(point: Point) {
+    return this.getAvailableOffers(point.type)?.filter((item) => point.offers.includes(item.id));
   }
 }

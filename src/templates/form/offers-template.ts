@@ -1,6 +1,6 @@
 import type { DataBase } from '@presenter/main-presenter';
 import type { InnerOffer } from '../../types/offer-type';
-import type { WaypointType } from '../../types/waypoint-type';
+import type { PointType } from '../../types/point-type';
 
 const createAvailableOffersTemplate = (offer: InnerOffer, selectedOffers: Set<string>): string => {
   const selected = selectedOffers.has(offer.id) ? 'checked' : '';
@@ -15,7 +15,7 @@ const createAvailableOffersTemplate = (offer: InnerOffer, selectedOffers: Set<st
     </div>`;
 };
 
-const createOffersTemplate = (type: WaypointType, selectedOffers: Set<string>, dataBase: DataBase) => {
+const createOffersTemplate = (type: PointType, selectedOffers: Set<string>, dataBase: DataBase) => {
   const availableOffers = dataBase.offersModel.getAvailableOffers(type);
 
   return availableOffers.length !== 0

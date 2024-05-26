@@ -1,7 +1,7 @@
 import type { DataBase } from '@presenter/main-presenter';
-import type { Waypoint } from '../../types/waypoint-type';
+import type { Point } from '../../types/point-type';
 
-const createDescriptionTemplate = (destination: Waypoint['destination'], dataBase: DataBase) => {
+const createDescriptionTemplate = (destination: Point['destination'], dataBase: DataBase) => {
   const currentDestination = dataBase.destinationsModel.getDestinationByID(destination) ?? '';
 
   if (currentDestination !== '') {

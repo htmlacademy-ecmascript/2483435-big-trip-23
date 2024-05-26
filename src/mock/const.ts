@@ -1,4 +1,4 @@
-import type { Waypoint } from '../types/waypoint-type';
+import type { Point } from '../types/point-type';
 
 const MOCK_CITIES = ['Amsterdam', 'London', 'Chamonix', 'Geneva'];
 
@@ -16,7 +16,7 @@ const MOCK_DESCRIPTION = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-const DEFAULT_WAYPOINT: Waypoint = {
+const DEFAULT_POINT: Point = {
   id: '',
   basePrice: Number(''),
   dateFrom: '',
@@ -27,4 +27,4 @@ const DEFAULT_WAYPOINT: Waypoint = {
   type: 'flight',
 };
 
-export { MOCK_CITIES, MOCK_DESCRIPTION, DEFAULT_WAYPOINT };
+export { MOCK_CITIES, MOCK_DESCRIPTION, DEFAULT_POINT };

@@ -1,4 +1,4 @@
-import type { InnerOffer } from '../../types/offer-type';
+import type { InnerOffer } from '../types/offer-type';
 
 const markUpOffer = (currentOffer: InnerOffer): string => `
 <li class="event__offer">

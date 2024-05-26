@@ -1,5 +1,5 @@
 import Randomizer from '../utils/random';
-import { appDay } from '../utils/time';
+import { appDay } from '../utils/time/time';
 
 function getDates() {
   const startDate = appDay()

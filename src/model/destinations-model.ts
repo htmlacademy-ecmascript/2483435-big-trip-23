@@ -1,7 +1,7 @@
 import Observable from '../framework/observable';
 import type MockService from '../service/mock';
 import type { Destination } from '../types/destination-type';
-import type { Waypoint } from '../types/waypoint-type';
+import type { Point } from '../types/point-type';
 
 export default class DestinationsModel extends Observable {
   #service: MockService;
@@ -19,14 +19,14 @@ export default class DestinationsModel extends Observable {
 
   get allDestinationsNames(): string[] {
     this.#destinations = this.#service.destinations;
-    return Array.from(this.#destinations.map((waypoint) => waypoint.name));
+    return Array.from(this.#destinations.map((point) => point.name));
   }
 
   get allDestinationsIDs(): string[] {
     this.#destinations = this.#service.destinations;
-    return Array.from(this.#destinations.map((waypoint) => waypoint.id));
+    return Array.from(this.#destinations.map((point) => point.id));
   }
 
-  getDestinationByID = (destination: Waypoint['destination']) => this.#destinations.find((item) => item.id === destination);
+  getDestinationByID = (destination: Point['destination']) => this.#destinations.find((item) => item.id === destination);
   getDestinationByName = (name: Destination['name']) => this.#destinations.find((item) => item.name === name);
 }

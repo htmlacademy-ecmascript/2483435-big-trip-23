@@ -1,4 +1,4 @@
-import View from '../../framework/view/view';
+import AbstractView from '../../framework/view/view';
 import { SORT_TYPES } from '../../const';
 import { upperCaseLetter } from '../../utils/utils';
 import type { SortType } from '../../const';
@@ -15,7 +15,7 @@ ${SORT_TYPES.map((type, index) => createSortTemplate(type, index === 0)).join(''
 
 export type SortHandler = (type: SortType) => void;
 
-export default class SortingView extends View<HTMLFormElement> {
+export default class SortingView extends AbstractView<HTMLFormElement> {
   #handleSortTypeChange: SortHandler;
 
   constructor({ onSortTypeChange }: { onSortTypeChange: SortHandler }) {

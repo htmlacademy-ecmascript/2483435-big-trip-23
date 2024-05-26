@@ -1,8 +1,8 @@
-import View from '../../framework/view/view';
+import AbstractView from '../../framework/view/view';
 
 const TEMPLATE = '<ul class="trip-events__list"></ul>';
 
-export default class MainListContainer extends View<HTMLUListElement> {
+export default class MainListContainer extends AbstractView<HTMLUListElement> {
   get template() {
     return TEMPLATE;
   }

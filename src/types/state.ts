@@ -1,9 +1,9 @@
 import type { Prettify } from '../utils/types-utils';
-import type { Waypoint } from './waypoint-type';
+import type { Point } from './point-type';
 
 type State = Prettify<
-  Waypoint & {
-    selectedOffs: Set<string>;
+  Point & {
+    selectedOffers: Set<string>;
   }
 >;
 
