@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-import type { Waypoint } from '../types/waypoint-type';
+import type { Point } from '../../types/point-type';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
@@ -15,7 +15,7 @@ export const enum TimeDiff {
 
 export type DayJsParam = string | number | Dayjs | Date | null | undefined;
 
-function getDuration(date1: Waypoint['dateFrom'], date2: Waypoint['dateTo']): string {
+function getDuration(date1: Point['dateFrom'], date2: Point['dateTo']): string {
   const diff = Math.abs(dayjs(date2).diff(date1));
 
   const daysValue = Math.floor(diff / TimeDiff.DAY);
@@ -43,13 +43,6 @@ function getDuration(date1: Waypoint['dateFrom'], date2: Waypoint['dateTo']): st
   return correctTime;
 }
 
-const now = dayjs();
-const isFutureWaypoints = (waypoint: Waypoint) => dayjs(waypoint.dateFrom).isAfter(now);
-
-const isPresentWaypoints = (waypoint: Waypoint) => dayjs(waypoint.dateFrom).isBefore(now) && dayjs(waypoint.dateTo).isAfter(now);
-
-const isPastWaypoints = (waypoint: Waypoint) => dayjs(waypoint.dateTo).isBefore(now);
-
 const appDay = dayjs;
 
-export { appDay, getDuration, isFutureWaypoints, isPresentWaypoints, isPastWaypoints };
+export { appDay, getDuration };

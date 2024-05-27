@@ -1,12 +1,12 @@
 import { mockDestinations } from '../mock/destination';
 import { mockOffers } from '../mock/offers';
-import { mockWaypoint } from '../mock/waypoint';
-import type { Waypoint } from '../types/waypoint-type';
+import { mockPoint } from '../mock/point';
+import type { Point } from '../types/point-type';
 import Randomizer from '../utils/random';
 
 export default class MockService {
   #destinations = mockDestinations();
-  #points: Waypoint[] = [];
+  #points: Point[] = [];
   #offers = mockOffers();
 
   constructor() {
@@ -30,7 +30,7 @@ export default class MockService {
     const destination = Randomizer.getArrayElement(this.#destinations).id;
     const offersIDs = offers.slice(0, Randomizer.getInteger(0, offers.length)).map(({ id }) => id);
 
-    return mockWaypoint({ destination, offers: offersIDs, type });
+    return mockPoint({ destination, offers: offersIDs, type });
   };
 
   #generatePoints() {

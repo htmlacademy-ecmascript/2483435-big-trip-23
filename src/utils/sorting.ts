@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
-import type { Waypoint } from '../types/waypoint-type';
+import type { Point } from '../types/point-type';
 
-const priceSort = (waypointA: Waypoint, waypointB: Waypoint) => waypointB.basePrice - waypointA.basePrice;
+const priceSort = (pointA: Point, pointB: Point) => pointB.basePrice - pointA.basePrice;
 
-const getDuration = ({ dateFrom, dateTo }: Waypoint) => dayjs(dateTo).diff(dayjs(dateFrom));
+const getDuration = ({ dateFrom, dateTo }: Point) => dayjs(dateTo).diff(dayjs(dateFrom));
 
-const timeSort = (waypointA: Waypoint, waypointB: Waypoint) => getDuration(waypointB) - getDuration(waypointA);
+const timeSort = (pointA: Point, pointB: Point) => getDuration(pointB) - getDuration(pointA);
 
-const daySort = (waypointA: Waypoint, waypointB: Waypoint) => dayjs(waypointA.dateFrom).diff(dayjs(waypointB.dateFrom));
+const daySort = (pointA: Point, pointB: Point) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 
 export { priceSort, timeSort, daySort };

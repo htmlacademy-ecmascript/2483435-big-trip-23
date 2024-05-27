@@ -1,4 +1,4 @@
-import type View from '../framework/view/view';
+import type AbstractView from '../framework/view/view';
 
 function createElement<E extends Element>(template: string) {
   const newElement = document.createElement('div');
@@ -7,11 +7,11 @@ function createElement<E extends Element>(template: string) {
   return newElement.firstElementChild as E;
 }
 
-function render(component: View<Element>, container: Element, place: InsertPosition = 'beforeend') {
+function render(component: AbstractView<Element>, container: Element, place: InsertPosition = 'beforeend') {
   container.insertAdjacentElement(place, component.element);
 }
 
-function replace(newComponent: View<Element>, oldComponent: View<Element>) {
+function replace(newComponent: AbstractView<Element>, oldComponent: AbstractView<Element>) {
   const newElement = newComponent.element;
   const oldElement = oldComponent.element;
 
@@ -24,7 +24,7 @@ function replace(newComponent: View<Element>, oldComponent: View<Element>) {
   parent.replaceChild(newElement, oldElement);
 }
 
-function remove(component: View<Element> | null) {
+function remove(component: AbstractView<Element> | null) {
   if (component === null) {
     return;
   }

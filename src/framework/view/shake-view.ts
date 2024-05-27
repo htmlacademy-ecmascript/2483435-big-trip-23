@@ -1,13 +1,13 @@
 import type { EmptyFn } from '../../types/common';
 import './abstract-view.css';
-import View from './view';
+import AbstractView from './view';
 
 const enum SnakeAnimation {
   CLASS_NAME = 'shake',
   ANIMATION_TIMEOUT = 600,
 }
 
-export default abstract class ShakeView<El extends Element = HTMLDivElement> extends View<El> {
+export default abstract class ShakeView<El extends Element = HTMLDivElement> extends AbstractView<El> {
   constructor() {
     super();
   }

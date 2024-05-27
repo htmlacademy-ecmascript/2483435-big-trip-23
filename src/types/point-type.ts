@@ -3,9 +3,9 @@ import type { CamelizeObject } from '../utils/types-utils';
 import type { Destination } from './destination-type';
 import type { InnerOffer } from './offer-type';
 
-type WaypointType = (typeof POINTS_TYPES)[number];
+type PointType = (typeof POINTS_TYPES)[number];
 
-interface ServerWayPoint {
+interface ServerPoint {
   id: string;
   base_price: number;
   date_from: string;
@@ -13,8 +13,8 @@ interface ServerWayPoint {
   destination: Destination['id'];
   is_favorite: boolean;
   offers: InnerOffer['id'][];
-  type: WaypointType;
+  type: PointType;
 }
-type Waypoint = CamelizeObject<ServerWayPoint>;
+type Point = CamelizeObject<ServerPoint>;
 
-export type { Waypoint, WaypointType };
+export type { Point, PointType };

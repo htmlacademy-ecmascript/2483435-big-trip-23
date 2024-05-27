@@ -1,17 +1,17 @@
 import type { FilterType } from '../const';
-import { isFutureWaypoints, isPresentWaypoints, isPastWaypoints } from '../utils/time';
-import type { Waypoint } from '../types/waypoint-type';
+import type { Point } from '../types/point-type';
+import { isFuturePoints, isPresentPoints, isPastPoints } from './time/time-for-filters';
 
-const filter: Record<FilterType, (waypoints: Waypoint[]) => Waypoint[]> = {
-  everything: (waypoints) => waypoints,
-  future: (waypoints) => waypoints.filter((waypoint) => isFutureWaypoints(waypoint)),
-  present: (waypoints) => waypoints.filter((waypoint) => isPresentWaypoints(waypoint)),
-  past: (waypoints) => waypoints.filter((waypoint) => isPastWaypoints(waypoint)),
+const filter: Record<FilterType, (points: Point[]) => Point[]> = {
+  everything: (points) => points,
+  future: (points) => points.filter((point) => isFuturePoints(point)),
+  present: (points) => points.filter((point) => isPresentPoints(point)),
+  past: (points) => points.filter((point) => isPastPoints(point)),
 };
 
-function generateFilter(waypoints: Waypoint[]) {
-  return Object.entries(filter).map(([type, filterWaypoints]) => {
-    const filteredPoints = filterWaypoints(waypoints);
+function generateFilter(points: Point[]) {
+  return Object.entries(filter).map(([type, filterPoints]) => {
+    const filteredPoints = filterPoints(points);
 
     return {
       type,
@@ -23,4 +23,9 @@ function generateFilter(waypoints: Waypoint[]) {
 
 export type Filters = ReturnType<typeof generateFilter>;
 
-export { generateFilter };
+export type Filter = {
+  type: FilterType;
+  count: number;
+};
+
+export { filter };

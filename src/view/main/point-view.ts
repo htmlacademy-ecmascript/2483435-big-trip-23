@@ -1,15 +1,15 @@
-import View from '../../framework/view/view';
+import AbstractView from '../../framework/view/view';
 import dayjs from 'dayjs';
-import type { Waypoint } from '../../types/waypoint-type';
+import type { Point } from '../../types/point-type';
 import type { Destination } from '../../types/destination-type';
 import type { InnerOffer } from '../../types/offer-type';
 import { capitalLetter } from '../../utils/utils';
-import { getDuration } from '../../utils/time';
-import { createSelectedOffersTemplate } from '../../templates/waypoint/selected-offers-template';
-import type { EmptyFn, WaypointData } from '../../types/common';
+import { getDuration } from '../../utils/time/time';
+import { createSelectedOffersTemplate } from '../../templates/selected-offers-template';
+import type { EmptyFn, PointData } from '../../types/common';
 
-function getTemplate(waypoint: Waypoint, destination: Destination, selectedOffers: InnerOffer[]): string {
-  const { dateFrom, dateTo, type, basePrice, isFavorite } = waypoint;
+function getTemplate(point: Point, destination: Destination, selectedOffers: InnerOffer[]): string {
+  const { dateFrom, dateTo, type, basePrice, isFavorite } = point;
   const { name } = destination;
   const date = dayjs(dateFrom).format('MMM DD');
   const timeStart = dayjs(dateFrom).format('HH:mm');
@@ -54,19 +54,19 @@ function getTemplate(waypoint: Waypoint, destination: Destination, selectedOffer
   </li>`;
 }
 
-export default class WaypointView extends View<HTMLTimeElement> {
-  #waypoint: Waypoint;
+export default class PointView extends AbstractView<HTMLTimeElement> {
+  #point: Point;
   #destination: Destination;
   #selectedOffers: InnerOffer[];
   #handleEditClick: EmptyFn;
   #handleFavoriteClick: EmptyFn;
 
-  constructor({ waypoint, dataBase, onEditClick, onFavoriteClick }: WaypointData & { onEditClick: EmptyFn; onFavoriteClick: EmptyFn }) {
+  constructor({ point, dataBase, onEditClick, onFavoriteClick }: PointData & { onEditClick: EmptyFn; onFavoriteClick: EmptyFn }) {
     super();
 
-    this.#waypoint = waypoint;
-    this.#destination = dataBase.destinationsModel.getDestinationByID(this.#waypoint.destination)!;
-    this.#selectedOffers = dataBase.offersModel.getSelectedOffers(this.#waypoint);
+    this.#point = point;
+    this.#destination = dataBase.destinationsModel.getDestinationByID(this.#point.destination)!;
+    this.#selectedOffers = dataBase.offersModel.getSelectedOffers(this.#point);
 
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
@@ -75,7 +75,7 @@ export default class WaypointView extends View<HTMLTimeElement> {
   }
 
   get template() {
-    return getTemplate(this.#waypoint, this.#destination, this.#selectedOffers);
+    return getTemplate(this.#point, this.#destination, this.#selectedOffers);
   }
 
   #editClickHandler: EventListener = (evt) => {

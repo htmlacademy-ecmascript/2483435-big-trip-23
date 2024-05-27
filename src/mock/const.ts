@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import type { Point } from '../types/point-type';
 
 const MOCK_CITIES = ['Amsterdam', 'London', 'Chamonix', 'Geneva'];
 
@@ -16,26 +16,15 @@ const MOCK_DESCRIPTION = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-const DEFAULT_DESTINATION = {
-  id: '1',
-  basePrice: '',
-  dateFrom: dayjs(),
-  dateTo: dayjs().add(3, 'day').add(4, 'hours').add(15, 'minute'),
-  destination: 'Geneva',
+const DEFAULT_POINT: Point = {
+  id: '',
+  basePrice: Number(''),
+  dateFrom: '',
+  dateTo: '',
+  destination: '',
   isFavorite: false,
-  offers: [
-    {
-      id: 3,
-      title: 'Add breakfast',
-      price: 70,
-    },
-    {
-      id: 2,
-      title: 'Book tickets',
-      price: 90,
-    },
-  ],
-  type: 'Flight',
+  offers: [],
+  type: 'flight',
 };
 
-export { MOCK_CITIES, MOCK_DESCRIPTION, DEFAULT_DESTINATION };
+export { MOCK_CITIES, MOCK_DESCRIPTION, DEFAULT_POINT };
