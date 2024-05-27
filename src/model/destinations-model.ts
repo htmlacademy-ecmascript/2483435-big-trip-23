@@ -1,29 +1,38 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { UpdateType } from '../const';
 import Observable from '../framework/observable';
-import type MockService from '../service/mock';
 import type { Destination } from '../types/destination-type';
 import type { Point } from '../types/point-type';
 
-export default class DestinationsModel extends Observable {
-  #service: MockService;
-  #destinations: Destination[];
+export default class DestinationsModel extends Observable<UpdateType, Point> {
+  #pointsApiService: any | null = null;
+  #destinations: Destination[] = [];
 
-  constructor(service: MockService) {
+  constructor({ pointsApiService }: { pointsApiService: any }) {
     super();
-    this.#service = service;
-    this.#destinations = this.#service.destinations;
+    this.#pointsApiService = pointsApiService;
   }
 
   get destinations() {
     return this.#destinations;
   }
 
+  async init() {
+    try {
+      const destinations = await this.#pointsApiService.destinations;
+      this.#destinations = destinations;
+    } catch (err) {
+      this.#destinations = [];
+    }
+
+    this._notify(UpdateType.INIT, {});
+  }
+
   get allDestinationsNames(): string[] {
-    this.#destinations = this.#service.destinations;
     return Array.from(this.#destinations.map((point) => point.name));
   }
 
   get allDestinationsIDs(): string[] {
-    this.#destinations = this.#service.destinations;
     return Array.from(this.#destinations.map((point) => point.id));
   }
 

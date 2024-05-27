@@ -4,25 +4,36 @@ import PointsModel from './model/points-model';
 import DestinationsModel from './model/destinations-model';
 import OffersModel from './model/offers-model';
 import FilterModel from './model/filter-model';
-import MockService from './service/mock';
 import NewEventButtonView from './view/header/new-event-button-view';
 import { render } from './framework/render';
+import PointsApiService from './service/point-api-service';
 
 const headerContainer = document.querySelector('.trip-main')!;
 const tripFilterContainer = headerContainer.querySelector('.trip-controls__filters')!;
 
-const service = new MockService();
+const AUTHORIZATION = 'Basic YQpmc1BXzUBtsKrA';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
+
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+});
+
+const destinationsModel = new DestinationsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+});
+
+const offersModel = new OffersModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+});
+
 const filterModel = new FilterModel();
-const destinationsModel = new DestinationsModel(service);
-const offersModel = new OffersModel(service);
-const pointsModel = new PointsModel(service);
-const dataBase = { destinationsModel, offersModel, pointsModel: pointsModel };
+const dataBase = { destinationsModel, offersModel, pointsModel };
 
 const mainPresenter = new MainPresenter({ dataBase, filterModel, onNewPointDestroy: handleNewPointFormClose });
 const filterPresenter = new FilterPresenter({
   filterContainer: tripFilterContainer as HTMLElement,
-  filterModel: filterModel,
-  pointsModel: pointsModel,
+  filterModel,
+  pointsModel,
 });
 
 const newEventButtonComponent = new NewEventButtonView({ onClick: handleNewEventButtonClick });
@@ -38,5 +49,8 @@ function handleNewEventButtonClick() {
 
 render(newEventButtonComponent, headerContainer, 'beforeend');
 
-mainPresenter.init();
 filterPresenter.init();
+pointsModel.init();
+destinationsModel.init();
+offersModel.init();
+mainPresenter.init();
