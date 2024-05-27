@@ -16,11 +16,7 @@ const enum UpdateType {
   MINOR,
   /** В пределах одной точки*/
   PATCH,
-<<<<<<< HEAD
   INIT,
-=======
-  INIT
->>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
 }
 
 const enum UserAction {
