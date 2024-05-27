@@ -124,7 +124,7 @@ export default class PointPresenter {
 
   #handleFavoriteClick = () => {
     if (this.#point) {
-      this.#handleDataChange(UserAction.updatePoint, UpdateType.MINOR, { ...this.#point, isFavorite: !this.#point.isFavorite });
+      this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, { ...this.#point, isFavorite: !this.#point.isFavorite });
     }
   };
 
@@ -138,11 +138,11 @@ export default class PointPresenter {
       !isDatesEqual(dayjs(this.#point!.dateTo), dayjs(updatePoint.dateTo)) ||
       this.#point?.offers !== updatePoint.offers;
 
-    this.#handleDataChange(UserAction.updatePoint, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updatePoint);
+    this.#handleDataChange(UserAction.UPDATE_POINT, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updatePoint);
     this.#switchToViewMode();
   };
 
   #handleDeleteClick = (point: Point) => {
-    this.#handleDataChange(UserAction.deletePoint, UpdateType.MINOR, point);
+    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
   };
 }

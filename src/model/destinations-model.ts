@@ -8,11 +8,7 @@ export default class DestinationsModel extends Observable<UpdateType, Point> {
   #pointsApiService: any | null = null;
   #destinations: Destination[] = [];
 
-<<<<<<< HEAD
   constructor({ pointsApiService }: { pointsApiService: any }) {
-=======
-  constructor({pointsApiService} : {pointsApiService: any}) {
->>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
     super();
     this.#pointsApiService = pointsApiService;
   }
@@ -25,11 +21,7 @@ export default class DestinationsModel extends Observable<UpdateType, Point> {
     try {
       const destinations = await this.#pointsApiService.destinations;
       this.#destinations = destinations;
-<<<<<<< HEAD
     } catch (err) {
-=======
-    } catch(err) {
->>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
       this.#destinations = [];
     }
 

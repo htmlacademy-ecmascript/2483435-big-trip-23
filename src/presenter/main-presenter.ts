@@ -124,13 +124,13 @@ export default class ListPresenter {
 
   #handleViewAction = (actionType: UserAction, updateType: UpdateType, updatePoint: any) => {
     switch (actionType) {
-      case UserAction.updatePoint:
+      case UserAction.UPDATE_POINT:
         this.#pointsModel.updatePoint(updateType, updatePoint);
         break;
-      case UserAction.addPoint:
+      case UserAction.ADD_POINT:
         this.#pointsModel.addPoint(updateType, updatePoint);
         break;
-      case UserAction.deletePoint:
+      case UserAction.DELETE_POINT:
         this.#pointsModel.deletePoint(updateType, updatePoint);
         break;
     }
@@ -152,11 +152,8 @@ export default class ListPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-<<<<<<< HEAD
+
         this.#renderPointsList();
-=======
-        this. #renderPointsList();
->>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
         break;
       default:
         this.#onChange();

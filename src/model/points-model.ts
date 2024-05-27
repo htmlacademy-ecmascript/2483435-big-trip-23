@@ -7,11 +7,7 @@ export default class PointsModel extends Observable<UpdateType, Point> {
   #pointsApiService: any | null = null;
   #points: Point[] = [];
 
-<<<<<<< HEAD
   constructor({ pointsApiService }: { pointsApiService: any }) {
-=======
-  constructor({pointsApiService} : {pointsApiService: any}) {
->>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
     super();
     this.#pointsApiService = pointsApiService;
   }
@@ -24,11 +20,7 @@ export default class PointsModel extends Observable<UpdateType, Point> {
     try {
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
-<<<<<<< HEAD
     } catch (err) {
-=======
-    } catch(err) {
->>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
       this.#points = [];
     }
 
@@ -62,20 +54,12 @@ export default class PointsModel extends Observable<UpdateType, Point> {
   }
 
   #adaptToClient(point: any) {
-<<<<<<< HEAD
     const adaptedPoint = {
       ...point,
       dateFrom: point['date_from'],
       dateTo: point['date_to'],
       basePrice: point['base_price'],
       isFavorite: point['is_favorite'],
-=======
-    const adaptedPoint = {...point,
-      dateFrom: point['date_from'],
-      dateTo: point['date_to'],
-      basePrice: point['base_price'],
-      isFavorite: point['is_favorite']
->>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
     };
 
     delete adaptedPoint['date_from'];
@@ -85,8 +69,4 @@ export default class PointsModel extends Observable<UpdateType, Point> {
 
     return adaptedPoint;
   }
-<<<<<<< HEAD
-=======
-
->>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
 }

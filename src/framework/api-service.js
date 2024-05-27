@@ -20,25 +20,11 @@ export default class ApiService {
    * @param {Headers} [config.headers] Заголовки запроса
    * @returns {Promise<Response>}
    */
-<<<<<<< HEAD
+
   async _load({ url, method = 'GET', body = null, headers = new Headers() }) {
     headers.append('Authorization', this._authorization);
 
     const response = await fetch(`${this._endPoint}/${url}`, { method, body, headers });
-=======
-  async _load({
-    url,
-    method = 'GET',
-    body = null,
-    headers = new Headers(),
-  }) {
-    headers.append('Authorization', this._authorization);
-
-    const response = await fetch(
-      `${this._endPoint}/${url}`,
-      {method, body, headers},
-    );
->>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
 
     try {
       ApiService.checkStatus(response);

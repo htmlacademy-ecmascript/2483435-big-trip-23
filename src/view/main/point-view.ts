@@ -75,7 +75,6 @@ export default class PointView extends AbstractView<HTMLTimeElement> {
   }
 
   get template() {
-    console.log(this.#point);
     return getTemplate(this.#point, this.#destination, this.#selectedOffers);
   }
 
