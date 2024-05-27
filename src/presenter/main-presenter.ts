@@ -152,7 +152,11 @@ export default class ListPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
+<<<<<<< HEAD
         this.#renderPointsList();
+=======
+        this. #renderPointsList();
+>>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
         break;
       default:
         this.#onChange();

@@ -8,7 +8,7 @@ export default class OffersModel extends Observable<UpdateType, Point> {
   #pointsApiService: any | null = null;
   #offers: Offer[] = [];
 
-  constructor({ pointsApiService }: { pointsApiService: any }) {
+  constructor({pointsApiService} : {pointsApiService: any}) {
     super();
     this.#pointsApiService = pointsApiService;
   }
@@ -21,7 +21,12 @@ export default class OffersModel extends Observable<UpdateType, Point> {
     try {
       const offers = await this.#pointsApiService.offers;
       this.#offers = offers;
+<<<<<<< HEAD
     } catch (err) {
+=======
+
+    } catch(err) {
+>>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
       this.#offers = [];
     }
 

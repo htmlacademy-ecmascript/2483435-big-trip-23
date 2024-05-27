@@ -9,6 +9,7 @@ const Method = {
 
 export default class PointsApiService extends ApiService {
   get points() {
+<<<<<<< HEAD
     return this._load({ url: 'points' }).then(ApiService.parseResponse);
   }
 
@@ -18,6 +19,20 @@ export default class PointsApiService extends ApiService {
 
   get offers() {
     return this._load({ url: 'offers' }).then(ApiService.parseResponse);
+=======
+    return this._load({url: 'points'})
+      .then(ApiService.parseResponse);
+  }
+
+  get destinations() {
+    return this._load({url: 'destinations'})
+      .then(ApiService.parseResponse);
+  }
+
+  get offers() {
+    return this._load({url: 'offers'})
+      .then(ApiService.parseResponse);
+>>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
   }
 
   async updatePoint(point: Point) {
@@ -25,7 +40,11 @@ export default class PointsApiService extends ApiService {
       url: `points/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(point)),
+<<<<<<< HEAD
       headers: new Headers({ 'Content-Type': 'application/json' }),
+=======
+      headers: new Headers({'Content-Type': 'application/json'}),
+>>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
     });
 
     const parsedResponse = await ApiService.parseResponse(response);
@@ -34,8 +53,12 @@ export default class PointsApiService extends ApiService {
   }
 
   #adaptToServer(point: any) {
+<<<<<<< HEAD
     const adaptedPoint = {
       ...point,
+=======
+    const adaptedPoint = {...point,
+>>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
       'date_from': point.dateFrom,
       'date_to': point.dateTo,
       'base_price': point.basePrice,
@@ -49,4 +72,8 @@ export default class PointsApiService extends ApiService {
 
     return adaptedPoint;
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
 }

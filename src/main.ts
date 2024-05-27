@@ -15,6 +15,7 @@ const AUTHORIZATION = 'Basic YQpmc1BXzUBtsKrA';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const pointsModel = new PointsModel({
+<<<<<<< HEAD
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
 });
 
@@ -26,6 +27,20 @@ const offersModel = new OffersModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
 });
 
+=======
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
+
+const destinationsModel = new DestinationsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
+
+const offersModel = new OffersModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
+
+
+>>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
 const filterModel = new FilterModel();
 const dataBase = { destinationsModel, offersModel, pointsModel };
 
@@ -33,7 +48,11 @@ const mainPresenter = new MainPresenter({ dataBase, filterModel, onNewPointDestr
 const filterPresenter = new FilterPresenter({
   filterContainer: tripFilterContainer as HTMLElement,
   filterModel,
+<<<<<<< HEAD
   pointsModel,
+=======
+  pointsModel
+>>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
 });
 
 const newEventButtonComponent = new NewEventButtonView({ onClick: handleNewEventButtonClick });
@@ -54,3 +73,7 @@ pointsModel.init();
 destinationsModel.init();
 offersModel.init();
 mainPresenter.init();
+<<<<<<< HEAD
+=======
+console.log(dataBase);
+>>>>>>> c9474dda971c01a8ad03f280d38340691b379e7c
