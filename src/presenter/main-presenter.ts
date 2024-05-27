@@ -16,6 +16,7 @@ import { priceSort, timeSort, daySort } from '../utils/sorting';
 import type FilterModel from '../model/filter-model';
 import NoPointView from '../view/main/no-point-view';
 import NewPointPresenter from './new-point-presenter';
+import LoadingView from '../view/main/loading-view';
 
 export interface DataBase {
   destinationsModel: DestinationsModel;
@@ -26,6 +27,7 @@ export interface DataBase {
 export default class ListPresenter {
   #tripMainContainer: HTMLDivElement;
   #tripEventsContainer: HTMLTableSectionElement;
+  #loadingComponent = new LoadingView();
   #pointsModel: PointsModel;
   #filterModel: FilterModel | null = null;
   #dataBase: DataBase;
@@ -38,6 +40,7 @@ export default class ListPresenter {
   #filterType: FilterType = 'everything';
   #wasRendered: boolean = false;
   #newPointPresenter: NewPointPresenter;
+  #isLoading = true;
 
   constructor({
     dataBase,
@@ -146,6 +149,11 @@ export default class ListPresenter {
           dataBase: this.#dataBase,
         });
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this. #renderPointsList();
+        break;
       default:
         this.#onChange();
         break;
@@ -175,10 +183,15 @@ export default class ListPresenter {
     render(this.#noPointComponent, this.#tripEventsContainer);
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#tripEventsContainer);
+  }
+
   #clearPointsList() {
     this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.destroy());
     this.#pointsPresenters.clear();
+    remove(this.#loadingComponent);
 
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);
@@ -193,6 +206,11 @@ export default class ListPresenter {
 
   #renderPointsList() {
     render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
     if (this.points.length > 0) {
       this.#renderSorting();
 

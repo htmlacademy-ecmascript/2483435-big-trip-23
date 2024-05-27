@@ -1,20 +1,30 @@
-import type { UpdateType } from '../const';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { UpdateType } from '../const';
 import Observable from '../framework/observable';
-import type MockService from '../service/mock';
 import type { Point } from '../types/point-type';
 
 export default class PointsModel extends Observable<UpdateType, Point> {
-  #service: MockService;
+  #pointsApiService: any | null = null;
   #points: Point[] = [];
 
-  constructor(service: MockService) {
+  constructor({pointsApiService} : {pointsApiService: any}) {
     super();
-    this.#service = service;
-    this.#points = this.#service.points;
+    this.#pointsApiService = pointsApiService;
   }
 
   get points() {
     return this.#points;
+  }
+
+  async init() {
+    try {
+      const points = await this.#pointsApiService.points;
+      this.#points = points.map(this.#adaptToClient);
+    } catch(err) {
+      this.#points = [];
+    }
+
+    this._notify(UpdateType.INIT, {});
   }
 
   updatePoint(updateType: UpdateType, updatePoint: Point) {
@@ -42,4 +52,21 @@ export default class PointsModel extends Observable<UpdateType, Point> {
   getById(id: string) {
     return this.#points.find((point) => point.id === id);
   }
+
+  #adaptToClient(point: any) {
+    const adaptedPoint = {...point,
+      dateFrom: point['date_from'],
+      dateTo: point['date_to'],
+      basePrice: point['base_price'],
+      isFavorite: point['is_favorite']
+    };
+
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['is_favorite'];
+
+    return adaptedPoint;
+  }
+
 }

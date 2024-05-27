@@ -16,12 +16,13 @@ const enum UpdateType {
   MINOR,
   /** В пределах одной точки*/
   PATCH,
+  INIT
 }
 
 const enum UserAction {
-  'updatePoint',
-  'addPoint',
-  'deletePoint',
+  UPDATE_POINT,
+  ADD_POINT,
+  DELETE_POINT,
 }
 
 const PointsEmptyMessages = {
