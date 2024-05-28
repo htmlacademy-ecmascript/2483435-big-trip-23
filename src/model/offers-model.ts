@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UpdateType } from '../const';
 import Observable from '../framework/observable';
+import type PointsApiService from '../service/point-api-service';
 import type { Offer } from '../types/offer-type';
 import type { Point } from '../types/point-type';
 
 export default class OffersModel extends Observable<UpdateType, Point> {
-  #pointsApiService: any | null = null;
+  #pointsApiService: PointsApiService;
   #offers: Offer[] = [];
 
-  constructor({ pointsApiService }: { pointsApiService: any }) {
+  constructor({ pointsApiService }: { pointsApiService: PointsApiService }) {
     super();
     this.#pointsApiService = pointsApiService;
   }
@@ -29,11 +29,11 @@ export default class OffersModel extends Observable<UpdateType, Point> {
   }
 
   getAvailableOffers(type: Point['type']) {
-    return this.#offers.find((item) => item.type === type)!.offers;
+    return this.#offers.find((item) => item.type === type)?.offers ?? [];
   }
 
   getAvailableOffersIDs(type: Point['type']): string[] {
-    return this.#offers.find((item) => item.type === type)!.offers.map((item) => item.id);
+    return this.getAvailableOffers(type).map((item) => item.id) ?? [];
   }
 
   getSelectedOffers(point: Point) {
