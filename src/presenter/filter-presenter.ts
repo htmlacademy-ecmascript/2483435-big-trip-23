@@ -31,7 +31,7 @@ export default class FilterPresenter {
   }
 
   get filters() {
-    const points = this.#pointsModel!.points;
+    const points = this.#pointsModel?.points ?? [];
 
     return Object.values(FILTER_TYPES).map((type) => ({
       type,
@@ -45,13 +45,18 @@ export default class FilterPresenter {
 
     this.#filterComponent = new FilterView({
       filters,
-      currentFilterType: this.#filterModel!.filter,
+      currentFilterType: this.#filterModel?.filter ?? 'everything',
       onFilterTypeChange: this.#handleFilterTypeChange,
     });
 
     if (prevFilterComponent === null) {
-      render(this.#filterComponent, this.#filterContainer!);
-      return;
+      const container = this.#filterContainer;
+      if (container !== null) {
+        render(this.#filterComponent, container);
+        return;
+      } else {
+        throw new Error('Filter container is not defined');
+      }
     }
 
     replace(this.#filterComponent, prevFilterComponent);
@@ -63,10 +68,10 @@ export default class FilterPresenter {
   };
 
   #handleFilterTypeChange = (filterType: FilterType) => {
-    if (this.#filterModel!.filter === filterType) {
+    if (!this.#filterModel || this.#filterModel.filter === filterType) {
       return;
     }
 
-    this.#filterModel!.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
   };
 }

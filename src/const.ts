@@ -1,5 +1,15 @@
-import type { PointType } from './types/point-type';
+import type { Point, PointType } from './types/point-type';
 
+const DEFAULT_POINT: Point = {
+  id: '',
+  basePrice: Number(''),
+  dateFrom: '',
+  dateTo: '',
+  destination: '',
+  isFavorite: false,
+  offers: [],
+  type: 'flight',
+};
 const POINTS_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'] as const;
 
 const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'] as const;
@@ -32,4 +42,15 @@ const PointsEmptyMessages = {
   past: 'There are no past events now',
 } as const satisfies Record<FilterType, string>;
 
-export { POINTS_TYPES, SORT_TYPES, FILTER_TYPES, PointsEmptyMessages, SortType, FilterType, UserAction, UpdateType, isValidPointType };
+export {
+  POINTS_TYPES,
+  SORT_TYPES,
+  FILTER_TYPES,
+  PointsEmptyMessages,
+  SortType,
+  FilterType,
+  UserAction,
+  UpdateType,
+  isValidPointType,
+  DEFAULT_POINT,
+};

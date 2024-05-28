@@ -5,7 +5,7 @@ import type { EmptyFn } from '../types/common';
 import type { DataBase } from './main-presenter';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
-import { DEFAULT_POINT } from '../mock/const';
+import { DEFAULT_POINT } from '../const';
 import PointFormView from '../view/main/point-form-view';
 
 type PointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
@@ -68,9 +68,28 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#pointNewComponent?.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointNewComponent?.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointNewComponent?.shake(resetFormState);
+  }
+
   #handleFormSubmit = (newPoint: Point) => {
-    this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, { ...newPoint });
-    this.destroy();
+    this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, newPoint);
+    // this.destroy();
   };
 
   #handleDeleteClick = () => {

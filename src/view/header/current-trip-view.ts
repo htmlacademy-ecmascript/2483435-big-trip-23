@@ -1,4 +1,4 @@
-import AbstractView from '../../framework/view/view';
+import AbstractView from '../../framework/view/abstract-view';
 
 const TEMPLATE = `<section class="trip-main__trip-info  trip-info">
             <div class="trip-info__main">

@@ -76,7 +76,8 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointEditComponent, prevPointEditComponent);
+      replace(this.#pointComponent, prevPointEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -94,6 +95,41 @@ export default class PointPresenter {
     }
   }
 
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent?.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent?.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent?.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointEditComponent?.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent?.shake(resetFormState);
+  }
+
   #switchToEditMode() {
     if (!this.#pointComponent || !this.#pointEditComponent) {
       return;
@@ -108,7 +144,9 @@ export default class PointPresenter {
     if (!this.#pointComponent || !this.#pointEditComponent) {
       return;
     }
-    this.#pointEditComponent!.reset(this.#point!);
+    if (this.#point) {
+      this.#pointEditComponent.reset(this.#point);
+    }
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
@@ -117,7 +155,16 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt: KeyboardEvent) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#pointEditComponent!.reset(this.#point!);
+      if (this.#pointEditComponent) {
+        if (this.#point) {
+          this.#pointEditComponent.reset(this.#point);
+        } else {
+          throw new Error('Point is null');
+        }
+        this.#pointEditComponent.reset(this.#point);
+      } else {
+        throw new Error('pointEditComponent is null');
+      }
       this.#switchToViewMode();
     }
   };
@@ -133,13 +180,15 @@ export default class PointPresenter {
   #handleFormClose = () => this.#switchToViewMode();
 
   #handleFormSubmit = (updatePoint: Point) => {
-    const isMinorUpdate =
-      !isDatesEqual(dayjs(this.#point!.dateFrom), dayjs(updatePoint.dateFrom)) ||
-      !isDatesEqual(dayjs(this.#point!.dateTo), dayjs(updatePoint.dateTo)) ||
-      this.#point?.offers !== updatePoint.offers;
+    const point = this.#point;
+    if (point) {
+      const isMinorUpdate =
+        !isDatesEqual(dayjs(point.dateFrom), dayjs(updatePoint.dateFrom)) ||
+        !isDatesEqual(dayjs(point.dateTo), dayjs(updatePoint.dateTo)) ||
+        point.offers !== updatePoint.offers;
 
-    this.#handleDataChange(UserAction.UPDATE_POINT, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updatePoint);
-    this.#switchToViewMode();
+      this.#handleDataChange(UserAction.UPDATE_POINT, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updatePoint);
+    }
   };
 
   #handleDeleteClick = (point: Point) => {

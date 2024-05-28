@@ -1,4 +1,4 @@
-import AbstractView from '../../framework/view/view';
+import AbstractView from '../../framework/view/abstract-view';
 import type { FilterType } from '../../const';
 import { PointsEmptyMessages } from '../../const';
 

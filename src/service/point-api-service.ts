@@ -1,29 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable camelcase */
 import ApiService from '../framework/api-service';
-import type { Point } from '../types/point-type';
+import type { Destination } from '../types/destination-type';
+import type { Offer } from '../types/offer-type';
+import type { Point, ServerPoint } from '../types/point-type';
 
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
+const URL = {
+  POINTS: 'points',
+  DESTINATIONS: 'destinations',
+  OFFERS: 'offers',
 };
 
 export default class PointsApiService extends ApiService {
   get points() {
-    return this._load({ url: 'points' }).then(ApiService.parseResponse);
+    return this._load({ url: 'points' }).then(ApiService.parseResponse<ServerPoint[]>);
   }
 
   get destinations() {
-    return this._load({ url: 'destinations' }).then(ApiService.parseResponse);
+    return this._load({ url: 'destinations' }).then(ApiService.parseResponse<Destination[]>);
   }
 
   get offers() {
-    return this._load({ url: 'offers' }).then(ApiService.parseResponse);
+    return this._load({ url: 'offers' }).then(ApiService.parseResponse<Offer[]>);
   }
 
   async updatePoint(point: Point) {
     const response = await this._load({
-      url: `points/${point.id}`,
-      method: Method.PUT,
+      url: `${URL.POINTS}/${point.id}`,
+      method: 'PUT',
       body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
@@ -33,14 +36,36 @@ export default class PointsApiService extends ApiService {
     return parsedResponse;
   }
 
-  #adaptToServer(point: any) {
-    const adaptedPoint = {
+  async addPoint(point: Point) {
+    const response = await this._load({
+      url: URL.POINTS,
+      method: 'POST',
+      body: JSON.stringify(this.#adaptToServer(point)),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  }
+
+  async deletePoint(point: Point) {
+    const response = await this._load({
+      url: `${URL.POINTS}/${point.id}`,
+      method: 'DELETE',
+    });
+
+    return response;
+  }
+
+  #adaptToServer(point: Point): ServerPoint {
+    const adaptedPoint: Partial<ServerPoint & Point> = {
       ...point,
 
-      'date_from': point.dateFrom,
-      'date_to': point.dateTo,
-      'base_price': point.basePrice,
-      'is_favorite': point.isFavorite,
+      date_from: point.dateFrom,
+      date_to: point.dateTo,
+      base_price: point.basePrice,
+      is_favorite: point.isFavorite,
     };
 
     delete adaptedPoint.dateFrom;
@@ -48,6 +73,6 @@ export default class PointsApiService extends ApiService {
     delete adaptedPoint.basePrice;
     delete adaptedPoint.isFavorite;
 
-    return adaptedPoint;
+    return adaptedPoint as ServerPoint;
   }
 }

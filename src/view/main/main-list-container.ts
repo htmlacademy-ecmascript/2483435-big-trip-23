@@ -1,4 +1,4 @@
-import AbstractView from '../../framework/view/view';
+import AbstractView from '../../framework/view/abstract-view';
 
 const TEMPLATE = '<ul class="trip-events__list"></ul>';
 

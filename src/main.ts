@@ -9,9 +9,9 @@ import { render } from './framework/render';
 import PointsApiService from './service/point-api-service';
 
 const headerContainer = document.querySelector('.trip-main')!;
-const tripFilterContainer = headerContainer.querySelector('.trip-controls__filters')!;
+const tripFilterContainer = headerContainer?.querySelector('.trip-controls__filters');
 
-const AUTHORIZATION = 'Basic YQpmc1BXzUBtsKrA';
+const AUTHORIZATION = 'Basic YQpmc1BXzUBKrA';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const pointsModel = new PointsModel({
@@ -27,31 +27,28 @@ const offersModel = new OffersModel({
 });
 
 const filterModel = new FilterModel();
-const dataBase = { destinationsModel, offersModel, pointsModel };
 
-const mainPresenter = new MainPresenter({ dataBase, filterModel, onNewPointDestroy: handleNewPointFormClose });
-const filterPresenter = new FilterPresenter({
-  filterContainer: tripFilterContainer as HTMLElement,
-  filterModel,
+const successfulLoad = () => {
+  const newEventButtonComponent = new NewEventButtonView({ onClick: handleNewEventButtonClick });
+  const dataBase = { destinationsModel, offersModel, pointsModel };
+  const mainPresenter = new MainPresenter({ dataBase, filterModel, onNewPointDestroy: handleNewPointFormClose });
+  const filterPresenter = new FilterPresenter({
+    filterContainer: tripFilterContainer as HTMLElement,
+    filterModel,
+    pointsModel,
+  });
+  function handleNewPointFormClose() {
+    newEventButtonComponent.element.disabled = false;
+  }
 
-  pointsModel,
-});
+  function handleNewEventButtonClick() {
+    mainPresenter.createPoint();
+    newEventButtonComponent.element.disabled = true;
+  }
 
-const newEventButtonComponent = new NewEventButtonView({ onClick: handleNewEventButtonClick });
+  filterPresenter.init();
+  render(newEventButtonComponent, headerContainer, 'beforeend');
+  mainPresenter.init();
+};
 
-function handleNewPointFormClose() {
-  newEventButtonComponent.element.disabled = false;
-}
-
-function handleNewEventButtonClick() {
-  mainPresenter.createPoint();
-  newEventButtonComponent.element.disabled = true;
-}
-
-render(newEventButtonComponent, headerContainer, 'beforeend');
-
-filterPresenter.init();
-pointsModel.init();
-destinationsModel.init();
-offersModel.init();
-mainPresenter.init();
+Promise.all([pointsModel.init(), destinationsModel.init(), offersModel.init()]).finally(successfulLoad);

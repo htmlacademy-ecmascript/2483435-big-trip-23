@@ -27,26 +27,42 @@ export default class PointsModel extends Observable<UpdateType, Point> {
     this._notify(UpdateType.INIT, {});
   }
 
-  updatePoint(updateType: UpdateType, updatePoint: Point) {
+  async updatePoint(updateType: UpdateType, updatePoint: Point) {
     const index = this.#points.findIndex((point) => point.id === updatePoint.id);
+    try {
+      const response = await this.#pointsApiService.updatePoint(updatePoint);
 
-    this.#points = [...this.#points.slice(0, index), updatePoint, ...this.#points.slice(index + 1)];
+      const updatedPoint = this.#adaptToClient(response);
+      this.#points = [...this.#points.slice(0, index), updatedPoint, ...this.#points.slice(index + 1)];
 
-    this._notify(updateType, updatePoint);
+      this._notify(updateType, updatedPoint);
+    } catch (err) {
+      throw new Error('Can\'t update point');
+    }
   }
 
-  addPoint(updateType: UpdateType, updatePoint: Point) {
-    this.#points = [updatePoint, ...this.#points];
-
-    this._notify(updateType, updatePoint);
+  async addPoint(updateType: UpdateType, updatePoint: Point) {
+    try {
+      const response = await this.#pointsApiService.addPoint(updatePoint);
+      const newPoint = this.#adaptToClient(response);
+      this.#points = [updatePoint, ...this.#points];
+      this._notify(updateType, newPoint);
+    } catch (err) {
+      throw new Error('Can\'t add point');
+    }
   }
 
-  deletePoint(updateType: UpdateType, updatePoint: Point) {
+  async deletePoint(updateType: UpdateType, updatePoint: Point) {
     const index = this.#points.findIndex((point) => point.id === updatePoint.id);
 
-    this.#points = [...this.#points.slice(0, index), ...this.#points.slice(index + 1)];
+    try {
+      await this.#pointsApiService.deletePoint(updatePoint);
+      this.#points = [...this.#points.slice(0, index), ...this.#points.slice(index + 1)];
 
-    this._notify(updateType, updatePoint);
+      this._notify(updateType, {});
+    } catch (err) {
+      throw new Error('Can\'t delete point');
+    }
   }
 
   getById(id: string) {

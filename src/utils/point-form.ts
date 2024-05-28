@@ -33,7 +33,7 @@ export function handleDestinationChange(view: View, evt: Event, dataBase: DataBa
     return;
   }
 
-  const selectedDestination = dataBase.destinationsModel.getDestinationByName(select)!.id;
+  const selectedDestination = dataBase.destinationsModel.getDestinationByName(select)?.id;
   evt.preventDefault();
   view.updateElement({
     destination: selectedDestination,

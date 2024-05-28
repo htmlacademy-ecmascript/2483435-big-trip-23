@@ -1,4 +1,4 @@
-import AbstractView from '../../framework/view/view';
+import AbstractView from '../../framework/view/abstract-view';
 import { SORT_TYPES } from '../../const';
 import { upperCaseLetter } from '../../utils/utils';
 import type { SortType } from '../../const';
