@@ -40,6 +40,12 @@ export function setEventFinish(view: View) {
   });
 
   function finishDateChangeHandler([userDate]: Date[]) {
+    const start = appDay(view._state.dateFrom);
+    const finish = appDay(userDate);
+
+    if (start >= finish) {
+      view._state.dateFrom = start.subtract(5, 'minute').toString();
+    }
     finishTime.destroy();
     view.updateElement({
       dateTo: userDate.toString(),

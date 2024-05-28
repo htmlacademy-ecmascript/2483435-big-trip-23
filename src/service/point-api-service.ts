@@ -1,10 +1,14 @@
 /* eslint-disable camelcase */
 import ApiService from '../framework/api-service';
-import type { Point } from '../types/point-type';
+import type { Destination } from '../types/destination-type';
+import type { Offer } from '../types/offer-type';
+import type { Point, ServerPoint } from '../types/point-type';
+import type { State } from '../types/state';
 
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
+const URL = {
+  POINTS: 'points',
+  DESTINATIONS: 'destinations',
+  OFFERS: 'offers',
 };
 
 export default class PointsApiService extends ApiService {
@@ -23,7 +27,7 @@ export default class PointsApiService extends ApiService {
   async updatePoint(point: Point) {
     const response = await this._load({
       url: `points/${point.id}`,
-      method: Method.PUT,
+      method: 'PUT',
       body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
@@ -33,7 +37,29 @@ export default class PointsApiService extends ApiService {
     return parsedResponse;
   }
 
-  #adaptToServer(point: any) {
+  async addPoint(point: Point) {
+    const response = await this._load({
+      url: URL.POINTS,
+      method: 'POST',
+      body: JSON.stringify(this.#adaptToServer(point)),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  }
+
+  async deletePoint(point: Point) {
+    const response = await this._load({
+      url: `${URL.POINTS}/${point.id}`,
+      method: 'DELETE',
+    });
+
+    return response;
+  }
+
+  #adaptToServer(point: State) {
     const adaptedPoint = {
       ...point,
 
