@@ -27,10 +27,10 @@ export default class PointsModel extends Observable<UpdateType, Point> {
     this._notify(UpdateType.INIT, {});
   }
 
-  async updatePoint(updateType: UpdateType, updatePoint: Point) {
-    const index = this.#points.findIndex((point) => point.id === updatePoint.id);
+  async updatePoint(updateType: UpdateType, currentPoint: Point) {
+    const index = this.#points.findIndex((point) => point.id === currentPoint.id);
     try {
-      const response = await this.#pointsApiService.updatePoint(updatePoint);
+      const response = await this.#pointsApiService.updatePoint(currentPoint);
 
       const updatedPoint = this.#adaptToClient(response);
       this.#points = [...this.#points.slice(0, index), updatedPoint, ...this.#points.slice(index + 1)];
@@ -41,22 +41,22 @@ export default class PointsModel extends Observable<UpdateType, Point> {
     }
   }
 
-  async addPoint(updateType: UpdateType, updatePoint: Point) {
+  async addPoint(updateType: UpdateType, currentPoint: Point) {
     try {
-      const response = await this.#pointsApiService.addPoint(updatePoint);
+      const response = await this.#pointsApiService.addPoint(currentPoint);
       const newPoint = this.#adaptToClient(response);
-      this.#points = [updatePoint, ...this.#points];
+      this.#points = [newPoint, ...this.#points];
       this._notify(updateType, newPoint);
     } catch (err) {
       throw new Error('Can\'t add point');
     }
   }
 
-  async deletePoint(updateType: UpdateType, updatePoint: Point) {
-    const index = this.#points.findIndex((point) => point.id === updatePoint.id);
+  async deletePoint(updateType: UpdateType, currentPoint: Point) {
+    const index = this.#points.findIndex((point) => point.id === currentPoint.id);
 
     try {
-      await this.#pointsApiService.deletePoint(updatePoint);
+      await this.#pointsApiService.deletePoint(currentPoint);
       this.#points = [...this.#points.slice(0, index), ...this.#points.slice(index + 1)];
 
       this._notify(updateType, {});
