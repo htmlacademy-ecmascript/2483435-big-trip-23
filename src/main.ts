@@ -11,20 +11,16 @@ import PointsApiService from './service/point-api-service';
 const headerContainer = document.querySelector('.trip-main')!;
 const tripFilterContainer = headerContainer?.querySelector('.trip-controls__filters');
 
-const AUTHORIZATION = 'Basic YQpmc1BXzUBKrA';
-const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
+const enum Setting {
+  AUTHORIZATION = 'Basic YQpmc1BXzUBKrA',
+  END_POINT = 'https://23.objects.htmlacademy.pro/big-trip'
+}
 
-const pointsModel = new PointsModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
-});
+const pointsApiService = new PointsApiService(Setting.END_POINT, Setting.AUTHORIZATION);
 
-const destinationsModel = new DestinationsModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
-});
-
-const offersModel = new OffersModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
-});
+const pointsModel = new PointsModel({pointsApiService});
+const destinationsModel = new DestinationsModel({pointsApiService});
+const offersModel = new OffersModel({pointsApiService});
 
 const filterModel = new FilterModel();
 
