@@ -4,7 +4,7 @@ import type { State } from '../../types/state';
 import { correctName } from './destinations-template';
 
 export const pointDataForTemplate = (data: State, dataBase: DataBase, isNewPoint: boolean) => {
-  const { dateFrom, dateTo, type, destination, basePrice, selectedOffers } = data;
+  const { dateFrom, dateTo, type, destination, basePrice, selectedOffers, isDisabled, isSaving, isDeleting } = data;
 
   switch (isNewPoint) {
     case false:
@@ -17,7 +17,11 @@ export const pointDataForTemplate = (data: State, dataBase: DataBase, isNewPoint
         basePrice: basePrice,
         selectedOffers,
         cancelButton: 'Delete',
-        rollupButton: '<button class="event__rollup-btn" type="button">',
+        startHiding: '',
+        endHiding: '',
+        isDisabled,
+        isSaving,
+        isDeleting,
       };
     default:
       return {
@@ -29,7 +33,11 @@ export const pointDataForTemplate = (data: State, dataBase: DataBase, isNewPoint
         basePrice: basePrice,
         selectedOffers,
         cancelButton: 'Cancel',
-        rollupButton: '<div hidden><button class="event__rollup-btn" type="button"></div>',
+        startHiding: '<div hidden>',
+        endHiding: '</div>',
+        isDisabled,
+        isSaving,
+        isDeleting,
       };
   }
 };

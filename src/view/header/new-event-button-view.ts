@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AbstractView from '../../framework/view/view';
+import AbstractView from '../../framework/view/abstract-view';
 
 const getTemplate = () => '<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>';
 

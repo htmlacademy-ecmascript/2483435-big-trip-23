@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import flatpickr from 'flatpickr';
 import type { View } from '../point-form';
+import { appDay } from './time';
 
 export function setEventStart(view: View) {
   flatpickr(view.element.querySelectorAll('.event__input--time')[0], {
@@ -13,9 +14,13 @@ export function setEventStart(view: View) {
   });
 
   function startDateChangeHandler([userDate]: Date[]) {
-    if (new Date(userDate) > new Date(view._state.dateTo)) {
-      view._state.dateTo = userDate.toString();
+    const start = appDay(userDate);
+    const finish = appDay(view._state.dateTo);
+
+    if (start >= finish) {
+      view._state.dateTo = start.add(5, 'minute').toString();
     }
+
     view.updateElement({
       dateFrom: userDate.toString(),
     });
@@ -23,7 +28,7 @@ export function setEventStart(view: View) {
 }
 
 export function setEventFinish(view: View) {
-  const currentStartDate = view._state.dateFrom === '' ? 'today' : new Date(view._state.dateFrom);
+  const currentStartDate = view._state.dateFrom === '' ? 'today' : appDay(view._state.dateFrom).toString();
 
   const finishTime = flatpickr(view.element.querySelectorAll('.event__input--time')[1], {
     minDate: currentStartDate,
@@ -35,6 +40,12 @@ export function setEventFinish(view: View) {
   });
 
   function finishDateChangeHandler([userDate]: Date[]) {
+    const start = appDay(view._state.dateFrom);
+    const finish = appDay(userDate);
+
+    if (start >= finish) {
+      view._state.dateFrom = start.subtract(5, 'minute').toString();
+    }
     finishTime.destroy();
     view.updateElement({
       dateTo: userDate.toString(),

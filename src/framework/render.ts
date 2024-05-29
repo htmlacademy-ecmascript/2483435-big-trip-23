@@ -1,4 +1,4 @@
-import type AbstractView from '../framework/view/view';
+import type AbstractView from './view/abstract-view';
 
 function createElement<E extends Element>(template: string) {
   const newElement = document.createElement('div');

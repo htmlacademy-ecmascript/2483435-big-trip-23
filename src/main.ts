@@ -4,39 +4,51 @@ import PointsModel from './model/points-model';
 import DestinationsModel from './model/destinations-model';
 import OffersModel from './model/offers-model';
 import FilterModel from './model/filter-model';
-import MockService from './service/mock';
 import NewEventButtonView from './view/header/new-event-button-view';
 import { render } from './framework/render';
+import PointsApiService from './service/point-api-service';
 
 const headerContainer = document.querySelector('.trip-main')!;
-const tripFilterContainer = headerContainer.querySelector('.trip-controls__filters')!;
+const tripFilterContainer = headerContainer?.querySelector('.trip-controls__filters');
 
-const service = new MockService();
-const filterModel = new FilterModel();
-const destinationsModel = new DestinationsModel(service);
-const offersModel = new OffersModel(service);
-const pointsModel = new PointsModel(service);
-const dataBase = { destinationsModel, offersModel, pointsModel: pointsModel };
+const AUTHORIZATION = 'Basic YQpmc1BXzUBKrA';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
-const mainPresenter = new MainPresenter({ dataBase, filterModel, onNewPointDestroy: handleNewPointFormClose });
-const filterPresenter = new FilterPresenter({
-  filterContainer: tripFilterContainer as HTMLElement,
-  filterModel: filterModel,
-  pointsModel: pointsModel,
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
 });
 
-const newEventButtonComponent = new NewEventButtonView({ onClick: handleNewEventButtonClick });
+const destinationsModel = new DestinationsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+});
 
-function handleNewPointFormClose() {
-  newEventButtonComponent.element.disabled = false;
-}
+const offersModel = new OffersModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+});
 
-function handleNewEventButtonClick() {
-  mainPresenter.createPoint();
-  newEventButtonComponent.element.disabled = true;
-}
+const filterModel = new FilterModel();
 
-render(newEventButtonComponent, headerContainer, 'beforeend');
+const successfulLoad = () => {
+  const newEventButtonComponent = new NewEventButtonView({ onClick: handleNewEventButtonClick });
+  const dataBase = { destinationsModel, offersModel, pointsModel };
+  const mainPresenter = new MainPresenter({ dataBase, filterModel, onNewPointDestroy: handleNewPointFormClose });
+  const filterPresenter = new FilterPresenter({
+    filterContainer: tripFilterContainer as HTMLElement,
+    filterModel,
+    pointsModel,
+  });
+  function handleNewPointFormClose() {
+    newEventButtonComponent.element.disabled = false;
+  }
 
-mainPresenter.init();
-filterPresenter.init();
+  function handleNewEventButtonClick() {
+    mainPresenter.createPoint();
+    newEventButtonComponent.element.disabled = true;
+  }
+
+  filterPresenter.init();
+  render(newEventButtonComponent, headerContainer, 'beforeend');
+  mainPresenter.init();
+};
+
+Promise.all([pointsModel.init(), destinationsModel.init(), offersModel.init()]).finally(successfulLoad);

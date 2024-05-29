@@ -6,7 +6,11 @@ import he from 'he';
 
 const correctName = (destination: Point['destination'], dataBase: DataBase) => {
   const currentDestination = dataBase.destinationsModel.getDestinationByID(destination);
-  return capitalLetter(currentDestination!.name);
+  if (currentDestination) {
+    return capitalLetter(currentDestination.name);
+  } else {
+    throw new Error('Invalid destination');
+  }
 };
 
 const getOptions = (currentName: string, name: string) =>

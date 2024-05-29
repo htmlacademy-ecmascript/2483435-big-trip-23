@@ -17,4 +17,4 @@ interface ServerPoint {
 }
 type Point = CamelizeObject<ServerPoint>;
 
-export type { Point, PointType };
+export type { Point, PointType, ServerPoint };

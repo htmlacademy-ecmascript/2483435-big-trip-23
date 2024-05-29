@@ -14,7 +14,7 @@ export default class Observable<E = string, P = any> {
     this.#observers.delete(observer);
   }
 
-  _notify(event: E, payload: P) {
+  _notify(event: E, payload: any) {
     this.#observers.forEach((observer) => observer(event, payload));
   }
 }

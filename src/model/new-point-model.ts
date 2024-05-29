@@ -1,4 +1,4 @@
-import { DEFAULT_POINT } from '../mock/const';
+import { DEFAULT_POINT } from '../const';
 
 export default class NewPointModel {
   #point = DEFAULT_POINT;

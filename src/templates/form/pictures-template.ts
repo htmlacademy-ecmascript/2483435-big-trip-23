@@ -6,19 +6,21 @@ const getTemplate = (pictures: AppPicture[]) =>
 
 const createPicturesTemplate = (destination: string, dataBase: DataBase) => {
   if (destination !== '') {
-    const pictures = dataBase.destinationsModel.getDestinationByID(destination)!.pictures;
+    const pictures = dataBase.destinationsModel.getDestinationByID(destination)?.pictures;
 
-    return pictures!.length !== 0
-      ? `
-      <div class="event__photos-container">
-          <div class="event__photos-tape">
-          ${getTemplate(pictures)}
+    if (pictures) {
+      return pictures.length !== 0
+        ? `
+        <div class="event__photos-container">
+            <div class="event__photos-tape">
+            ${getTemplate(pictures)}
+            </div>
           </div>
-        </div>
-        `
-      : '';
-  } else {
-    return '';
+          `
+        : '';
+    } else {
+      throw new Error('Pictures is not found');
+    }
   }
 };
 
