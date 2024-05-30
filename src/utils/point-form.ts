@@ -1,4 +1,4 @@
-import type { DataBase } from '@presenter/main-presenter';
+import type { DataBase } from '@presenter/list';
 import { isValidPointType } from '../const';
 import type AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import type { State } from '../types/state';

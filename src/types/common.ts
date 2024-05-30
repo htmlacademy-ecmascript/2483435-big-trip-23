@@ -1,4 +1,4 @@
-import type { DataBase } from '@presenter/main-presenter';
+import type { DataBase } from '@presenter/list';
 import type { Point } from './point-type';
 
 type PointData = { point: Point; dataBase: DataBase };

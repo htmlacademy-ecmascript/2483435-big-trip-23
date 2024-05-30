@@ -4,7 +4,7 @@ import type { PointData } from '../../types/common';
 import type { State } from '../../types/state';
 import type { Point } from '../../types/point-type';
 import { handleDestinationChange, handleSelectedOffers, handleTypeChange } from '../../utils/point-form';
-import type { DataBase } from '@presenter/main-presenter';
+import type { DataBase } from '@presenter/list';
 import type { Instance as Flatpickr } from 'flatpickr/dist/types/instance';
 import 'flatpickr/dist/flatpickr.min.css';
 import { setEventFinish, setEventStart } from '../../utils/time/time-for-form';

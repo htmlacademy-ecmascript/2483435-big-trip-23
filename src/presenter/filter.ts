@@ -1,30 +1,28 @@
 import { render, replace, remove } from '../framework/render';
 import FilterView from '../view/header/filter-view';
 import { filter } from '../utils/filter';
-import type FilterModel from '../model/filter-model';
-import type PointsModel from '../model/points-model';
+import type FilterModel from '../model/filters';
+import type PointsModel from '../model/points';
 import type { FilterType } from '../const';
 import { FILTER_TYPES, UpdateType } from '../const';
+import type { Models } from '../model/create-models';
 
 export default class FilterPresenter {
-  #filterContainer: HTMLElement | null = null;
+  #container: HTMLElement;
   #filterModel: FilterModel | null = null;
   #pointsModel: PointsModel | null = null;
-
   #filterComponent: FilterView | null = null;
 
   constructor({
-    filterContainer,
-    filterModel,
-    pointsModel: pointsModel,
+    container,
+    models
   }: {
-    filterContainer: HTMLElement;
-    filterModel: FilterModel;
-    pointsModel: PointsModel;
+    container: HTMLElement;
+    models: Models
   }) {
-    this.#filterContainer = filterContainer;
-    this.#filterModel = filterModel;
-    this.#pointsModel = pointsModel;
+    this.#container = container;
+    this.#pointsModel = models.pointsModel;
+    this.#filterModel = models.filtersModel;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -50,7 +48,7 @@ export default class FilterPresenter {
     });
 
     if (prevFilterComponent === null) {
-      const container = this.#filterContainer;
+      const container = this.#container;
       if (container !== null) {
         render(this.#filterComponent, container);
         return;

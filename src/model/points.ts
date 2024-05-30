@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UpdateType } from '../const';
 import Observable from '../framework/observable';
+import type PointsApiService from '../service/point-api-service';
 import type { Point } from '../types/point-type';
 
 export default class PointsModel extends Observable<UpdateType, Point> {
-  #pointsApiService: any | null = null;
+  #service: PointsApiService | null = null;
   #points: Point[] = [];
 
-  constructor({ pointsApiService }: { pointsApiService: any }) {
+  constructor({ service }: { service: PointsApiService }) {
     super();
-    this.#pointsApiService = pointsApiService;
+    this.#service = service;
   }
 
   get points() {
@@ -18,8 +19,8 @@ export default class PointsModel extends Observable<UpdateType, Point> {
 
   async init() {
     try {
-      const points = await this.#pointsApiService.points;
-      this.#points = points.map(this.#adaptToClient);
+      const points = await this.#service?.points;
+      this.#points = points?.map(this.#adaptToClient) ?? [];
     } catch (err) {
       this.#points = [];
     }
@@ -30,7 +31,7 @@ export default class PointsModel extends Observable<UpdateType, Point> {
   async updatePoint(updateType: UpdateType, currentPoint: Point) {
     const index = this.#points.findIndex((point) => point.id === currentPoint.id);
     try {
-      const response = await this.#pointsApiService.updatePoint(currentPoint);
+      const response = await this.#service?.updatePoint(currentPoint);
 
       const updatedPoint = this.#adaptToClient(response);
       this.#points = [...this.#points.slice(0, index), updatedPoint, ...this.#points.slice(index + 1)];
@@ -43,7 +44,7 @@ export default class PointsModel extends Observable<UpdateType, Point> {
 
   async addPoint(updateType: UpdateType, currentPoint: Point) {
     try {
-      const response = await this.#pointsApiService.addPoint(currentPoint);
+      const response = await this.#service?.addPoint(currentPoint);
       const newPoint = this.#adaptToClient(response);
       this.#points = [newPoint, ...this.#points];
       this._notify(updateType, newPoint);
@@ -56,7 +57,7 @@ export default class PointsModel extends Observable<UpdateType, Point> {
     const index = this.#points.findIndex((point) => point.id === currentPoint.id);
 
     try {
-      await this.#pointsApiService.deletePoint(currentPoint);
+      await this.#service?.deletePoint(currentPoint);
       this.#points = [...this.#points.slice(0, index), ...this.#points.slice(index + 1)];
 
       this._notify(updateType, {});

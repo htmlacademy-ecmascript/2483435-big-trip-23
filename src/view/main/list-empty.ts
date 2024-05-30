@@ -4,7 +4,7 @@ import { PointsEmptyMessages } from '../../const';
 
 const getTemplate = (filter: FilterType) => `<p class="trip-events__msg">${PointsEmptyMessages[filter]}</p>`;
 
-export default class NoPointView extends AbstractView<HTMLTableSectionElement> {
+export default class ListEmptyView extends AbstractView<HTMLTableSectionElement> {
   #filter: FilterType;
 
   constructor(filter: FilterType) {

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import PointView from '../view/main/point-view';
+import PointView from '../view/main/point';
 import type { Point } from '../types/point-type';
 import { render, replace, remove } from '../framework/render';
 import type { EmptyFn, PointData } from '../types/common';
-import type { DataBase } from './main-presenter';
+import type { DataBase } from './list';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
 import dayjs from 'dayjs';
-import PointFormView from '../view/main/point-form-view';
+import PointFormView from '../view/main/point-form';
 import { isDatesEqual } from '../utils/time/time-for-filters';
 
 const enum Mode {

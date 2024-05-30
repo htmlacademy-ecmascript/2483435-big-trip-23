@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UpdateType } from '../const';
 import Observable from '../framework/observable';
+import type PointsApiService from '../service/point-api-service';
 import type { Destination } from '../types/destination-type';
 import type { Point } from '../types/point-type';
 
 export default class DestinationsModel extends Observable<UpdateType, Point> {
-  #pointsApiService: any | null = null;
+  #service: PointsApiService | null = null;
   #destinations: Destination[] = [];
 
-  constructor({ pointsApiService }: { pointsApiService: any }) {
+  constructor({ service }: { service: PointsApiService }) {
     super();
-    this.#pointsApiService = pointsApiService;
+    this.#service = service;
   }
 
   get destinations() {
@@ -19,8 +19,8 @@ export default class DestinationsModel extends Observable<UpdateType, Point> {
 
   async init() {
     try {
-      const destinations = await this.#pointsApiService.destinations;
-      this.#destinations = destinations;
+      const destinations = await this.#service?.destinations;
+      this.#destinations = destinations ?? [];
     } catch (err) {
       this.#destinations = [];
     }

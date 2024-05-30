@@ -1,4 +1,4 @@
-import type { DataBase } from '@presenter/main-presenter';
+import type { DataBase } from '@presenter/list';
 import type { InnerOffer } from '../../types/offer-type';
 import type { State } from '../../types/state';
 

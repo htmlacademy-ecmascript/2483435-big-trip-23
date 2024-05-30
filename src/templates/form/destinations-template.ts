@@ -1,6 +1,6 @@
 import type { Point } from '../../types/point-type';
 import { checkMatch } from '../../utils/utils';
-import type { DataBase } from '@presenter/main-presenter';
+import type { DataBase } from '@presenter/list';
 import { capitalLetter } from '../../utils/utils';
 import he from 'he';
 

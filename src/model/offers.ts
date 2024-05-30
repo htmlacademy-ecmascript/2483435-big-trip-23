@@ -5,12 +5,12 @@ import type { Offer } from '../types/offer-type';
 import type { Point } from '../types/point-type';
 
 export default class OffersModel extends Observable<UpdateType, Point> {
-  #pointsApiService: PointsApiService;
+  #service: PointsApiService | null = null;
   #offers: Offer[] = [];
 
-  constructor({ pointsApiService }: { pointsApiService: PointsApiService }) {
+  constructor({ service }: { service: PointsApiService }) {
     super();
-    this.#pointsApiService = pointsApiService;
+    this.#service = service;
   }
 
   get offers() {
@@ -19,8 +19,8 @@ export default class OffersModel extends Observable<UpdateType, Point> {
 
   async init() {
     try {
-      const offers = await this.#pointsApiService.offers;
-      this.#offers = offers;
+      const offers = await this.#service?.offers;
+      this.#offers = offers ?? [];
     } catch (err) {
       this.#offers = [];
     }

@@ -1,4 +1,4 @@
-import type { DataBase } from '@presenter/main-presenter';
+import type { DataBase } from '@presenter/list';
 import type { Point } from '../../types/point-type';
 
 const createDescriptionTemplate = (destination: Point['destination'], dataBase: DataBase) => {

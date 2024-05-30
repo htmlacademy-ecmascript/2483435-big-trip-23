@@ -1,4 +1,4 @@
-import type { DataBase } from '@presenter/main-presenter';
+import type { DataBase } from '@presenter/list';
 import dayjs from 'dayjs';
 import type { State } from '../../types/state';
 import { correctName } from './destinations-template';

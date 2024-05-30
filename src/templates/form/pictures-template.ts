@@ -1,4 +1,4 @@
-import type { DataBase } from '@presenter/main-presenter';
+import type { DataBase } from '@presenter/list';
 import type { AppPicture } from '../../types/destination-type';
 
 const getTemplate = (pictures: AppPicture[]) =>

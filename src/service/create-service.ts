@@ -1,0 +1,8 @@
+import PointsApiService from './point-api-service';
+
+const enum Setting {
+  AUTHORIZATION = 'Basic YQpmc1BXzUB3KrA',
+  END_POINT = 'https://23.objects.htmlacademy.pro/big-trip',
+}
+
+export const createService = () => new PointsApiService(Setting.END_POINT, Setting.AUTHORIZATION);

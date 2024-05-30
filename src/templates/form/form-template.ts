@@ -1,4 +1,4 @@
-import type { DataBase } from '@presenter/main-presenter';
+import type { DataBase } from '@presenter/list';
 import type { State } from '../../types/state';
 import { capitalLetter } from '../../utils/utils';
 import { createDescriptionTemplate } from './description-template';
