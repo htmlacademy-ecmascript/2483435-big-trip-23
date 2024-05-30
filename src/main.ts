@@ -12,7 +12,7 @@ const headerContainer = document.querySelector('.trip-main')!;
 const tripFilterContainer = headerContainer?.querySelector('.trip-controls__filters');
 
 const enum Setting {
-  AUTHORIZATION = 'Basic YQpmc1BXzUBKrA',
+  AUTHORIZATION = 'Basic YQpmc1BXzUB3KrA',
   END_POINT = 'https://23.objects.htmlacademy.pro/big-trip',
 }
 
