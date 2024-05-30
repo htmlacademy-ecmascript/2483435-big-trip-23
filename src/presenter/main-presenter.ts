@@ -35,6 +35,8 @@ export default class ListPresenter {
   #tripEventsContainer: HTMLTableSectionElement;
   #loadingComponent = new LoadingView();
   #pointsModel: PointsModel;
+  #destinationsModel: DestinationsModel;
+  #offersModel: OffersModel;
   #filterModel: FilterModel | null = null;
   #dataBase: DataBase;
   #points: Point[];
@@ -44,7 +46,6 @@ export default class ListPresenter {
   #noPointComponent: NoPointView | null = null;
   #currentSortType: SortType = SORT_TYPES[0];
   #filterType: FilterType = 'everything';
-  #wasRendered: boolean = false;
   #newPointPresenter: NewPointPresenter;
   #isLoading = true;
   #uiBlocker = new UiBlocker({
@@ -67,6 +68,8 @@ export default class ListPresenter {
 
     this.#dataBase = dataBase;
     this.#pointsModel = this.#dataBase.pointsModel;
+    this.#destinationsModel = this.#dataBase.destinationsModel;
+    this.#offersModel = this.#dataBase.offersModel;
     this.#points = this.#dataBase.pointsModel.points;
     this.#sortComponent = new SortingView({ onSortTypeChange: this.#handleSortTypeChange });
     this.#filterModel = filterModel;
@@ -99,14 +102,8 @@ export default class ListPresenter {
   }
 
   init() {
-    if (this.#wasRendered === false) {
-      this.#renderPointsList();
-      this.#wasRendered = true;
-    } else {
-      this.#renderPointsList();
-    }
-
     this.#renderTripMain();
+    Promise.all([this.#pointsModel.init(), this.#destinationsModel.init(), this.#offersModel.init()]).finally(this.#handleDataLoad);
   }
 
   #renderPoint(pointData: { point: Point; dataBase: DataBase }) {
@@ -182,11 +179,6 @@ export default class ListPresenter {
           }
         }
         break;
-      case UpdateType.INIT:
-        this.#isLoading = false;
-        remove(this.#loadingComponent);
-        this.#renderPointsList();
-        break;
       default:
         this.#onChange();
         break;
@@ -237,15 +229,21 @@ export default class ListPresenter {
     this.#newPointPresenter!.init();
   }
 
-  #renderPointsList() {
-    render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
-    // if (this.#isLoading) {
-    //   this.#renderLoading();
-    //   return;
-    // }
-    if (this.points.length > 0) {
-      this.#renderSorting();
+  #handleDataLoad = () => {
+    this.#isLoading = false;
+    remove(this.#loadingComponent);
+    this.#renderPointsList();
+  };
 
+  #renderPointsList() {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
+    if (this.points.length > 0) {
+      render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
+      this.#renderSorting();
       this.#renderPoints(this.points);
     } else {
       this.#renderNoPoints();
