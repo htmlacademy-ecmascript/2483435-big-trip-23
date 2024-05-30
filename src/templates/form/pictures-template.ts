@@ -21,6 +21,8 @@ const createPicturesTemplate = (destination: string, dataBase: DataBase) => {
     } else {
       throw new Error('Pictures is not found');
     }
+  } else {
+    return '';
   }
 };
 
