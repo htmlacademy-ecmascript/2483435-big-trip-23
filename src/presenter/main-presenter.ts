@@ -18,6 +18,7 @@ import NoPointView from '../view/main/no-point-view';
 import NewPointPresenter from './new-point-presenter';
 import LoadingView from '../view/main/loading-view';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
+import type { EmptyFn } from '../types/common';
 
 export interface DataBase {
   destinationsModel: DestinationsModel;
@@ -48,6 +49,7 @@ export default class ListPresenter {
   #filterType: FilterType = 'everything';
   #newPointPresenter: NewPointPresenter;
   #isLoading = true;
+  #destroyNewPoint: EmptyFn;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT,
@@ -73,12 +75,16 @@ export default class ListPresenter {
     this.#points = this.#dataBase.pointsModel.points;
     this.#sortComponent = new SortingView({ onSortTypeChange: this.#handleSortTypeChange });
     this.#filterModel = filterModel;
+    this.#destroyNewPoint = () => {
+      onNewPointDestroy();
+      this.#renderNoPoints();
+    };
 
     this.#newPointPresenter = new NewPointPresenter({
       mainListContainer: this.#mainListContainer.element,
       dataBase,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewPointDestroy,
+      onDestroy: this.#destroyNewPoint,
     });
 
     this.#pointsModel.addObserver(this.#handlePointsModelEvent);
@@ -224,9 +230,11 @@ export default class ListPresenter {
   }
 
   createPoint() {
+    render(this.#mainListContainer, this.#tripEventsContainer, 'beforeend');
     this.#currentSortType = 'day';
     this.#filterModel!.setFilter(UpdateType.MAJOR, 'everything');
     this.#newPointPresenter!.init();
+    remove(this.#noPointComponent);
   }
 
   #handleDataLoad = () => {
