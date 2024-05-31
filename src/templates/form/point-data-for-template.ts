@@ -1,9 +1,9 @@
-import type { DataBase } from '@presenter/list';
 import dayjs from 'dayjs';
 import type { State } from '../../types/state';
 import { correctName } from './destinations-template';
+import type { Models } from '../../model/create-models';
 
-export const pointDataForTemplate = (data: State, dataBase: DataBase, isNewPoint: boolean) => {
+export const pointDataForTemplate = (data: State, models: Models, isNewPoint: boolean) => {
   const { dateFrom, dateTo, type, destination, basePrice, selectedOffers, isDisabled, isSaving, isDeleting } = data;
 
   switch (isNewPoint) {
@@ -12,7 +12,7 @@ export const pointDataForTemplate = (data: State, dataBase: DataBase, isNewPoint
         timeStart: dayjs(dateFrom).format('DD/MM/YY HH:mm'),
         timeEnd: dayjs(dateTo).format('DD/MM/YY HH:mm'),
         destination,
-        destinationName: correctName(destination, dataBase),
+        destinationName: correctName(destination, models),
         type,
         basePrice: basePrice,
         selectedOffers,
@@ -28,7 +28,7 @@ export const pointDataForTemplate = (data: State, dataBase: DataBase, isNewPoint
         timeStart: dateFrom === '' ? '' : dayjs(dateFrom).format('DD/MM/YY HH:mm'),
         timeEnd: dateTo === '' ? '' : dayjs(dateTo).format('DD/MM/YY HH:mm'),
         destination,
-        destinationName: destination ? correctName(destination, dataBase) : '',
+        destinationName: destination ? correctName(destination, models) : '',
         type,
         basePrice: basePrice,
         selectedOffers,

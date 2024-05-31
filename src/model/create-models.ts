@@ -3,6 +3,7 @@ import FilterModel from './filters';
 import OffersModel from './offers';
 import PointsModel from './points';
 import type PointsApiService from '../service/point-api-service';
+import SortingModel from './sorting';
 
 
 export const getModels = (service: PointsApiService) => {
@@ -10,12 +11,14 @@ export const getModels = (service: PointsApiService) => {
   const destinationsModel = new DestinationsModel({ service });
   const offersModel = new OffersModel({ service });
   const filtersModel = new FilterModel();
+  const sortingModel = new SortingModel;
 
   return {
     pointsModel,
     destinationsModel,
     offersModel,
-    filtersModel
+    filtersModel,
+    sortingModel
   };
 
 };

@@ -1,12 +1,12 @@
-import type { DataBase } from '@presenter/list';
+import type { Models } from '../../model/create-models';
 import type { AppPicture } from '../../types/destination-type';
 
 const getTemplate = (pictures: AppPicture[]) =>
   pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
 
-const createPicturesTemplate = (destination: string, dataBase: DataBase) => {
+const createPicturesTemplate = (destination: string, models: Models) => {
   if (destination !== '') {
-    const pictures = dataBase.destinationsModel.getDestinationByID(destination)?.pictures;
+    const pictures = models.destinationsModel.getDestinationByID(destination)?.pictures;
 
     if (pictures) {
       return pictures.length !== 0

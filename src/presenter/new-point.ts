@@ -2,11 +2,11 @@
 import type { Point } from '../types/point-type';
 import { render, remove } from '../framework/render';
 import type { EmptyFn } from '../types/common';
-import type { DataBase } from './list';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
 import { DEFAULT_POINT } from '../const';
 import PointFormView from '../view/main/point-form';
+import type { Models } from '../model/create-models';
 
 type PointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
@@ -15,22 +15,22 @@ export default class NewPointPresenter {
   #handleDataChange: PointChange;
   #handleDestroy: EmptyFn;
   #pointNewComponent: PointFormView | null = null;
-  #dataBase: DataBase;
+  #models: Models;
   #point: Point;
 
   constructor({
     mainListContainer,
-    models: dataBase,
+    models: models,
     onDataChange,
     onDestroy,
   }: {
     mainListContainer: HTMLUListElement;
-    models: DataBase;
+    models: Models;
     onDataChange: PointChange;
     onDestroy: EmptyFn;
   }) {
     this.#mainListContainer = mainListContainer;
-    this.#dataBase = dataBase;
+    this.#models = models;
     this.#point = DEFAULT_POINT;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
@@ -44,7 +44,7 @@ export default class NewPointPresenter {
 
     this.#pointNewComponent = new PointFormView({
       point: this.#point,
-      dataBase: this.#dataBase,
+      models: this.#models,
       isNewPoint: true,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleCancelClick,

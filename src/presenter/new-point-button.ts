@@ -1,31 +1,35 @@
-// import NewEventButtonView from '@view/header/new-event-button-view';
-// import mainPresenter from './list';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import NewEventButtonView from '../view/header/new-event-button-view';
+import type { EmptyFn } from '../types/common';
+import { render } from '../framework/render';
 
-// export default class NewEventButtonPresenter {
-//   #container: HTMLDivElement;
-//   #button: NewEventButtonView | null = null;
+export default class AddEventButtonPresenter {
+  #container: HTMLDivElement;
+  #button: NewEventButtonView | null = null;
+  #onButtonClick: EmptyFn;
 
-//   constructor({headerContainer}: {headerContainer: HTMLDivElement}) {
-//     this.#container = headerContainer;
-//   }
+  constructor({ container, onAddButtonClick }: { container: any; onAddButtonClick: EmptyFn }) {
+    this.#container = container;
+    this.#onButtonClick = onAddButtonClick;
+  }
 
-//   init() {
-// this.#button = new NewEventButtonView({ onClick: this.#handleNewEventButtonClick });
-// }
+  init() {
+    this.#button = new NewEventButtonView({ onButtonClick: this.#handleButton });
+    render(this.#button, this.#container);
+  }
 
-// #handleNewPointFormClose() {
-//   newEventButtonComponent.element.disabled = false;
-// }
+  handleFormClose() {
+    if (this.#button !== null) {
+      this.#button.element.disabled = false;
+    }
+  }
 
-// #handleNewEventButtonClick() {
-//   mainPresenter.createPoint();
-//   newEventButtonComponent.element.disabled = true;
-// }
+  #handleButton = () => {
+    this.#onButtonClick();
+    if (this.#button !== null) {
+      this.#button.element.disabled = true;
+    }
+  };
 
-// }
+}
 
-
-// render(newEventButtonComponent, headerContainer, 'beforeend');
-
-
-// const newEventButtonComponent = new NewEventButtonView({ onClick: handleNewEventButtonClick });

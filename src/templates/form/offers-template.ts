@@ -1,4 +1,4 @@
-import type { DataBase } from '@presenter/list';
+import type { Models } from '../../model/create-models';
 import type { InnerOffer } from '../../types/offer-type';
 import type { State } from '../../types/state';
 
@@ -15,11 +15,11 @@ const createAvailableOffersTemplate = (offer: InnerOffer, selectedOffers: Set<st
     </div>`;
 };
 
-const createOffersTemplate = (point: State, dataBase: DataBase) => {
+const createOffersTemplate = (point: State, models: Models) => {
   const type = point.type;
   const selectedOffers = point.selectedOffers;
   const isDisabled = point.isDisabled;
-  const availableOffers = dataBase.offersModel.getAvailableOffers(type);
+  const availableOffers = models.offersModel.getAvailableOffers(type);
 
   return availableOffers.length !== 0
     ? `

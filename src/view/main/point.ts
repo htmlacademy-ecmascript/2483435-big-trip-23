@@ -61,12 +61,12 @@ export default class PointView extends AbstractView<HTMLTimeElement> {
   #handleEditClick: EmptyFn;
   #handleFavoriteClick: EmptyFn;
 
-  constructor({ point, dataBase, onEditClick, onFavoriteClick }: PointData & { onEditClick: EmptyFn; onFavoriteClick: EmptyFn }) {
+  constructor({ point, models, onEditClick, onFavoriteClick }: PointData & { onEditClick: EmptyFn; onFavoriteClick: EmptyFn }) {
     super();
 
     this.#point = point;
-    this.#destination = dataBase.destinationsModel.getDestinationByID(this.#point.destination)!;
-    this.#selectedOffers = dataBase.offersModel.getSelectedOffers(this.#point);
+    this.#destination = models.destinationsModel.getDestinationByID(this.#point.destination)!;
+    this.#selectedOffers = models.offersModel.getSelectedOffers(this.#point);
 
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;

@@ -1,11 +1,11 @@
+import type { Models } from '../../model/create-models';
 import type { Point } from '../../types/point-type';
 import { checkMatch } from '../../utils/utils';
-import type { DataBase } from '@presenter/list';
 import { capitalLetter } from '../../utils/utils';
 import he from 'he';
 
-const correctName = (destination: Point['destination'], dataBase: DataBase) => {
-  const currentDestination = dataBase.destinationsModel.getDestinationByID(destination);
+const correctName = (destination: Point['destination'], models: Models) => {
+  const currentDestination = models.destinationsModel.getDestinationByID(destination);
   if (currentDestination) {
     return capitalLetter(currentDestination.name);
   } else {
@@ -16,9 +16,9 @@ const correctName = (destination: Point['destination'], dataBase: DataBase) => {
 const getOptions = (currentName: string, name: string) =>
   `<option value="${he.escape(currentName)}"${checkMatch(name, currentName, 'checked')}></option>`;
 
-const createDestinationsListTemplate = (destination: Point['destination'], dataBase: DataBase) => {
-  const currentDestination = dataBase.destinationsModel.getDestinationByID(destination) ?? '';
-  const allDestinationsNames = dataBase.destinationsModel.allDestinationsNames;
+const createDestinationsListTemplate = (destination: Point['destination'], models: Models) => {
+  const currentDestination = models.destinationsModel.getDestinationByID(destination) ?? '';
+  const allDestinationsNames = models.destinationsModel.allDestinationsNames;
 
   return allDestinationsNames
     .map((currentName: string): string => {

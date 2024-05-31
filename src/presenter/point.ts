@@ -3,12 +3,12 @@ import PointView from '../view/main/point';
 import type { Point } from '../types/point-type';
 import { render, replace, remove } from '../framework/render';
 import type { EmptyFn, PointData } from '../types/common';
-import type { DataBase } from './list';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
 import dayjs from 'dayjs';
 import PointFormView from '../view/main/point-form';
-import { isDatesEqual } from '../utils/time/time-for-filters';
+import { isDatesEqual } from '../utils/time/filters-time';
+import type { Models } from '../model/create-models';
 
 const enum Mode {
   DEFAULT,
@@ -22,7 +22,7 @@ export default class PointPresenter {
 
   #pointComponent: PointView | null = null;
   #pointEditComponent: PointFormView | null = null;
-  #dataBase: DataBase | null = null;
+  #models: Models | null = null;
   #point: Point | null = null;
 
   #handleDataChange: PointChange;
@@ -43,8 +43,8 @@ export default class PointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init({ point, dataBase }: PointData) {
-    this.#dataBase = dataBase;
+  init({ point, models }: PointData) {
+    this.#models = models;
     this.#point = point;
 
     const prevPointComponent = this.#pointComponent;
@@ -52,14 +52,14 @@ export default class PointPresenter {
 
     this.#pointComponent = new PointView({
       point: this.#point,
-      dataBase: this.#dataBase,
+      models: this.#models,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#pointEditComponent = new PointFormView({
       point: this.#point,
-      dataBase: this.#dataBase,
+      models: this.#models,
       isNewPoint: false,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,

@@ -1,5 +1,5 @@
 import { render, replace, remove } from '../framework/render';
-import FilterView from '../view/header/filter-view';
+import FilterView from '../view/header/filter';
 import { filter } from '../utils/filter';
 import type FilterModel from '../model/filters';
 import type PointsModel from '../model/points';

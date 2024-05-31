@@ -1,22 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import AbstractView from '../../framework/view/abstract-view';
+import type { EmptyFn } from '../../types/common';
 
 const getTemplate = () => '<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>';
 
 export default class NewEventButtonView extends AbstractView<HTMLFormElement> {
-  #handleClick: any;
+  #handleClick: EmptyFn;
 
-  constructor({ onClick }: { onClick: any }) {
+  constructor({ onButtonClick: onButtonClick }: { onButtonClick: EmptyFn }) {
     super();
-    this.#handleClick = onClick;
-    this.element.addEventListener('click', this.#clickHandler);
+    this.#handleClick = onButtonClick;
+    this.element.addEventListener('click', this.#onClick);
   }
 
   get template() {
     return getTemplate();
   }
 
-  #clickHandler: EventListener = (evt) => {
+  #onClick: EventListener = (evt) => {
     evt.preventDefault();
     this.#handleClick();
   };
