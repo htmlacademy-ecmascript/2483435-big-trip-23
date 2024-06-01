@@ -23,7 +23,7 @@ const AllowedPrice = {
 };
 
 export default class PointFormView extends AbstractStatefulView<State> {
-  #handleFormSubmit: (updatePoint: Point) => void;
+  #handleFormSubmit: (updatedPoint: Point) => void;
   #handleDeleteClick: any;
   #handleFormClose: () => void;
   #pointData: PointData;
@@ -43,7 +43,7 @@ export default class PointFormView extends AbstractStatefulView<State> {
     isNewPoint,
   }: PointData & {
     isNewPoint: boolean;
-    onFormSubmit: (updatePoint: Point) => void;
+    onFormSubmit: (updatedPoint: Point) => void;
     onDeleteClick: (point: Point) => void;
     onFormClose: () => void | null;
   }) {

@@ -190,32 +190,32 @@ export default class ListPresenter {
     remove(this.#emptyList);
   }
 
-  #handleViewAction = async (actionType: UserAction, updateType: UpdateType, updatePoint: any) => {
+  #handleViewAction = async (actionType: UserAction, updateType: UpdateType, updatedPoint: any) => {
     this.#uiBlocker.block();
 
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointsPresenters.get(updatePoint.id)?.setSaving();
+        this.#pointsPresenters.get(updatedPoint.id)?.setSaving();
         try {
-          await this.#pointsModel.updatePoint(updateType, updatePoint);
+          await this.#pointsModel.updatePoint(updateType, updatedPoint);
         } catch (err) {
-          this.#pointsPresenters.get(updatePoint.id)?.setAborting();
+          this.#pointsPresenters.get(updatedPoint.id)?.setAborting();
         }
         break;
       case UserAction.ADD_POINT:
         this.#newPointPresenter.setSaving();
         try {
-          await this.#pointsModel.addPoint(updateType, updatePoint);
+          await this.#pointsModel.addPoint(updateType, updatedPoint);
         } catch (err) {
           this.#newPointPresenter.setAborting();
         }
         break;
       case UserAction.DELETE_POINT:
-        this.#pointsPresenters.get(updatePoint.id)?.setDeleting();
+        this.#pointsPresenters.get(updatedPoint.id)?.setDeleting();
         try {
-          await this.#pointsModel.deletePoint(updateType, updatePoint);
+          await this.#pointsModel.deletePoint(updateType, updatedPoint);
         } catch (err) {
-          this.#pointsPresenters.get(updatePoint.id)?.setAborting();
+          this.#pointsPresenters.get(updatedPoint.id)?.setAborting();
         }
         break;
     }

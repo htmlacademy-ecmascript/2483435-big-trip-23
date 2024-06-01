@@ -179,15 +179,15 @@ export default class PointPresenter {
   #onDeleteClick = () => this.#switchToViewMode();
   #handleFormClose = () => this.#switchToViewMode();
 
-  #handleFormSubmit = (updatePoint: Point) => {
+  #handleFormSubmit = (updatedPoint: Point) => {
     const point = this.#point;
     if (point) {
       const isMinorUpdate =
-        !isDatesEqual(dayjs(point.dateFrom), dayjs(updatePoint.dateFrom)) ||
-        !isDatesEqual(dayjs(point.dateTo), dayjs(updatePoint.dateTo)) ||
-        point.offers !== updatePoint.offers;
+        !isDatesEqual(dayjs(point.dateFrom), dayjs(updatedPoint.dateFrom)) ||
+        !isDatesEqual(dayjs(point.dateTo), dayjs(updatedPoint.dateTo)) ||
+        point.offers !== updatedPoint.offers;
 
-      this.#handleDataChange(UserAction.UPDATE_POINT, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updatePoint);
+      this.#handleDataChange(UserAction.UPDATE_POINT, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updatedPoint);
     }
   };
 

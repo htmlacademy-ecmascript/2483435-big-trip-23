@@ -12,32 +12,32 @@ const uiBlocker = new UiBlocker({
   lowerLimit: TimeLimit.LOWER_LIMIT,
   upperLimit: TimeLimit.UPPER_LIMIT,
 });
-export const viewAction = (presenter: any, model: any) => async (actionType: UserAction, updateType: UpdateType, updatePoint: any) => {
+export const viewAction = (presenter: any, model: any) => async (actionType: UserAction, updateType: UpdateType, updatedPoint: any) => {
   uiBlocker.block();
 
   switch (actionType) {
     case UserAction.UPDATE_POINT:
-      presenter.get(updatePoint.id)?.setSaving();
+      presenter.get(updatedPoint.id)?.setSaving();
       try {
-        await model.updatePoint(updateType, updatePoint);
+        await model.updatedPoint(updateType, updatedPoint);
       } catch (err) {
-        presenter.get(updatePoint.id)?.setAborting();
+        presenter.get(updatedPoint.id)?.setAborting();
       }
       break;
     case UserAction.ADD_POINT:
       presenter.setSaving();
       try {
-        await model.addPoint(updateType, updatePoint);
+        await model.addPoint(updateType, updatedPoint);
       } catch (err) {
         presenter.setAborting();
       }
       break;
     case UserAction.DELETE_POINT:
-      presenter.get(updatePoint.id)?.setDeleting();
+      presenter.get(updatedPoint.id)?.setDeleting();
       try {
-        await model.deletePoint(updateType, updatePoint);
+        await model.deletePoint(updateType, updatedPoint);
       } catch (err) {
-        presenter.get(updatePoint.id)?.setAborting();
+        presenter.get(updatedPoint.id)?.setAborting();
       }
       break;
   }
