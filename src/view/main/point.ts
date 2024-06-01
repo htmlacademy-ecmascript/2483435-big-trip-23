@@ -5,7 +5,7 @@ import type { Destination } from '../../types/destination-type';
 import type { InnerOffer } from '../../types/offer-type';
 import { capitalLetter } from '../../utils/utils';
 import { getDuration } from '../../utils/time/time';
-import { createSelectedOffersTemplate } from '../../templates/selected-offers-template';
+import { createSelectedOffersTemplate } from '../../templates/selected-offers';
 import type { EmptyFn, PointData } from '../../types/common';
 
 function getTemplate(point: Point, destination: Destination, selectedOffers: InnerOffer[]): string {

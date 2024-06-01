@@ -1,10 +1,10 @@
 import { render, replace, remove } from '../framework/render';
 import FilterView from '../view/header/filter';
 import { filter } from '../utils/filter';
-import type FilterModel from '../model/filters';
+import type FilterModel from '../model/filter';
 import type PointsModel from '../model/points';
 import type { FilterType } from '../const';
-import { FILTER_TYPES, UpdateType } from '../const';
+import { FILTER_TYPES } from '../const';
 import type { Models } from '../model/create-models';
 
 export default class FilterPresenter {
@@ -13,13 +13,7 @@ export default class FilterPresenter {
   #pointsModel: PointsModel | null = null;
   #filterComponent: FilterView | null = null;
 
-  constructor({
-    container,
-    models
-  }: {
-    container: HTMLElement;
-    models: Models
-  }) {
+  constructor({ container, models }: { container: HTMLElement; models: Models }) {
     this.#container = container;
     this.#pointsModel = models.pointsModel;
     this.#filterModel = models.filtersModel;
@@ -70,6 +64,6 @@ export default class FilterPresenter {
       return;
     }
 
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterModel.setFilter(filterType);
   };
 }

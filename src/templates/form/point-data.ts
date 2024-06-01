@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import type { State } from '../../types/state';
-import { correctName } from './destinations-template';
+import { correctName } from './destinations';
 import type { Models } from '../../model/create-models';
 
 export const pointDataForTemplate = (data: State, models: Models, isNewPoint: boolean) => {

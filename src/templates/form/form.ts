@@ -1,11 +1,11 @@
 import type { State } from '../../types/state';
 import { capitalLetter } from '../../utils/utils';
-import { createDescriptionTemplate } from './description-template';
-import { createDestinationsListTemplate } from './destinations-template';
-import { createOffersTemplate } from './offers-template';
-import { createPicturesTemplate } from './pictures-template';
-import { createPointsTypesListTemplate } from './types-template';
-import { pointDataForTemplate } from './point-data-for-template';
+import { createDescriptionTemplate } from './description';
+import { createDestinationsListTemplate } from './destinations';
+import { createOffersTemplate } from './offers';
+import { createPicturesTemplate } from './pictures';
+import { createPointsTypesListTemplate } from './types';
+import { pointDataForTemplate } from './point-data';
 import he from 'he';
 import type { Models } from '../../model/create-models';
 
@@ -18,7 +18,7 @@ export function getFormTemplate(data: State, models: Models, isNewPoint: boolean
   const point = pointDataForTemplate(data, models, isNewPoint);
 
   return `<li class="trip-events__item">
-  <form class="event event--edit" action="#" method="post">
+  <form class="event event--edit" action="#" method="post" disabled>
   <header class="event__header">
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">

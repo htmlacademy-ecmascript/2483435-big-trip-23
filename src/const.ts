@@ -20,12 +20,11 @@ type SortType = (typeof SORT_TYPES)[number];
 const pointSet = new Set(POINTS_TYPES);
 const isValidPointType = (type: string): type is PointType => pointSet.has(type as PointType);
 const enum UpdateType {
-  /** Перерисовывает всю страницу */
-  MAJOR,
   /** Список меняется */
   MINOR,
   /** В пределах одной точки*/
   PATCH,
+  /** Произошла инициализация */
   INIT,
 }
 

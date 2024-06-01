@@ -14,6 +14,7 @@ export default class NewPointPresenter {
   #mainListContainer: any;
   #handleDataChange: PointChange;
   #handleDestroy: EmptyFn;
+  #handleFormClose: EmptyFn;
   #pointNewComponent: PointFormView | null = null;
   #models: Models;
   #point: Point;
@@ -23,17 +24,20 @@ export default class NewPointPresenter {
     models: models,
     onDataChange,
     onDestroy,
+    onFormClose,
   }: {
     mainListContainer: HTMLUListElement;
     models: Models;
     onDataChange: PointChange;
     onDestroy: EmptyFn;
+    onFormClose: EmptyFn;
   }) {
     this.#mainListContainer = mainListContainer;
     this.#models = models;
     this.#point = DEFAULT_POINT;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+    this.#handleFormClose = onFormClose;
   }
 
   init() {
@@ -61,7 +65,7 @@ export default class NewPointPresenter {
     }
 
     this.#handleDestroy();
-
+    this.#handleFormClose();
     remove(this.#pointNewComponent);
     this.#pointNewComponent = null;
 
@@ -89,7 +93,7 @@ export default class NewPointPresenter {
 
   #handleFormSubmit = (newPoint: Point) => {
     this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, newPoint);
-    // this.destroy();
+    this.destroy();
   };
 
   #handleCancelClick = () => {

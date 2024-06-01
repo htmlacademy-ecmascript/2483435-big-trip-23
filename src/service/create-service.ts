@@ -1,7 +1,7 @@
 import PointsApiService from './point-api-service';
 
 const enum Setting {
-  AUTHORIZATION = 'Basic YQpmc1BXzUB3KrA',
+  AUTHORIZATION = 'Basic YQpmc1BozkUB3KrA',
   END_POINT = 'https://23.objects.htmlacademy.pro/big-trip',
 }
 

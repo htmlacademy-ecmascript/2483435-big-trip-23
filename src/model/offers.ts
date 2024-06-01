@@ -39,4 +39,8 @@ export default class OffersModel extends Observable<UpdateType, Point> {
   getSelectedOffers(point: Point) {
     return this.getAvailableOffers(point.type).filter((item) => point.offers.includes(item.id));
   }
+
+  getSelectedOffersPrice(point: Point) {
+    return this.getSelectedOffers(point).reduce((sum, item) => sum + item.price, 0);
+  }
 }

@@ -6,6 +6,6 @@ export const getPageElements = () => {
   return {
     header,
     filters,
-    events
+    events,
   };
 };

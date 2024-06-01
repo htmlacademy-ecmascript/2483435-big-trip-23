@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
-import { getFormTemplate, FormNames } from '../../templates/form/form-template';
+import { getFormTemplate, FormNames } from '../../templates/form/form';
 import type { PointData } from '../../types/common';
 import type { State } from '../../types/state';
 import type { Point } from '../../types/point-type';
@@ -18,7 +18,7 @@ export type PointForm = HTMLFormElement & {
 };
 
 const AllowedPrice = {
-  MIN: 1,
+  MIN: 0,
   MAX: 100_000,
 };
 

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import NewEventButtonView from '../view/header/new-event-button-view';
+import NewButtonView from '../view/header/new-button';
 import type { EmptyFn } from '../types/common';
 import { render } from '../framework/render';
 
 export default class AddEventButtonPresenter {
   #container: HTMLDivElement;
-  #button: NewEventButtonView | null = null;
+  #button: NewButtonView | null = null;
   #onButtonClick: EmptyFn;
 
   constructor({ container, onAddButtonClick }: { container: any; onAddButtonClick: EmptyFn }) {
@@ -14,11 +14,11 @@ export default class AddEventButtonPresenter {
   }
 
   init() {
-    this.#button = new NewEventButtonView({ onButtonClick: this.#handleButton });
+    this.#button = new NewButtonView({ onButtonClick: this.#handleButton });
     render(this.#button, this.#container);
   }
 
-  handleFormClose() {
+  activate() {
     if (this.#button !== null) {
       this.#button.element.disabled = false;
     }
@@ -30,6 +30,4 @@ export default class AddEventButtonPresenter {
       this.#button.element.disabled = true;
     }
   };
-
 }
-
