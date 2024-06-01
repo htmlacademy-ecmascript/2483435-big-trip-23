@@ -43,5 +43,4 @@ export default class OffersModel extends Observable<UpdateType, Point> {
   getSelectedOffersPrice(point: Point) {
     return this.getSelectedOffers(point).reduce((sum, item) => sum + item.price, 0);
   }
-
 }

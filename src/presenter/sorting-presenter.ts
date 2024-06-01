@@ -36,5 +36,4 @@ export default class SortingPresenter {
     remove(this.#sortComponent);
     this.#renderSorting();
   };
-
 }

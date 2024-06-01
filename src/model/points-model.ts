@@ -69,5 +69,4 @@ export default class PointsModel extends Observable<UpdateType, Point> {
   getById(id: string) {
     return this.#points.find((point) => point.id === id);
   }
-
 }

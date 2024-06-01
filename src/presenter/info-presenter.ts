@@ -38,5 +38,4 @@ export default class InfoPresenter {
       remove(this.#info);
     }
   };
-
 }

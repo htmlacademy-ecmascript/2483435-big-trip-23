@@ -79,7 +79,6 @@ export default class ListPresenter {
     this.#sortingModel.addObserver(this.#handleSortTypeChange);
   }
 
-
   get points() {
     this.#currentFilter = this.#filterModel?.filter ?? 'everything';
     const points = this.#pointsModel.points;
@@ -95,7 +94,6 @@ export default class ListPresenter {
       .catch(() => this.#handleDataLoad(false));
   }
 
-
   #renderLoading() {
     render(this.#loadingComponent, this.#mainContainer);
   }
@@ -109,7 +107,6 @@ export default class ListPresenter {
     this.#emptyListComponent = new EmptyListView(this.#currentFilter);
     render(this.#emptyListComponent, this.#mainContainer);
   }
-
 
   #renderPointsList() {
     if (this.#isLoading) {
@@ -162,7 +159,6 @@ export default class ListPresenter {
     this.#newPointPresenter.init();
     remove(this.#emptyListComponent);
   }
-
 
   #handleDataLoad = (isSuccessful: boolean) => {
     this.#isLoading = false;

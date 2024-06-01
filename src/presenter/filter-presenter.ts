@@ -22,7 +22,6 @@ export default class FilterPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-
   get filters() {
     const points = this.#pointsModel.points;
 
@@ -67,5 +66,4 @@ export default class FilterPresenter {
 
     this.#filterModel.setFilter(filterType);
   };
-
 }

@@ -6,5 +6,4 @@ export default class NewPointModel {
   get newPoint() {
     return this.#point;
   }
-
 }

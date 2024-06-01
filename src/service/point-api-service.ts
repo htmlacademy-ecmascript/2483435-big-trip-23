@@ -94,5 +94,4 @@ export default class PointsApiService extends ApiService {
 
     return adaptedPoint;
   }
-
 }

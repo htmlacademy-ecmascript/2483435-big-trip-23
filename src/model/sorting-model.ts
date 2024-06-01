@@ -30,5 +30,4 @@ export default class SortingModel extends Observable<UpdateType.MINOR, SortType>
         return points.sort(priceSort);
     }
   };
-
 }

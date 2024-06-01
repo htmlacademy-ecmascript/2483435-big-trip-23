@@ -36,5 +36,4 @@ export default class SortingView extends AbstractView<HTMLFormElement> {
     const newSortType = evt.target.value as SortType;
     this.#handleSortTypeChange(newSortType);
   };
-
 }

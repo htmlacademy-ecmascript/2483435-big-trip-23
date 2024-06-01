@@ -43,7 +43,6 @@ export default class PointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-
   init({ point, models }: PointData) {
     this.#models = models;
     this.#point = point;
@@ -85,7 +84,6 @@ export default class PointPresenter {
     remove(prevPointEditComponent);
   }
 
-
   destroy() {
     remove(this.#pointComponent);
     remove(this.#pointEditComponent);
@@ -96,7 +94,6 @@ export default class PointPresenter {
       this.#handleFormClose();
     }
   }
-
 
   setSaving() {
     if (this.#mode === Mode.EDITING) {
@@ -171,9 +168,9 @@ export default class PointPresenter {
     const point = this.#point;
     if (point) {
       const isMinorUpdate =
-      !isDatesEqual(dayjs(point.dateFrom), dayjs(updatedPoint.dateFrom)) ||
-      !isDatesEqual(dayjs(point.dateTo), dayjs(updatedPoint.dateTo)) ||
-      point.offers !== updatedPoint.offers;
+        !isDatesEqual(dayjs(point.dateFrom), dayjs(updatedPoint.dateFrom)) ||
+        !isDatesEqual(dayjs(point.dateTo), dayjs(updatedPoint.dateTo)) ||
+        point.offers !== updatedPoint.offers;
 
       this.#handleDataChange(UserAction.UPDATE_POINT, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updatedPoint);
     }
@@ -195,6 +192,4 @@ export default class PointPresenter {
       this.#switchToViewMode();
     }
   };
-
 }
-

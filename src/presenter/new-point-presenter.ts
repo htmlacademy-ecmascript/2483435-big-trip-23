@@ -40,7 +40,6 @@ export default class NewPointPresenter {
     this.#handleFormClose = onFormClose;
   }
 
-
   init() {
     this.#pointNewComponent = new PointFormView({
       point: this.#point,
@@ -68,7 +67,6 @@ export default class NewPointPresenter {
 
     document.removeEventListener('keydown', this.#handleEscKeyDown);
   }
-
 
   setSaving() {
     this.#pointNewComponent?.updateElement({

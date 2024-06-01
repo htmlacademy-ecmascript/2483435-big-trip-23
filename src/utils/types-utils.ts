@@ -8,12 +8,11 @@ type CamelizeObject<T extends object> = {
   [K in keyof T & string as CamelCase<K>]: T[K];
 };
 
-
 type SnakeCase<T> = T extends `${infer First}${infer Rest}`
-? First extends Uppercase<First>
-? `_${Lowercase<First>}${SnakeCase<Rest>}`
-: `${First}${SnakeCase<Rest>}`
-: '';
+  ? First extends Uppercase<First>
+    ? `_${Lowercase<First>}${SnakeCase<Rest>}`
+    : `${First}${SnakeCase<Rest>}`
+  : '';
 
 type SnakeCaseObject<T extends object> = {
   [K in keyof T & string as SnakeCase<K>]: T[K];
@@ -28,4 +27,3 @@ type Prettify<T> = {
 };
 
 export type { CamelizeObject, WithDate, Prettify, SnakeCaseObject };
-
