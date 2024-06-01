@@ -1,9 +1,9 @@
-import DestinationsModel from './destinations';
-import FilterModel from './filter';
-import OffersModel from './offers';
-import PointsModel from './points';
+import DestinationsModel from './destinations-model';
+import FilterModel from './filter-model';
+import OffersModel from './offers-model';
+import PointsModel from './points-model';
 import type PointsApiService from '../service/point-api-service';
-import SortingModel from './sorting';
+import SortingModel from './sorting-model';
 
 export const getModels = (service: PointsApiService) => {
   const pointsModel = new PointsModel({ service });

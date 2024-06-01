@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
 import { getFormTemplate, FormNames } from '../../templates/form/form';
-import type { PointData } from '../../types/common';
+import type { EmptyFn, PointData } from '../../types/common';
 import type { State } from '../../types/state';
 import type { Point } from '../../types/point-type';
 import { handleDestinationChange, handleSelectedOffers, handleTypeChange } from '../../utils/point-form';
@@ -25,7 +25,7 @@ const AllowedPrice = {
 export default class PointFormView extends AbstractStatefulView<State> {
   #handleFormSubmit: (updatedPoint: Point) => void;
   #handleDeleteClick: any;
-  #handleFormClose: () => void;
+  #handleFormClose: EmptyFn;
   #pointData: PointData;
   #point: Point;
   #models: Models;
@@ -45,7 +45,7 @@ export default class PointFormView extends AbstractStatefulView<State> {
     isNewPoint: boolean;
     onFormSubmit: (updatedPoint: Point) => void;
     onDeleteClick: (point: Point) => void;
-    onFormClose: () => void | null;
+    onFormClose: EmptyFn | null;
   }) {
     super();
     this.#pointData = { point, models: Models };

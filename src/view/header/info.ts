@@ -4,7 +4,7 @@ import type { Models } from '../../model/create-models';
 import type { Point } from '../../types/point-type';
 import { route } from '../../templates/info/route';
 import { date } from '../../templates/info/date';
-import { price } from '../../templates/info/price';
+import { cost } from '../../templates/info/cost';
 
 const getTemplate = (models: Models) => `<section class="trip-main__trip-info  trip-info">
             <div class="trip-info__main">
@@ -14,7 +14,7 @@ const getTemplate = (models: Models) => `<section class="trip-main__trip-info  t
             </div>
 
             <p class="trip-info__cost">
-              Total: &euro;&nbsp;<span class="trip-info__cost-value">${price(models)}</span>
+              Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost(models)}</span>
             </p>
           </section>`;
 

@@ -8,6 +8,15 @@ import { daySort, priceSort, timeSort } from '../utils/sorting';
 export default class SortingModel extends Observable<UpdateType.MINOR, SortType> {
   #type: SortType = SORT_TYPES[0];
 
+  get type() {
+    return this.#type;
+  }
+
+  setSortType(sortType: SortType) {
+    this.#type = sortType;
+    this._notify(UpdateType.MINOR, this.#type);
+  }
+
   getSortedPoints = (points: Point[], sortType: SortType) => {
     if (sortType === 'event' || sortType === 'offers') {
       return points;
@@ -22,12 +31,4 @@ export default class SortingModel extends Observable<UpdateType.MINOR, SortType>
     }
   };
 
-  get type() {
-    return this.#type;
-  }
-
-  setSortType(sortType: SortType) {
-    this.#type = sortType;
-    this._notify(UpdateType.MINOR, this.#type);
-  }
 }

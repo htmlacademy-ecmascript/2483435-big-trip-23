@@ -1,9 +1,9 @@
 import InfoView from '../view/header/info';
 import type { Models } from '../model/create-models';
-import type DestinationsModel from '../model/destinations';
+import type DestinationsModel from '../model/destinations-model';
 import type { Point } from '../types/point-type';
 import { remove, render } from '../framework/render';
-import type PointsModel from '../model/points';
+import type PointsModel from '../model/points-model';
 
 export default class InfoPresenter {
   #container: HTMLElement;
@@ -38,4 +38,5 @@ export default class InfoPresenter {
       remove(this.#info);
     }
   };
+
 }

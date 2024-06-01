@@ -1,9 +1,10 @@
 import type { FilterType } from '../const';
-import { UpdateType } from '../const';
+import { FILTER_TYPES, UpdateType } from '../const';
 import Observable from '../framework/observable';
 
+
 export default class FilterModel extends Observable<UpdateType.MINOR, FilterType> {
-  #filter: FilterType = 'everything';
+  #filter: FilterType = FILTER_TYPES[0];
 
   get filter() {
     return this.#filter;
@@ -13,4 +14,5 @@ export default class FilterModel extends Observable<UpdateType.MINOR, FilterType
     this.#filter = filter;
     this._notify(UpdateType.MINOR, filter);
   }
+
 }

@@ -3,14 +3,14 @@ import NewButtonView from '../view/header/new-button';
 import type { EmptyFn } from '../types/common';
 import { render } from '../framework/render';
 
-export default class AddEventButtonPresenter {
+export default class NewButtonPresenter {
   #container: HTMLDivElement;
   #button: NewButtonView | null = null;
   #onButtonClick: EmptyFn;
 
-  constructor({ container, onAddButtonClick }: { container: any; onAddButtonClick: EmptyFn }) {
+  constructor({ container, onNewButtonClick: onNewButtonClick }: { container: any; onNewButtonClick: EmptyFn }) {
     this.#container = container;
-    this.#onButtonClick = onAddButtonClick;
+    this.#onButtonClick = onNewButtonClick;
   }
 
   init() {

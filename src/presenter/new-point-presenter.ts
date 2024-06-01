@@ -11,41 +11,37 @@ import type { Models } from '../model/create-models';
 type PointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
 export default class NewPointPresenter {
-  #mainListContainer: any;
+  #container: any;
   #handleDataChange: PointChange;
-  #handleDestroy: EmptyFn;
+  #handleNewPointDestroy: EmptyFn;
   #handleFormClose: EmptyFn;
   #pointNewComponent: PointFormView | null = null;
   #models: Models;
   #point: Point;
 
   constructor({
-    mainListContainer,
-    models: models,
+    container,
+    models,
     onDataChange,
-    onDestroy,
+    onNewPointDestroy,
     onFormClose,
   }: {
-    mainListContainer: HTMLUListElement;
+    container: HTMLUListElement;
     models: Models;
     onDataChange: PointChange;
-    onDestroy: EmptyFn;
+    onNewPointDestroy: EmptyFn;
     onFormClose: EmptyFn;
   }) {
-    this.#mainListContainer = mainListContainer;
+    this.#container = container;
     this.#models = models;
     this.#point = DEFAULT_POINT;
     this.#handleDataChange = onDataChange;
-    this.#handleDestroy = onDestroy;
+    this.#handleNewPointDestroy = onNewPointDestroy;
     this.#handleFormClose = onFormClose;
   }
 
-  init() {
-    this.#point.id = crypto.randomUUID();
-    if (this.#pointNewComponent !== null) {
-      return;
-    }
 
+  init() {
     this.#pointNewComponent = new PointFormView({
       point: this.#point,
       models: this.#models,
@@ -54,9 +50,10 @@ export default class NewPointPresenter {
       onDeleteClick: this.#handleCancelClick,
       onFormClose: () => null,
     });
-    render(this.#pointNewComponent, this.#mainListContainer, 'afterbegin');
 
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    render(this.#pointNewComponent, this.#container, 'afterbegin');
+
+    document.addEventListener('keydown', this.#handleEscKeyDown);
   }
 
   destroy() {
@@ -64,13 +61,14 @@ export default class NewPointPresenter {
       return;
     }
 
-    this.#handleDestroy();
+    this.#handleNewPointDestroy();
     this.#handleFormClose();
     remove(this.#pointNewComponent);
     this.#pointNewComponent = null;
 
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
   }
+
 
   setSaving() {
     this.#pointNewComponent?.updateElement({
@@ -100,7 +98,7 @@ export default class NewPointPresenter {
     this.destroy();
   };
 
-  #escKeyDownHandler = (evt: KeyboardEvent) => {
+  #handleEscKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.destroy();

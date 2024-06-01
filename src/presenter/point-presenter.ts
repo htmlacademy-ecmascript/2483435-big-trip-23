@@ -18,7 +18,7 @@ const enum Mode {
 type PointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
 export default class PointPresenter {
-  #mainListContainer: HTMLUListElement;
+  #container: HTMLUListElement;
 
   #pointComponent: PointView | null = null;
   #pointEditComponent: PointFormView | null = null;
@@ -30,18 +30,19 @@ export default class PointPresenter {
   #mode = Mode.DEFAULT;
 
   constructor({
-    mainListContainer,
+    container,
     onDataChange,
     onModeChange,
   }: {
-    mainListContainer: HTMLUListElement;
+    container: HTMLUListElement;
     onDataChange: PointChange;
     onModeChange: EmptyFn;
   }) {
-    this.#mainListContainer = mainListContainer;
+    this.#container = container;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
+
 
   init({ point, models }: PointData) {
     this.#models = models;
@@ -67,7 +68,7 @@ export default class PointPresenter {
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
-      render(this.#pointComponent, this.#mainListContainer);
+      render(this.#pointComponent, this.#container);
       return;
     }
 
@@ -84,6 +85,7 @@ export default class PointPresenter {
     remove(prevPointEditComponent);
   }
 
+
   destroy() {
     remove(this.#pointComponent);
     remove(this.#pointEditComponent);
@@ -91,9 +93,10 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#onDeleteClick();
+      this.#handleFormClose();
     }
   }
+
 
   setSaving() {
     if (this.#mode === Mode.EDITING) {
@@ -135,7 +138,7 @@ export default class PointPresenter {
       return;
     }
     replace(this.#pointEditComponent, this.#pointComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#handleEscKeyDown);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
@@ -148,11 +151,35 @@ export default class PointPresenter {
       this.#pointEditComponent.reset(this.#point);
     }
     replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#mode = Mode.DEFAULT;
   }
 
-  #escKeyDownHandler = (evt: KeyboardEvent) => {
+  #handleEditClick = () => this.#switchToEditMode();
+  #handleFormClose = () => this.#switchToViewMode();
+  #handleDeleteClick = (point: Point) => {
+    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
+  };
+
+  #handleFavoriteClick = () => {
+    if (this.#point) {
+      this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, { ...this.#point, isFavorite: !this.#point.isFavorite });
+    }
+  };
+
+  #handleFormSubmit = (updatedPoint: Point) => {
+    const point = this.#point;
+    if (point) {
+      const isMinorUpdate =
+      !isDatesEqual(dayjs(point.dateFrom), dayjs(updatedPoint.dateFrom)) ||
+      !isDatesEqual(dayjs(point.dateTo), dayjs(updatedPoint.dateTo)) ||
+      point.offers !== updatedPoint.offers;
+
+      this.#handleDataChange(UserAction.UPDATE_POINT, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updatedPoint);
+    }
+  };
+
+  #handleEscKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       if (this.#pointEditComponent) {
@@ -169,29 +196,5 @@ export default class PointPresenter {
     }
   };
 
-  #handleFavoriteClick = () => {
-    if (this.#point) {
-      this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, { ...this.#point, isFavorite: !this.#point.isFavorite });
-    }
-  };
-
-  #handleEditClick = () => this.#switchToEditMode();
-  #onDeleteClick = () => this.#switchToViewMode();
-  #handleFormClose = () => this.#switchToViewMode();
-
-  #handleFormSubmit = (updatedPoint: Point) => {
-    const point = this.#point;
-    if (point) {
-      const isMinorUpdate =
-        !isDatesEqual(dayjs(point.dateFrom), dayjs(updatedPoint.dateFrom)) ||
-        !isDatesEqual(dayjs(point.dateTo), dayjs(updatedPoint.dateTo)) ||
-        point.offers !== updatedPoint.offers;
-
-      this.#handleDataChange(UserAction.UPDATE_POINT, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, updatedPoint);
-    }
-  };
-
-  #handleDeleteClick = (point: Point) => {
-    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
-  };
 }
+

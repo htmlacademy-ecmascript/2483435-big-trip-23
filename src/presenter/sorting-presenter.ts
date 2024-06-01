@@ -1,17 +1,17 @@
 import type { SortType } from '../const';
 import { remove, render } from '../framework/render';
 import type { Models } from '../model/create-models';
-import type FilterModel from '../model/filter';
-import type PointsModel from '../model/points';
-import type SortingModel from '../model/sorting';
+import type FilterModel from '../model/filter-model';
+import type PointsModel from '../model/points-model';
+import type SortingModel from '../model/sorting-model';
 import SortingView from '../view/main/sorting';
 
 export default class SortingPresenter {
   #container: HTMLTableSectionElement;
   #sortingModel: SortingModel;
   #sortComponent: SortingView | null = null;
-  #pointsModel: PointsModel | null = null;
-  #filterModel: FilterModel | null = null;
+  #pointsModel: PointsModel;
+  #filterModel: FilterModel;
 
   constructor({ container, models }: { container: HTMLTableSectionElement; models: Models }) {
     this.#container = container;
@@ -36,4 +36,5 @@ export default class SortingPresenter {
     remove(this.#sortComponent);
     this.#renderSorting();
   };
+
 }
