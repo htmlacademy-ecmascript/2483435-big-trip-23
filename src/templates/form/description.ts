@@ -1,8 +1,8 @@
-import type { DataBase } from '@presenter/main-presenter';
 import type { Point } from '../../types/point-type';
+import type { Models } from '../../model/create-models';
 
-const createDescriptionTemplate = (destination: Point['destination'], dataBase: DataBase) => {
-  const currentDestination = dataBase.destinationsModel.getDestinationByID(destination) ?? '';
+const createDescriptionTemplate = (destination: Point['destination'], models: Models) => {
+  const currentDestination = models.destinationsModel.getDestinationByID(destination) ?? '';
 
   if (currentDestination !== '') {
     const description = currentDestination.description;

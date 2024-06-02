@@ -30,7 +30,7 @@ export function setEventStart(view: View) {
 export function setEventFinish(view: View) {
   const currentStartDate = view._state.dateFrom === '' ? 'today' : appDay(view._state.dateFrom).toString();
 
-  const finishTime = flatpickr(view.element.querySelectorAll('.event__input--time')[1], {
+  flatpickr(view.element.querySelectorAll('.event__input--time')[1], {
     minDate: currentStartDate,
     static: false,
     enableTime: true,
@@ -46,7 +46,7 @@ export function setEventFinish(view: View) {
     if (start >= finish) {
       view._state.dateFrom = start.subtract(5, 'minute').toString();
     }
-    finishTime.destroy();
+
     view.updateElement({
       dateTo: userDate.toString(),
     });

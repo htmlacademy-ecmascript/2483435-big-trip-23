@@ -1,31 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UpdateType } from '../const';
 import Observable from '../framework/observable';
+import type PointsApiService from '../service/point-api-service';
 import type { Destination } from '../types/destination-type';
 import type { Point } from '../types/point-type';
 
 export default class DestinationsModel extends Observable<UpdateType, Point> {
-  #pointsApiService: any | null = null;
+  #service: PointsApiService;
   #destinations: Destination[] = [];
 
-  constructor({ pointsApiService }: { pointsApiService: any }) {
+  constructor({ service }: { service: PointsApiService }) {
     super();
-    this.#pointsApiService = pointsApiService;
+    this.#service = service;
   }
 
   get destinations() {
     return this.#destinations;
-  }
-
-  async init() {
-    try {
-      const destinations = await this.#pointsApiService.destinations;
-      this.#destinations = destinations;
-    } catch (err) {
-      this.#destinations = [];
-    }
-
-    this._notify(UpdateType.INIT, {});
   }
 
   get allDestinationsNames(): string[] {
@@ -34,6 +23,17 @@ export default class DestinationsModel extends Observable<UpdateType, Point> {
 
   get allDestinationsIDs(): string[] {
     return Array.from(this.#destinations.map((point) => point.id));
+  }
+
+  async init() {
+    try {
+      const destinations = await this.#service.destinations;
+      this.#destinations = destinations ?? [];
+    } catch (err) {
+      this.#destinations = [];
+    }
+
+    this._notify(UpdateType.INIT, {});
   }
 
   getDestinationByID = (destination: Point['destination']) => this.#destinations.find((item) => item.id === destination);

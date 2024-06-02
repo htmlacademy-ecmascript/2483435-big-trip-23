@@ -21,26 +21,13 @@ function getDuration(date1: Point['dateFrom'], date2: Point['dateTo']): string {
   const daysValue = Math.floor(diff / TimeDiff.DAY);
   const durationValue = dayjs.duration(diff);
 
-  const time = durationValue.format('DD HH mm').split(' ');
+  const time = durationValue.format('DD[D] HH[H] mm[M]').split(' ');
 
-  if (dayjs.duration(diff).get('day') !== daysValue) {
+  if (durationValue.get('day') !== daysValue) {
     time[0] = `${daysValue}D`;
   }
-  const days = time[0];
-  const hours = time[1];
-  const minutes = time[2];
 
-  let correctTime = `${minutes} M`;
-
-  if (hours !== '00' || days !== '00') {
-    correctTime = `${hours}H ${minutes}M`;
-  }
-
-  if (days !== '00') {
-    correctTime = `${days}D ${hours}H ${minutes}M`;
-  }
-
-  return correctTime;
+  return time.join(' ');
 }
 
 const appDay = dayjs;

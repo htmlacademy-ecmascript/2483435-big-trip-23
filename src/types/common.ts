@@ -1,7 +1,7 @@
-import type { DataBase } from '@presenter/main-presenter';
 import type { Point } from './point-type';
+import type { Models } from '../model/create-models';
 
-type PointData = { point: Point; dataBase: DataBase };
+type PointData = { point: Point; models: Models };
 type EmptyFn = () => void;
 
 export type { PointData, EmptyFn };

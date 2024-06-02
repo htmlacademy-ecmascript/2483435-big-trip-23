@@ -1,6 +1,6 @@
 import type { FilterType } from '../const';
 import type { Point } from '../types/point-type';
-import { isFuturePoints, isPresentPoints, isPastPoints } from './time/time-for-filters';
+import { isFuturePoints, isPresentPoints, isPastPoints } from './time/filters-time';
 
 const filter: Record<FilterType, (points: Point[]) => Point[]> = {
   everything: (points) => points,

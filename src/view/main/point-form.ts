@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
-import { getFormTemplate, FormNames } from '../../templates/form/form-template';
-import type { PointData } from '../../types/common';
+import { getFormTemplate, FormNames } from '../../templates/form/form';
+import type { EmptyFn, PointData } from '../../types/common';
 import type { State } from '../../types/state';
 import type { Point } from '../../types/point-type';
 import { handleDestinationChange, handleSelectedOffers, handleTypeChange } from '../../utils/point-form';
-import type { DataBase } from '@presenter/main-presenter';
 import type { Instance as Flatpickr } from 'flatpickr/dist/types/instance';
 import 'flatpickr/dist/flatpickr.min.css';
-import { setEventFinish, setEventStart } from '../../utils/time/time-for-form';
+import { setEventFinish, setEventStart } from '../../utils/time/form-time';
 import { appDay } from '../../utils/time/time';
+import type { Models } from '../../model/create-models';
 
 export type PointForm = HTMLFormElement & {
   [FormNames.Price]: HTMLInputElement;
@@ -17,17 +18,17 @@ export type PointForm = HTMLFormElement & {
 };
 
 const AllowedPrice = {
-  MIN: 1,
+  MIN: 0,
   MAX: 100_000,
 };
 
 export default class PointFormView extends AbstractStatefulView<State> {
-  #handleFormSubmit: (updatePoint: Point) => void;
-  #handleDeleteClick: (point: Point) => void;
-  #handleFormClose: () => void;
+  #handleFormSubmit: (updatedPoint: Point) => void;
+  #handleDeleteClick: any;
+  #handleFormClose: EmptyFn;
   #pointData: PointData;
   #point: Point;
-  #dataBase: DataBase;
+  #models: Models;
   dateStart: Flatpickr | null = null;
   dateFinish: Flatpickr | null = null;
   #form: PointForm | null = null;
@@ -35,33 +36,33 @@ export default class PointFormView extends AbstractStatefulView<State> {
 
   constructor({
     point,
-    dataBase,
+    models: Models,
     onFormSubmit,
     onDeleteClick,
     onFormClose,
     isNewPoint,
   }: PointData & {
     isNewPoint: boolean;
-    onFormSubmit: (updatePoint: Point) => void;
+    onFormSubmit: (updatedPoint: Point) => void;
     onDeleteClick: (point: Point) => void;
-    onFormClose: () => void | null;
+    onFormClose: EmptyFn | null;
   }) {
     super();
-    this.#pointData = { point, dataBase };
+    this.#pointData = { point, models: Models };
     this.#point = this.#pointData.point;
-    this.#dataBase = this.#pointData.dataBase;
+    this.#models = this.#pointData.models;
     this.#isNewPoint = isNewPoint;
     this._setState(this.parsePointToState(this.#point));
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
-    this.#handleFormClose = onFormClose;
+    this.#handleFormClose = onFormClose!;
 
     this._restoreHandlers();
   }
 
   get template() {
-    return getFormTemplate(this._state, this.#dataBase, this.#isNewPoint);
+    return getFormTemplate(this._state, this.#models, this.#isNewPoint);
   }
 
   removeElement() {
@@ -128,7 +129,7 @@ export default class PointFormView extends AbstractStatefulView<State> {
   };
 
   #typeChangeHandler: EventListener = (evt) => handleTypeChange(this, evt);
-  #destinationChangeHandler: EventListener = (evt) => handleDestinationChange(this, evt, this.#dataBase);
+  #destinationChangeHandler: EventListener = (evt) => handleDestinationChange(this, evt, this.#models);
   #selectedOffersHandler: EventListener = (evt) => handleSelectedOffers(this, evt);
 
   #setDateFrom = () => setEventStart(this);
@@ -140,19 +141,21 @@ export default class PointFormView extends AbstractStatefulView<State> {
 
   #formSubmitHandler: EventListener = (evt) => {
     evt.preventDefault();
-    if (
-      this._state.dateFrom !== '' &&
-      this._state.dateTo !== '' &&
-      this._state.basePrice > AllowedPrice.MIN &&
-      this._state.basePrice < AllowedPrice.MAX
-    ) {
+
+    const isNotEmptyDates = this._state.dateFrom !== '' && this._state.dateTo !== '';
+    const isCorrectPrice = this._state.basePrice > AllowedPrice.MIN && this._state.basePrice < AllowedPrice.MAX;
+    if (isNotEmptyDates && isCorrectPrice) {
       this.#handleFormSubmit(this.parseStateToPoint());
     }
   };
 
   #formDeleteHandler: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleDeleteClick(this.parseStateToPoint());
+    if (this.#isNewPoint === true) {
+      this.#handleDeleteClick();
+    } else {
+      this.#handleDeleteClick(this.parseStateToPoint());
+    }
   };
 
   #formCloseHandler: EventListener = (evt) => {

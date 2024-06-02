@@ -2,57 +2,57 @@
 import type { Point } from '../types/point-type';
 import { render, remove } from '../framework/render';
 import type { EmptyFn } from '../types/common';
-import type { DataBase } from './main-presenter';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
 import { DEFAULT_POINT } from '../const';
-import PointFormView from '../view/main/point-form-view';
+import PointFormView from '../view/main/point-form';
+import type { Models } from '../model/create-models';
 
 type PointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
 export default class NewPointPresenter {
-  #mainListContainer: any;
+  #container: any;
   #handleDataChange: PointChange;
-  #handleDestroy: EmptyFn;
+  #handleNewPointDestroy: EmptyFn;
+  #handleFormClose: EmptyFn;
   #pointNewComponent: PointFormView | null = null;
-  #dataBase: DataBase;
+  #models: Models;
   #point: Point;
 
   constructor({
-    mainListContainer,
-    dataBase,
+    container,
+    models,
     onDataChange,
-    onDestroy,
+    onNewPointDestroy,
+    onFormClose,
   }: {
-    mainListContainer: HTMLUListElement;
-    dataBase: DataBase;
+    container: HTMLUListElement;
+    models: Models;
     onDataChange: PointChange;
-    onDestroy: EmptyFn;
+    onNewPointDestroy: EmptyFn;
+    onFormClose: EmptyFn;
   }) {
-    this.#mainListContainer = mainListContainer;
-    this.#dataBase = dataBase;
+    this.#container = container;
+    this.#models = models;
     this.#point = DEFAULT_POINT;
     this.#handleDataChange = onDataChange;
-    this.#handleDestroy = onDestroy;
+    this.#handleNewPointDestroy = onNewPointDestroy;
+    this.#handleFormClose = onFormClose;
   }
 
   init() {
-    this.#point.id = crypto.randomUUID();
-    if (this.#pointNewComponent !== null) {
-      return;
-    }
-
     this.#pointNewComponent = new PointFormView({
       point: this.#point,
-      dataBase: this.#dataBase,
+      models: this.#models,
       isNewPoint: true,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick,
+      onDeleteClick: this.#handleCancelClick,
       onFormClose: () => null,
     });
-    render(this.#pointNewComponent, this.#mainListContainer, 'afterbegin');
 
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    render(this.#pointNewComponent, this.#container, 'afterbegin');
+
+    document.addEventListener('keydown', this.#handleEscKeyDown);
   }
 
   destroy() {
@@ -60,12 +60,12 @@ export default class NewPointPresenter {
       return;
     }
 
-    this.#handleDestroy();
-
+    this.#handleNewPointDestroy();
+    this.#handleFormClose();
     remove(this.#pointNewComponent);
     this.#pointNewComponent = null;
 
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
   }
 
   setSaving() {
@@ -89,14 +89,14 @@ export default class NewPointPresenter {
 
   #handleFormSubmit = (newPoint: Point) => {
     this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, newPoint);
-    // this.destroy();
-  };
-
-  #handleDeleteClick = () => {
     this.destroy();
   };
 
-  #escKeyDownHandler = (evt: KeyboardEvent) => {
+  #handleCancelClick = () => {
+    this.destroy();
+  };
+
+  #handleEscKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.destroy();

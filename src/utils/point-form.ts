@@ -1,6 +1,6 @@
-import type { DataBase } from '@presenter/main-presenter';
 import { isValidPointType } from '../const';
 import type AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import type { Models } from '../model/create-models';
 import type { State } from '../types/state';
 
 export type View = AbstractStatefulView<State> & {
@@ -26,14 +26,14 @@ export function handleTypeChange(view: View, evt: Event) {
   });
 }
 
-export function handleDestinationChange(view: View, evt: Event, dataBase: DataBase) {
+export function handleDestinationChange(view: View, evt: Event, models: Models) {
   const select = (evt.target as HTMLInputElement).value;
 
-  if (!dataBase.destinationsModel.allDestinationsNames.includes(select)) {
+  if (!models.destinationsModel.allDestinationsNames.includes(select)) {
     return;
   }
 
-  const selectedDestination = dataBase.destinationsModel.getDestinationByName(select)?.id;
+  const selectedDestination = models.destinationsModel.getDestinationByName(select)?.id;
   evt.preventDefault();
   view.updateElement({
     destination: selectedDestination,
