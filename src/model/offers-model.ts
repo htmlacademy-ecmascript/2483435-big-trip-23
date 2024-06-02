@@ -23,6 +23,7 @@ export default class OffersModel extends Observable<UpdateType, Point> {
       this.#offers = offers;
     } catch (err) {
       this.#offers = [];
+      throw new Error('Can\'t load offers');
     }
 
     this._notify(UpdateType.INIT, {});

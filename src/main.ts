@@ -5,7 +5,7 @@ import MainPresenter from './presenter/main-presenter';
 const start = async () => {
   const service = createService();
   const models = getModels(service);
-  const mainPresenter = new MainPresenter({ service, models });
+  const mainPresenter = new MainPresenter({ models });
 
   mainPresenter.init();
 };
