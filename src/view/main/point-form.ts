@@ -56,7 +56,7 @@ export default class PointFormView extends AbstractStatefulView<State> {
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
-    this.#handleFormClose = onFormClose;
+    this.#handleFormClose = onFormClose!;
 
     this._restoreHandlers();
   }
@@ -141,12 +141,10 @@ export default class PointFormView extends AbstractStatefulView<State> {
 
   #formSubmitHandler: EventListener = (evt) => {
     evt.preventDefault();
-    if (
-      this._state.dateFrom !== '' &&
-      this._state.dateTo !== '' &&
-      this._state.basePrice > AllowedPrice.MIN &&
-      this._state.basePrice < AllowedPrice.MAX
-    ) {
+
+    const isNotEmptyDates = this._state.dateFrom !== '' && this._state.dateTo !== '';
+    const isCorrectPrice = this._state.basePrice > AllowedPrice.MIN && this._state.basePrice < AllowedPrice.MAX;
+    if (isNotEmptyDates && isCorrectPrice) {
       this.#handleFormSubmit(this.parseStateToPoint());
     }
   };
