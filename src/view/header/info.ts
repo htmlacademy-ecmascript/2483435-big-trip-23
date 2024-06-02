@@ -19,12 +19,11 @@ const getTemplate = (models: Models) => `<section class="trip-main__trip-info  t
           </section>`;
 
 export default class InfoView extends AbstractView<HTMLTableSectionElement> {
-  #points: Point[];
   #models: Models;
 
-  constructor({ points, models }: { points: Point[]; models: Models }) {
+  constructor({ models }: { points: Point[]; models: Models }) {
     super();
-    this.#points = points;
+
     this.#models = models;
   }
 

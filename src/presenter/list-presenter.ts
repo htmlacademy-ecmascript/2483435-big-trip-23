@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FilterType, SortType } from '../const';
 import { SORT_TYPES, UpdateType, UserAction } from '../const';
 import { remove, render } from '../framework/render';
@@ -28,8 +27,6 @@ export default class ListPresenter {
   #mainContainer: HTMLTableSectionElement;
   #loadingComponent = new LoadingView();
   #pointsModel: PointsModel;
-  #destinationsModel: DestinationsModel;
-  #offersModel: OffersModel;
   #filterModel: FilterModel;
   #sortingModel: SortingModel;
   #models: Models;
@@ -40,7 +37,7 @@ export default class ListPresenter {
   #currentSortType: SortType = SORT_TYPES[0];
   #currentFilter: FilterType = 'everything';
   #newPointPresenter: NewPointPresenter;
-  #isLoading = true;
+  #isLoading: boolean = true;
   #handleNewPointDestroy: EmptyFn;
   #handleFormClose: EmptyFn;
   #uiBlocker = new UiBlocker({
@@ -53,8 +50,6 @@ export default class ListPresenter {
     this.#listContainer = new listView();
     this.#models = models;
     this.#pointsModel = this.#models.pointsModel;
-    this.#destinationsModel = this.#models.destinationsModel;
-    this.#offersModel = this.#models.offersModel;
     this.#filterModel = this.#models.filtersModel;
     this.#sortingModel = this.#models.sortingModel;
 
@@ -88,10 +83,7 @@ export default class ListPresenter {
   }
 
   init() {
-    this.#renderEmptyList();
-    Promise.all([this.#pointsModel.init(), this.#destinationsModel.init(), this.#offersModel.init()])
-      .then(() => this.#handleDataLoad(true))
-      .catch(() => this.#handleDataLoad(false));
+    this.#renderLoading();
   }
 
   #renderLoading() {
@@ -160,7 +152,7 @@ export default class ListPresenter {
     remove(this.#emptyListComponent);
   }
 
-  #handleDataLoad = (isSuccessful: boolean) => {
+  handleDataLoad = (isSuccessful: boolean) => {
     this.#isLoading = false;
     remove(this.#loadingComponent);
     if (isSuccessful === true) {
@@ -170,7 +162,7 @@ export default class ListPresenter {
     }
   };
 
-  #handleViewAction = async (actionType: UserAction, updateType: UpdateType, updatedPoint: any) => {
+  #handleViewAction = async (actionType: UserAction, updateType: UpdateType, updatedPoint: Point) => {
     this.#uiBlocker.block();
 
     switch (actionType) {
@@ -244,4 +236,5 @@ export default class ListPresenter {
     this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
+
 }

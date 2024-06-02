@@ -7,7 +7,7 @@ const Amount = {
 };
 
 export const route = (models: Models) => {
-  const points = models.pointsModel.points;
+  const points = models.sortingModel.getSortedPoints(models.pointsModel.points, 'day');
   const allPointsNames = points.map((point) => models.destinationsModel.getDestinationByID(point.destination)!.name);
 
   switch (allPointsNames.length) {

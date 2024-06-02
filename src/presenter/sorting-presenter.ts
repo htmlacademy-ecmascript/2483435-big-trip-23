@@ -23,6 +23,10 @@ export default class SortingPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
+  init(){
+    this.#renderSorting();
+  }
+
   #renderSorting() {
     this.#sortComponent = new SortingView({ onSortTypeChange: this.#handleSortTypeChange });
     render(this.#sortComponent, this.#container, 'afterbegin');
@@ -34,6 +38,8 @@ export default class SortingPresenter {
 
   #handleModelEvent = () => {
     remove(this.#sortComponent);
-    this.#renderSorting();
+    if (this.#pointsModel.points.length > 0) {
+      this.#renderSorting();
+    }
   };
 }
