@@ -4,7 +4,7 @@ import type { Models } from '../model/create-models';
 import type FilterModel from '../model/filter-model';
 import type PointsModel from '../model/points-model';
 import type SortingModel from '../model/sorting-model';
-import SortingView from '../view/main/sorting';
+import SortingView from '../view/main/sorting-view';
 
 export default class SortingPresenter {
   #container: HTMLTableSectionElement;
@@ -23,6 +23,16 @@ export default class SortingPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
+  init() {
+    this.#renderSorting();
+  }
+
+  handleDataLoad = (isSuccessful: boolean) => {
+    if (isSuccessful === false) {
+      remove(this.#sortComponent);
+    }
+  };
+
   #renderSorting() {
     this.#sortComponent = new SortingView({ onSortTypeChange: this.#handleSortTypeChange });
     render(this.#sortComponent, this.#container, 'afterbegin');
@@ -34,6 +44,8 @@ export default class SortingPresenter {
 
   #handleModelEvent = () => {
     remove(this.#sortComponent);
-    this.#renderSorting();
+    if (this.#pointsModel.points.length > 0) {
+      this.#renderSorting();
+    }
   };
 }

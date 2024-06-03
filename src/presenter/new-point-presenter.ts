@@ -1,17 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Point } from '../types/point-type';
 import { render, remove } from '../framework/render';
-import type { EmptyFn } from '../types/common';
+import type { EmptyFn, PointChange } from '../types/common';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
 import { DEFAULT_POINT } from '../const';
-import PointFormView from '../view/main/point-form';
+import PointFormView from '../view/main/point-form-view';
 import type { Models } from '../model/create-models';
 
-type PointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
-
 export default class NewPointPresenter {
-  #container: any;
+  #container: HTMLElement;
   #handleDataChange: PointChange;
   #handleNewPointDestroy: EmptyFn;
   #handleFormClose: EmptyFn;
@@ -89,7 +86,6 @@ export default class NewPointPresenter {
 
   #handleFormSubmit = (newPoint: Point) => {
     this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, newPoint);
-    this.destroy();
   };
 
   #handleCancelClick = () => {

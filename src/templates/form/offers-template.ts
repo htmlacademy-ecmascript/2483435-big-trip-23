@@ -2,7 +2,7 @@ import type { Models } from '../../model/create-models';
 import type { InnerOffer } from '../../types/offer-type';
 import type { State } from '../../types/state';
 
-const createAvailableOffersTemplate = (offer: InnerOffer, selectedOffers: Set<string>, isDisabled: State): string => {
+const createAvailableOffersTemplate = (offer: InnerOffer, selectedOffers: Set<string>, isDisabled: boolean): string => {
   const selected = selectedOffers.has(offer.id) ? 'checked' : '';
 
   return `<div class="event__offer-selector">
@@ -15,10 +15,10 @@ const createAvailableOffersTemplate = (offer: InnerOffer, selectedOffers: Set<st
     </div>`;
 };
 
-const createOffersTemplate = (point: State, models: Models) => {
-  const type = point.type;
-  const selectedOffers = point.selectedOffers;
-  const isDisabled = point.isDisabled;
+const createOffersTemplate = (
+  { type, selectedOffers, isDisabled }: Pick<State, 'type' | 'isDisabled' | 'selectedOffers'>,
+  models: Models,
+) => {
   const availableOffers = models.offersModel.getAvailableOffers(type);
 
   return availableOffers.length !== 0

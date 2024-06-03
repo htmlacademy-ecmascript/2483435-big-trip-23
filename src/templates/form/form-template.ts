@@ -1,11 +1,11 @@
 import type { State } from '../../types/state';
 import { capitalLetter } from '../../utils/utils';
-import { createDescriptionTemplate } from './description';
-import { createDestinationsListTemplate } from './destinations';
-import { createOffersTemplate } from './offers';
-import { createPicturesTemplate } from './pictures';
-import { createPointsTypesListTemplate } from './types';
-import { pointDataForTemplate } from './point-data';
+import { createDescriptionTemplate } from './description-template';
+import { createDestinationsListTemplate } from './destinations-template';
+import { createOffersTemplate } from './offers-template';
+import { createPicturesTemplate } from './pictures-template';
+import { createPointsTypesListTemplate } from './point-types-template';
+import { pointDataForTemplate } from './point-data-for-templates';
 import he from 'he';
 import type { Models } from '../../model/create-models';
 

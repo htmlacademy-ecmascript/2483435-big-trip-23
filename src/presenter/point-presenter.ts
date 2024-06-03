@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import PointView from '../view/main/point';
+import PointView from '../view/main/point-view';
 import type { Point } from '../types/point-type';
 import { render, replace, remove } from '../framework/render';
-import type { EmptyFn, PointData } from '../types/common';
+import type { EmptyFn, PointChange, PointData } from '../types/common';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
 import dayjs from 'dayjs';
-import PointFormView from '../view/main/point-form';
+import PointFormView from '../view/main/point-form-view';
 import { isDatesEqual } from '../utils/time/filters-time';
 import type { Models } from '../model/create-models';
 
@@ -14,8 +13,6 @@ const enum Mode {
   DEFAULT,
   EDITING,
 }
-
-type PointChange = (actionType: UserAction, updateType: UpdateType, update: any) => void;
 
 export default class PointPresenter {
   #container: HTMLUListElement;

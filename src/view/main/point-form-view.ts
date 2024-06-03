@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
-import { getFormTemplate, FormNames } from '../../templates/form/form';
-import type { EmptyFn, PointData } from '../../types/common';
+import { getFormTemplate, FormNames } from '../../templates/form/form-template';
+import type { EmptyFn, PointData, PointForm } from '../../types/common';
 import type { State } from '../../types/state';
 import type { Point } from '../../types/point-type';
 import { handleDestinationChange, handleSelectedOffers, handleTypeChange } from '../../utils/point-form';
@@ -10,12 +10,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { setEventFinish, setEventStart } from '../../utils/time/form-time';
 import { appDay } from '../../utils/time/time';
 import type { Models } from '../../model/create-models';
-
-export type PointForm = HTMLFormElement & {
-  [FormNames.Price]: HTMLInputElement;
-  [FormNames.Type]: RadioNodeList;
-  [FormNames.Destination]: HTMLSelectElement;
-};
 
 const AllowedPrice = {
   MIN: 0,
@@ -175,8 +169,11 @@ export default class PointFormView extends AbstractStatefulView<State> {
   }
 
   parseStateToPoint(): Point {
-    const { ...point } = this._state;
-    point.offers = Array.from(this._state.selectedOffers);
+    const { ...point } = this._state as Omit<Point, 'id'> &
+      Partial<State> & {
+        id?: string;
+      };
+    point!.offers = Array.from(this._state.selectedOffers);
     point.dateFrom = appDay(point.dateFrom).toISOString();
     point.dateTo = appDay(point.dateTo).toISOString();
     if (!Number.isInteger(point.basePrice)) {
@@ -192,6 +189,6 @@ export default class PointFormView extends AbstractStatefulView<State> {
     delete point.isSaving;
     delete point.isDeleting;
 
-    return point;
+    return point as Point;
   }
 }

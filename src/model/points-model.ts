@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UpdateType } from '../const';
 import Observable from '../framework/observable';
 import type PointsApiService from '../service/point-api-service';
@@ -23,6 +22,7 @@ export default class PointsModel extends Observable<UpdateType, Point> {
       this.#points = points.map(this.#service.adaptToClient);
     } catch (err) {
       this.#points = [];
+      throw new Error('Can\'t load points');
     }
 
     this._notify(UpdateType.INIT, {});
