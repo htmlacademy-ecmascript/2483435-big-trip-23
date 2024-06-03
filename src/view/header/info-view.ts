@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import AbstractView from '../../framework/view/abstract-view';
 import type { Models } from '../../model/create-models';
 import type { Point } from '../../types/point-type';
-import { route } from '../../templates/info/route';
-import { date } from '../../templates/info/date';
-import { cost } from '../../templates/info/cost';
+import { route } from '../../templates/info/route-template';
+import { date } from '../../templates/info/date-template';
+import { cost } from '../../templates/info/cost-template';
 
 const getTemplate = (models: Models) => `<section class="trip-main__trip-info  trip-info">
             <div class="trip-info__main">

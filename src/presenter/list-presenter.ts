@@ -9,10 +9,10 @@ import type SortingModel from '../model/sorting-model';
 import type { EmptyFn } from '../types/common';
 import type { Point } from '../types/point-type';
 import { filter } from '../utils/filter';
-import EmptyListView from '../view/main/empty-list';
-import FailedLoadView from '../view/main/failed-load';
-import listView from '../view/main/list';
-import LoadingView from '../view/main/loading';
+import EmptyListView from '../view/main/empty-list-view';
+import FailedLoadView from '../view/main/failed-load-view';
+import listView from '../view/main/list-view';
+import LoadingView from '../view/main/loading-view';
 import NewPointPresenter from './new-point-presenter';
 import PointPresenter from './point-presenter';
 
@@ -234,5 +234,4 @@ export default class ListPresenter {
     this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
-
 }

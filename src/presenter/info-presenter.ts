@@ -1,4 +1,4 @@
-import InfoView from '../view/header/info';
+import InfoView from '../view/header/info-view';
 import type { Models } from '../model/create-models';
 import type { Point } from '../types/point-type';
 import { remove, render } from '../framework/render';
@@ -36,5 +36,4 @@ export default class InfoPresenter {
       remove(this.#info);
     }
   };
-
 }

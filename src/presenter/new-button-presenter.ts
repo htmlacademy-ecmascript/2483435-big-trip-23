@@ -1,4 +1,4 @@
-import NewButtonView from '../view/header/new-button';
+import NewButtonView from '../view/header/new-button-view';
 import type { EmptyFn } from '../types/common';
 import { render } from '../framework/render';
 

@@ -4,9 +4,8 @@ import type { EmptyFn, PointChange } from '../types/common';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
 import { DEFAULT_POINT } from '../const';
-import PointFormView from '../view/main/point-form';
+import PointFormView from '../view/main/point-form-view';
 import type { Models } from '../model/create-models';
-
 
 export default class NewPointPresenter {
   #container: HTMLElement;
