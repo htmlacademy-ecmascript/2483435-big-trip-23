@@ -23,9 +23,15 @@ export default class SortingPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-  init(){
+  init() {
     this.#renderSorting();
   }
+
+  handleDataLoad = (isSuccessful: boolean) => {
+    if (isSuccessful === false) {
+      remove(this.#sortComponent);
+    }
+  };
 
   #renderSorting() {
     this.#sortComponent = new SortingView({ onSortTypeChange: this.#handleSortTypeChange });
