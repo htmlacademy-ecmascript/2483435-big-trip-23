@@ -169,7 +169,10 @@ export default class PointFormView extends AbstractStatefulView<State> {
   }
 
   parseStateToPoint(): Point {
-    const { ...point } = this._state;
+    const { ...point } = this._state as Omit<Point, 'id'> &
+      Partial<State> & {
+        id?: string;
+      };
     point!.offers = Array.from(this._state.selectedOffers);
     point.dateFrom = appDay(point.dateFrom).toISOString();
     point.dateTo = appDay(point.dateTo).toISOString();
@@ -186,6 +189,6 @@ export default class PointFormView extends AbstractStatefulView<State> {
     delete point.isSaving;
     delete point.isDeleting;
 
-    return point;
+    return point as Point;
   }
 }
