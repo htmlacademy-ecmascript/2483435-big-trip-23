@@ -1,4 +1,4 @@
-import type { SortType } from '../const';
+import type { SortType } from '../types/common';
 import { UpdateType } from '../const';
 import { SORT_TYPES } from '../const';
 import Observable from '../framework/observable';

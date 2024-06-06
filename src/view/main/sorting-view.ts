@@ -1,7 +1,7 @@
 import AbstractView from '../../framework/view/abstract-view';
 import { SORT_TYPES } from '../../const';
 import { upperCaseLetter } from '../../utils/utils';
-import type { SortType } from '../../const';
+import type { SortType } from '../../types/common';
 
 const createSortTemplate = (type: SortType, isActive: boolean): string => `
 <div class="trip-sort__item  trip-sort__item--${type}">

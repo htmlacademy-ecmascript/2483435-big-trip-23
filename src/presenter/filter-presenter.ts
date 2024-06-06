@@ -3,7 +3,7 @@ import FilterView from '../view/header/filter-view';
 import { filter } from '../utils/filter';
 import type FilterModel from '../model/filter-model';
 import type PointsModel from '../model/points-model';
-import type { FilterType } from '../const';
+import type { FilterType } from '../types/common';
 import { FILTER_TYPES } from '../const';
 import type { Models } from '../model/create-models';
 
