@@ -1,10 +1,6 @@
 import type { EmptyFn } from '../../types/common';
 import { createElement } from '../render';
-
-const enum SnakeAnimation {
-  CLASS_NAME = 'shake',
-  ANIMATION_TIMEOUT = 600,
-}
+import { SnakeAnimation } from './shake-view';
 
 export default abstract class AbstractView<El extends Element = HTMLDivElement> {
   #element: El | null = null;

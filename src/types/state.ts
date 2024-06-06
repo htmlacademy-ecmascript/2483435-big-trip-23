@@ -9,4 +9,3 @@ export type State = Prettify<
     isDeleting: boolean;
   }
 >;
-``
