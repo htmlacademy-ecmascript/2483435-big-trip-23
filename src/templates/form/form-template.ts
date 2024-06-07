@@ -8,12 +8,8 @@ import { createPointsTypesListTemplate } from './point-types-template';
 import { pointDataForTemplate } from './point-data-for-templates';
 import he from 'he';
 import type { Models } from '../../model/create-models';
+import { FormName } from '../../const';
 
-export const enum FormNames {
-  Price = 'event-price',
-  Type = 'event-type',
-  Destination = 'event-destination',
-}
 export function getFormTemplate(data: State, models: Models, isNewPoint: boolean) {
   const point = pointDataForTemplate(data, models, isNewPoint);
 
@@ -42,7 +38,7 @@ export function getFormTemplate(data: State, models: Models, isNewPoint: boolean
       <label class="event__label  event__type-output" for="event-destination-1">
       ${he.escape(capitalLetter(point.type))}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="${FormNames.Destination}" value="${he.escape(capitalLetter(point.destinationName))}" list="destination-list-1" required ${point.isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="${FormName.DESTINATION}" value="${he.escape(capitalLetter(point.destinationName))}" list="destination-list-1" required ${point.isDisabled ? 'disabled' : ''}>
       <datalist id="destination-list-1">
 
       ${createDestinationsListTemplate(point.destination, models)}
@@ -63,12 +59,12 @@ export function getFormTemplate(data: State, models: Models, isNewPoint: boolean
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="${FormNames.Price}" value="${point.basePrice}" ${point.isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--price" id="event-price-1" type="text" name="${FormName.PRICE}" value="${point.basePrice}" ${point.isDisabled ? 'disabled' : ''}>
     </div>
 
-    <button class="event__save-btn  btn  btn--blue" type="submit" ${point.isDisabled ? 'disabled' : ''}>${point.isSaving ? 'Saving...' : 'Save'}</button>
-    <button class="event__reset-btn" type="reset" ${point.isDisabled ? 'disabled' : ''}>${point.isDeleting ? 'Deleting...' : point.cancelButton}</button>
-    ${point.startHiding}<button class="event__rollup-btn" type="button" ${point.isDisabled ? 'disabled' : ''}> ${point.endHiding}
+    <button class="event__save-btn  btn  btn--blue" type="submit" >${point.isSaving ? 'Saving...' : 'Save'}</button>
+    <button class="event__reset-btn" type="reset" >${point.isDeleting ? 'Deleting...' : point.cancelButton}</button>
+    ${point.startHiding}<button class="event__rollup-btn" type="button"> ${point.endHiding}
 
     <span class="visually-hidden">Open event</span>
     </button>

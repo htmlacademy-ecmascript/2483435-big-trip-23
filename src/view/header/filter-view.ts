@@ -1,4 +1,4 @@
-import type { FilterType } from '../../const';
+import type { FilterType } from '../../types/common';
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
 import type { Filter } from '../../utils/filter';
 import { capitalLetter } from '../../utils/utils';

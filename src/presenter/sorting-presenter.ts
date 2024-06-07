@@ -1,4 +1,4 @@
-import type { SortType } from '../const';
+import type { SortType } from '../types/common';
 import { remove, render } from '../framework/render';
 import type { Models } from '../model/create-models';
 import type FilterModel from '../model/filter-model';

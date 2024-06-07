@@ -1,37 +1,27 @@
-import type { FilterType, SortType } from '../const';
-import { SORT_TYPES, UpdateType, UserAction } from '../const';
+import MessageView from '../view/main/message-view';
+import { Message, SORT_TYPES, TimeLimit, UpdateType, UserAction } from '../const';
 import { remove, render } from '../framework/render';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import type { Models } from '../model/create-models';
 import type FilterModel from '../model/filter-model';
 import type PointsModel from '../model/points-model';
 import type SortingModel from '../model/sorting-model';
-import type { EmptyFn } from '../types/common';
+import type { EmptyFn, FilterType, SortType } from '../types/common';
 import type { Point } from '../types/point-type';
 import { filter } from '../utils/filter';
-import EmptyListView from '../view/main/empty-list-view';
-import FailedLoadView from '../view/main/failed-load-view';
 import listView from '../view/main/list-view';
-import LoadingView from '../view/main/loading-view';
 import NewPointPresenter from './new-point-presenter';
 import PointPresenter from './point-presenter';
 
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
-
 export default class ListPresenter {
   #mainContainer: HTMLTableSectionElement;
-  #loadingComponent = new LoadingView();
+  #messageComponent: MessageView | null = null;
   #pointsModel: PointsModel;
   #filterModel: FilterModel;
   #sortingModel: SortingModel;
   #models: Models;
   #listContainer: listView;
   #pointsPresenters = new Map<Point['id'], PointPresenter>();
-  #emptyListComponent: EmptyListView | null = null;
-  #failedLoadComponent: FailedLoadView | null = null;
   #currentSortType: SortType = SORT_TYPES[0];
   #currentFilter: FilterType = 'everything';
   #newPointPresenter: NewPointPresenter;
@@ -52,8 +42,8 @@ export default class ListPresenter {
     this.#sortingModel = this.#models.sortingModel;
 
     this.#handleNewPointDestroy = () => {
-      if (this.points.length === 0) {
-        this.#renderEmptyList();
+      if (this.points!.length === 0) {
+        this.#renderMessage(Message.EMPTY, this.#currentFilter);
       }
     };
 
@@ -77,38 +67,30 @@ export default class ListPresenter {
     const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#currentFilter](points);
 
-    return this.#sortingModel?.getSortedPoints(filteredPoints, this.#currentSortType);
+    return this.#sortingModel?.getSortedPoints(filteredPoints, this.#currentSortType) ?? points;
   }
 
   init() {
-    this.#renderLoading();
+    this.#renderMessage(Message.LOADING, this.#currentFilter);
   }
 
-  #renderLoading() {
-    render(this.#loadingComponent, this.#mainContainer);
-  }
-
-  #renderFailedLoad() {
-    this.#failedLoadComponent = new FailedLoadView();
-    render(this.#failedLoadComponent, this.#mainContainer);
-  }
-
-  #renderEmptyList() {
-    this.#emptyListComponent = new EmptyListView(this.#currentFilter);
-    render(this.#emptyListComponent, this.#mainContainer);
+  #renderMessage(message: Message, currentFilter: FilterType) {
+    remove(this.#messageComponent);
+    this.#messageComponent = new MessageView(message, currentFilter);
+    render(this.#messageComponent, this.#mainContainer);
   }
 
   #renderPointsList() {
     if (this.#isLoading) {
-      this.#renderLoading();
       return;
     }
 
     if (this.points.length > 0) {
+      remove(this.#messageComponent);
       render(this.#listContainer, this.#mainContainer, 'beforeend');
       this.#renderPoints(this.points!);
     } else {
-      this.#renderEmptyList();
+      this.#renderMessage(Message.EMPTY, this.#currentFilter);
     }
   }
 
@@ -116,11 +98,6 @@ export default class ListPresenter {
     this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.destroy());
     this.#pointsPresenters.clear();
-    remove(this.#loadingComponent);
-
-    if (this.#emptyListComponent) {
-      remove(this.#emptyListComponent);
-    }
   }
 
   #renderPoints(points: Point[]) {
@@ -147,16 +124,18 @@ export default class ListPresenter {
     this.#handleFilterChange();
     this.#filterModel.setFilter('everything');
     this.#newPointPresenter.init();
-    remove(this.#emptyListComponent);
+    remove(this.#messageComponent);
   }
 
   handleDataLoad = (isSuccessful: boolean) => {
     this.#isLoading = false;
-    remove(this.#loadingComponent);
+    remove(this.#messageComponent);
     if (isSuccessful === true) {
+      this.#isLoading = false;
       this.#renderPointsList();
     } else {
-      this.#renderFailedLoad();
+      this.#isLoading = true;
+      this.#renderMessage(Message.FAILED_LOAD, this.#currentFilter);
     }
   };
 
@@ -213,7 +192,7 @@ export default class ListPresenter {
 
   #handleFilterChange = () => {
     this.#currentFilter = this.#filterModel?.filter ?? 'everything';
-    this.#sortingModel?.setSortType('day');
+    this.#sortingModel.setSortType('day');
     this.#currentSortType = 'day';
     this.#clearPointsList();
     this.#renderPointsList();

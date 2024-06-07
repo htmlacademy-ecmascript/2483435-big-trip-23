@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
-import { getFormTemplate, FormNames } from '../../templates/form/form-template';
+import { getFormTemplate } from '../../templates/form/form-template';
 import type { EmptyFn, PointData, PointForm } from '../../types/common';
 import type { State } from '../../types/state';
 import type { Point } from '../../types/point-type';
@@ -10,11 +10,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { setEventFinish, setEventStart } from '../../utils/time/form-time';
 import { appDay } from '../../utils/time/time';
 import type { Models } from '../../model/create-models';
-
-const AllowedPrice = {
-  MIN: 0,
-  MAX: 100_000,
-};
+import { AllowedPrice, FormName } from '../../const';
 
 export default class PointFormView extends AbstractStatefulView<State> {
   #handleFormSubmit: (updatedPoint: Point) => void;
@@ -109,12 +105,12 @@ export default class PointFormView extends AbstractStatefulView<State> {
       const input = evt.target;
 
       switch (input.name) {
-        case FormNames.Type:
+        case FormName.TYPE:
           return this.#typeChangeHandler(evt);
-        case FormNames.Price:
+        case FormName.PRICE:
           this._state.basePrice = Number(input.value);
           break;
-        case FormNames.Destination:
+        case FormName.DESTINATION:
           return this.#destinationChangeHandler(evt);
         default:
           return this.#selectedOffersHandler(evt);

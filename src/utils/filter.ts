@@ -1,4 +1,4 @@
-import type { FilterType } from '../const';
+import type { FilterType } from '../types/common';
 import type { Point } from '../types/point-type';
 import { isFuturePoints, isPresentPoints, isPastPoints } from './time/filters-time';
 
