@@ -2,6 +2,6 @@ const capitalLetter = (letter: string) => letter.charAt(0).toUpperCase() + lette
 
 const upperCaseLetter = (letter: string) => letter.toUpperCase();
 
-const checkMatch = (a: string, b: string, property: string) => (a === b ? property : '');
+const checkMatch = (stringA: string, stringB: string, property: string) => (stringA === stringB ? property : '');
 
 export { capitalLetter, checkMatch, upperCaseLetter };

@@ -4,7 +4,7 @@ import { getFormTemplate } from '../../templates/form/form-template';
 import type { EmptyFn, PointData, PointForm } from '../../types/common';
 import type { State } from '../../types/state';
 import type { Point } from '../../types/point-type';
-import { handleDestinationChange, handleSelectedOffers, handleTypeChange } from '../../utils/point-form';
+import { destinationChangeHandler, selectedOffersHandler, typeChangeHandler } from '../../utils/point-form';
 import type { Instance as Flatpickr } from 'flatpickr/dist/types/instance';
 import 'flatpickr/dist/flatpickr.min.css';
 import { setEventFinish, setEventStart } from '../../utils/time/form-time';
@@ -13,9 +13,9 @@ import type { Models } from '../../model/create-models';
 import { AllowedPrice, FormName } from '../../const';
 
 export default class PointFormView extends AbstractStatefulView<State> {
-  #handleFormSubmit: (updatedPoint: Point) => void;
-  #handleDeleteClick: any;
-  #handleFormClose: EmptyFn;
+  #formSubmitHandler: (updatedPoint: Point) => void;
+  #deleteButtonClickHandler: any;
+  #formCloseHandler: EmptyFn;
   #pointData: PointData;
   #point: Point;
   #models: Models;
@@ -27,15 +27,15 @@ export default class PointFormView extends AbstractStatefulView<State> {
   constructor({
     point,
     models: Models,
-    onFormSubmit,
-    onDeleteClick,
-    onFormClose,
+    formSubmitHandler: formSubmitHandler,
+    deleteButtonClickHandler: deleteButtonClickHandler,
+    formCloseHandler: formCloseHandler,
     isNewPoint,
   }: PointData & {
     isNewPoint: boolean;
-    onFormSubmit: (updatedPoint: Point) => void;
-    onDeleteClick: (point: Point) => void;
-    onFormClose: EmptyFn | null;
+    formSubmitHandler: (updatedPoint: Point) => void;
+    deleteButtonClickHandler: (point: Point) => void;
+    formCloseHandler: EmptyFn | null;
   }) {
     super();
     this.#pointData = { point, models: Models };
@@ -44,9 +44,9 @@ export default class PointFormView extends AbstractStatefulView<State> {
     this.#isNewPoint = isNewPoint;
     this._setState(this.parsePointToState(this.#point));
 
-    this.#handleFormSubmit = onFormSubmit;
-    this.#handleDeleteClick = onDeleteClick;
-    this.#handleFormClose = onFormClose!;
+    this.#formSubmitHandler = formSubmitHandler;
+    this.#deleteButtonClickHandler = deleteButtonClickHandler;
+    this.#formCloseHandler = formCloseHandler!;
 
     this._restoreHandlers();
   }
@@ -63,8 +63,8 @@ export default class PointFormView extends AbstractStatefulView<State> {
     this.#form = this.element.querySelector<PointForm>('form');
 
     if (this.#form) {
-      this.#form.addEventListener('input', this.#changeHandler);
-      this.#form.addEventListener('submit', this.#formSubmitHandler);
+      this.#form.addEventListener('input', this.#formInputChangeHandler);
+      this.#form.addEventListener('submit', this.#formSubmittingHandler);
 
       const resetButtonElement = this.#form.querySelector('.event__reset-btn');
       if (resetButtonElement) {
@@ -75,7 +75,7 @@ export default class PointFormView extends AbstractStatefulView<State> {
 
       const rollupButtonElement = this.#form.querySelector('.event__rollup-btn');
       if (rollupButtonElement) {
-        rollupButtonElement.addEventListener('click', this.#formCloseHandler);
+        rollupButtonElement.addEventListener('click', this.#formClosingHandler);
       } else {
         throw new Error('Rollup button is not found');
       }
@@ -100,7 +100,7 @@ export default class PointFormView extends AbstractStatefulView<State> {
     }
   }
 
-  #changeHandler: EventListener = (evt) => {
+  #formInputChangeHandler: EventListener = (evt) => {
     if (evt.target instanceof HTMLInputElement) {
       const input = evt.target;
 
@@ -118,9 +118,9 @@ export default class PointFormView extends AbstractStatefulView<State> {
     }
   };
 
-  #typeChangeHandler: EventListener = (evt) => handleTypeChange(this, evt);
-  #destinationChangeHandler: EventListener = (evt) => handleDestinationChange(this, evt, this.#models);
-  #selectedOffersHandler: EventListener = (evt) => handleSelectedOffers(this, evt);
+  #typeChangeHandler: EventListener = (evt) => typeChangeHandler(this, evt);
+  #destinationChangeHandler: EventListener = (evt) => destinationChangeHandler(this, evt, this.#models);
+  #selectedOffersHandler: EventListener = (evt) => selectedOffersHandler(this, evt);
 
   #setDateFrom = () => setEventStart(this);
   #setDateTo = () => setEventFinish(this);
@@ -129,28 +129,28 @@ export default class PointFormView extends AbstractStatefulView<State> {
     this.updateElement(this.parsePointToState(point));
   }
 
-  #formSubmitHandler: EventListener = (evt) => {
+  #formSubmittingHandler: EventListener = (evt) => {
     evt.preventDefault();
 
     const isNotEmptyDates = this._state.dateFrom !== '' && this._state.dateTo !== '';
     const isCorrectPrice = this._state.basePrice > AllowedPrice.MIN && this._state.basePrice < AllowedPrice.MAX;
     if (isNotEmptyDates && isCorrectPrice) {
-      this.#handleFormSubmit(this.parseStateToPoint());
+      this.#formSubmitHandler(this.parseStateToPoint());
     }
   };
 
   #formDeleteHandler: EventListener = (evt) => {
     evt.preventDefault();
     if (this.#isNewPoint === true) {
-      this.#handleDeleteClick();
+      this.#deleteButtonClickHandler();
     } else {
-      this.#handleDeleteClick(this.parseStateToPoint());
+      this.#deleteButtonClickHandler(this.parseStateToPoint());
     }
   };
 
-  #formCloseHandler: EventListener = (evt) => {
+  #formClosingHandler: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleFormClose();
+    this.#formCloseHandler();
   };
 
   parsePointToState(point: Point): State {

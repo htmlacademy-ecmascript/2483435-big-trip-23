@@ -5,19 +5,19 @@ import { render } from '../framework/render';
 export default class NewButtonPresenter {
   #container: HTMLDivElement;
   #button: NewButtonView | null = null;
-  #onButtonClick: EmptyFn;
+  #buttonClickHandler: EmptyFn;
 
-  constructor({ container, onNewButtonClick: onNewButtonClick }: { container: HTMLDivElement; onNewButtonClick: EmptyFn }) {
+  constructor({ container, newButtonClickHandler: newButtonClickHandler }: { container: HTMLDivElement; newButtonClickHandler: EmptyFn }) {
     this.#container = container;
-    this.#onButtonClick = onNewButtonClick;
+    this.#buttonClickHandler = newButtonClickHandler;
   }
 
   init() {
-    this.#button = new NewButtonView({ onButtonClick: this.#handleButtonClick });
+    this.#button = new NewButtonView({ newButtonClickHandler: this.#newButtonClickHandler });
     render(this.#button, this.#container);
   }
 
-  handleDataLoad = (isSuccessful: boolean) => {
+  dataLoadHandler = (isSuccessful: boolean) => {
     if (isSuccessful === false) {
       if (this.#button !== null) {
         this.#button.element.disabled = true;
@@ -31,8 +31,8 @@ export default class NewButtonPresenter {
     }
   }
 
-  #handleButtonClick = () => {
-    this.#onButtonClick();
+  #newButtonClickHandler = () => {
+    this.#buttonClickHandler();
     if (this.#button !== null) {
       this.#button.element.disabled = true;
     }

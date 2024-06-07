@@ -4,20 +4,20 @@ import type { EmptyFn } from '../../types/common';
 const getTemplate = () => '<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>';
 
 export default class NewButtonView extends AbstractView<HTMLFormElement> {
-  #handleClick: EmptyFn;
+  #newButtonClickHandler: EmptyFn;
 
-  constructor({ onButtonClick: onButtonClick }: { onButtonClick: EmptyFn }) {
+  constructor({ newButtonClickHandler: newButtonClickHandler }: { newButtonClickHandler: EmptyFn }) {
     super();
-    this.#handleClick = onButtonClick;
-    this.element.addEventListener('click', this.#onClick);
+    this.#newButtonClickHandler = newButtonClickHandler;
+    this.element.addEventListener('click', this.#buttonClickHandler);
   }
 
   get template() {
     return getTemplate();
   }
 
-  #onClick: EventListener = (evt) => {
+  #buttonClickHandler: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleClick();
+    this.#newButtonClickHandler();
   };
 }

@@ -19,30 +19,30 @@ export default class SortingPresenter {
     this.#pointsModel = models.pointsModel;
     this.#filterModel = models.filtersModel;
 
-    this.#pointsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#pointsModel.addObserver(this.#modelEventHandler);
+    this.#filterModel.addObserver(this.#modelEventHandler);
   }
 
   init() {
     this.#renderSorting();
   }
 
-  handleDataLoad = (isSuccessful: boolean) => {
+  dataLoadHandler = (isSuccessful: boolean) => {
     if (isSuccessful === false) {
       remove(this.#sortComponent);
     }
   };
 
   #renderSorting() {
-    this.#sortComponent = new SortingView({ onSortTypeChange: this.#handleSortTypeChange });
+    this.#sortComponent = new SortingView({ sortTypeChangeHandler: this.#sortTypeChangeHandler });
     render(this.#sortComponent, this.#container, 'afterbegin');
   }
 
-  #handleSortTypeChange = (sortType: SortType) => {
+  #sortTypeChangeHandler = (sortType: SortType) => {
     this.#sortingModel.setSortType(sortType);
   };
 
-  #handleModelEvent = () => {
+  #modelEventHandler = () => {
     remove(this.#sortComponent);
     if (this.#pointsModel.points.length > 0) {
       this.#renderSorting();

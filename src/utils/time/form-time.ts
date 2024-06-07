@@ -10,7 +10,7 @@ export function setEventStart(view: View) {
     enableTime: true,
     time_24hr: true,
     dateFormat: 'j\\/m\\/y H\\:i',
-    onChange: startDateChangeHandler,
+    dateChangeHandler: startDateChangeHandler,
   });
 
   function startDateChangeHandler([userDate]: Date[]) {
@@ -36,7 +36,7 @@ export function setEventFinish(view: View) {
     enableTime: true,
     time_24hr: true,
     dateFormat: 'j\\/m\\/y H\\:i',
-    onChange: finishDateChangeHandler,
+    dateChangeHandler: finishDateChangeHandler,
   });
 
   function finishDateChangeHandler([userDate]: Date[]) {
