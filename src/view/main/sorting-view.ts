@@ -16,24 +16,24 @@ ${SORT_TYPES.map((type, index) => createSortTemplate(type, index === 0)).join(''
 export type SortHandler = (type: SortType) => void;
 
 export default class SortingView extends AbstractView<HTMLFormElement> {
-  #handleSortTypeChange: SortHandler;
+  #sortTypeChangeHandler: SortHandler;
 
-  constructor({ onSortTypeChange }: { onSortTypeChange: SortHandler }) {
+  constructor({ sortTypeChangeHandler: sortTypeChangeHandler }: { sortTypeChangeHandler: SortHandler }) {
     super();
-    this.#handleSortTypeChange = onSortTypeChange;
+    this.#sortTypeChangeHandler = sortTypeChangeHandler;
 
-    this.element.addEventListener('input', this.#sortTypeChangeHandler);
+    this.element.addEventListener('input', this.#sortTypeChangingHandler);
   }
 
   get template() {
     return getTemplate();
   }
 
-  #sortTypeChangeHandler: EventListener = (evt) => {
+  #sortTypeChangingHandler: EventListener = (evt) => {
     if (!(evt.target instanceof HTMLInputElement)) {
       return;
     }
     const newSortType = evt.target.value as SortType;
-    this.#handleSortTypeChange(newSortType);
+    this.#sortTypeChangeHandler(newSortType);
   };
 }

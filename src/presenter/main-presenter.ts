@@ -18,19 +18,19 @@ export default class MainPresenter {
     this.#models = models;
 
     new FilterPresenter({ container: this.#elements.filters as HTMLElement, models: this.#models });
-    this.#newButton = new NewButtonPresenter({ container: this.#elements.header, onNewButtonClick: this.#handleNewButton });
-    this.#list = new ListPresenter({ container: this.#elements.events, models: this.#models, onFormClose: this.#handleCloseForm });
+    this.#newButton = new NewButtonPresenter({ container: this.#elements.header, newButtonClickHandler: this.#newButtonClickHandler });
+    this.#list = new ListPresenter({ container: this.#elements.events, models: this.#models, formCloseHandler: this.#formCloseHandler });
   }
 
   init() {
     this.#newButton.init();
     this.#list.init();
     Promise.all([this.#models.pointsModel.init(), this.#models.destinationsModel.init(), this.#models.offersModel.init()])
-      .then(() => this.#handleDataLoad(true))
-      .catch(() => this.#handleDataLoad(false));
+      .then(() => this.#dataLoadHandler(true))
+      .catch(() => this.#dataLoadHandler(false));
   }
 
-  #handleDataLoad = (isSuccessful: boolean) => {
+  #dataLoadHandler = (isSuccessful: boolean) => {
     if (isSuccessful) {
       this.#sorting = new SortingPresenter({ container: this.#elements.events, models: this.#models });
       this.#info = new InfoPresenter({ container: this.#elements.header as HTMLElement, models: this.#models });
@@ -39,15 +39,15 @@ export default class MainPresenter {
       this.#info.init();
     }
 
-    this.#newButton.handleDataLoad(isSuccessful);
-    this.#list.handleDataLoad(isSuccessful);
+    this.#newButton.dataLoadHandler(isSuccessful);
+    this.#list.dataLoadHandler(isSuccessful);
   };
 
-  #handleNewButton = () => {
+  #newButtonClickHandler = () => {
     if (this.#list !== null) {
       this.#list.createPoint();
     }
   };
 
-  #handleCloseForm = () => this.#newButton.activate();
+  #formCloseHandler = () => this.#newButton.activate();
 }

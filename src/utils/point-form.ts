@@ -7,7 +7,7 @@ export type View = AbstractStatefulView<State> & {
   parseFormToState(): Partial<State>;
 };
 
-export function handleTypeChange(view: View, evt: Event) {
+export function typeChangeHandler(view: View, evt: Event) {
   const input = evt.target;
   if (!(input instanceof HTMLInputElement)) {
     return;
@@ -26,7 +26,7 @@ export function handleTypeChange(view: View, evt: Event) {
   });
 }
 
-export function handleDestinationChange(view: View, evt: Event, models: Models) {
+export function destinationChangeHandler(view: View, evt: Event, models: Models) {
   const select = (evt.target as HTMLInputElement).value;
 
   if (!models.destinationsModel.allDestinationsNames.includes(select)) {
@@ -40,7 +40,7 @@ export function handleDestinationChange(view: View, evt: Event, models: Models) 
   });
 }
 
-export function handleSelectedOffers(view: View, evt: Event) {
+export function selectedOffersHandler(view: View, evt: Event) {
   if (!(evt.target instanceof HTMLInputElement)) {
     return;
   }

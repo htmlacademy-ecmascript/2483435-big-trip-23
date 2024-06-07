@@ -9,7 +9,7 @@ import type SortingModel from '../model/sorting-model';
 import type { EmptyFn, FilterType, SortType } from '../types/common';
 import type { Point } from '../types/point-type';
 import { filter } from '../utils/filter';
-import listView from '../view/main/list-view';
+import ListView from '../view/main/list-view';
 import NewPointPresenter from './new-point-presenter';
 import PointPresenter from './point-presenter';
 
@@ -20,46 +20,54 @@ export default class ListPresenter {
   #filterModel: FilterModel;
   #sortingModel: SortingModel;
   #models: Models;
-  #listContainer: listView;
+  #listContainer: ListView;
   #pointsPresenters = new Map<Point['id'], PointPresenter>();
   #currentSortType: SortType = SORT_TYPES[0];
   #currentFilter: FilterType = 'everything';
   #newPointPresenter: NewPointPresenter;
   #isLoading: boolean = true;
-  #handleNewPointDestroy: EmptyFn;
-  #handleFormClose: EmptyFn;
+  #newPointDestroyHandler: EmptyFn;
+  #formCloseHandler: EmptyFn;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT,
   });
 
-  constructor({ container, models, onFormClose }: { container: HTMLTableSectionElement; models: Models; onFormClose: EmptyFn }) {
+  constructor({
+    container,
+    models,
+    formCloseHandler: formCloseHandler,
+  }: {
+    container: HTMLTableSectionElement;
+    models: Models;
+    formCloseHandler: EmptyFn;
+  }) {
     this.#mainContainer = container;
-    this.#listContainer = new listView();
+    this.#listContainer = new ListView();
     this.#models = models;
     this.#pointsModel = this.#models.pointsModel;
     this.#filterModel = this.#models.filtersModel;
     this.#sortingModel = this.#models.sortingModel;
 
-    this.#handleNewPointDestroy = () => {
+    this.#newPointDestroyHandler = () => {
       if (this.points!.length === 0) {
         this.#renderMessage(Message.EMPTY, this.#currentFilter);
       }
     };
 
-    this.#handleFormClose = onFormClose;
+    this.#formCloseHandler = formCloseHandler;
 
     this.#newPointPresenter = new NewPointPresenter({
       container: this.#listContainer.element,
       models,
-      onDataChange: this.#handleViewAction,
-      onNewPointDestroy: this.#handleNewPointDestroy,
-      onFormClose: this.#handleFormClose,
+      dataChangeHandler: this.#viewActionHandler,
+      newPointDestroyHandler: this.#newPointDestroyHandler,
+      formCloseHandler: this.#formCloseHandler,
     });
 
-    this.#pointsModel.addObserver(this.#handlePointsModelEvent);
-    this.#filterModel.addObserver(this.#handleFilterChange);
-    this.#sortingModel.addObserver(this.#handleSortTypeChange);
+    this.#pointsModel.addObserver(this.#pointsModelEventHandler);
+    this.#filterModel.addObserver(this.#filterChangeHandler);
+    this.#sortingModel.addObserver(this.#sortTypeChangeHandler);
   }
 
   get points() {
@@ -110,8 +118,8 @@ export default class ListPresenter {
   #renderPoint(pointData: { point: Point; models: Models }) {
     const pointPresenter = new PointPresenter({
       container: this.#listContainer.element,
-      onDataChange: this.#handleViewAction,
-      onModeChange: this.#handleModeChange,
+      dataChangeHandler: this.#viewActionHandler,
+      modeChangeHandler: this.#modeChangeHandler,
     });
     pointPresenter.init(pointData);
 
@@ -121,13 +129,13 @@ export default class ListPresenter {
   createPoint() {
     render(this.#listContainer, this.#mainContainer, 'beforeend');
     this.#currentFilter = 'everything';
-    this.#handleFilterChange();
+    this.#filterChangeHandler();
     this.#filterModel.setFilter('everything');
     this.#newPointPresenter.init();
     remove(this.#messageComponent);
   }
 
-  handleDataLoad = (isSuccessful: boolean) => {
+  dataLoadHandler = (isSuccessful: boolean) => {
     this.#isLoading = false;
     remove(this.#messageComponent);
     if (isSuccessful === true) {
@@ -139,7 +147,7 @@ export default class ListPresenter {
     }
   };
 
-  #handleViewAction = async (actionType: UserAction, updateType: UpdateType, updatedPoint: Point) => {
+  #viewActionHandler = async (actionType: UserAction, updateType: UpdateType, updatedPoint: Point) => {
     this.#uiBlocker.block();
 
     switch (actionType) {
@@ -171,7 +179,7 @@ export default class ListPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #handlePointsModelEvent = (updateType: UpdateType, point: Point) => {
+  #pointsModelEventHandler = (updateType: UpdateType, point: Point) => {
     switch (updateType) {
       case UpdateType.PATCH:
         {
@@ -185,12 +193,12 @@ export default class ListPresenter {
         }
         break;
       default:
-        this.#handleFilterChange();
+        this.#filterChangeHandler();
         break;
     }
   };
 
-  #handleFilterChange = () => {
+  #filterChangeHandler = () => {
     this.#currentFilter = this.#filterModel?.filter ?? 'everything';
     this.#sortingModel.setSortType('day');
     this.#currentSortType = 'day';
@@ -198,7 +206,7 @@ export default class ListPresenter {
     this.#renderPointsList();
   };
 
-  #handleSortTypeChange = () => {
+  #sortTypeChangeHandler = () => {
     const sortType = this.#sortingModel?.type ?? SORT_TYPES[0];
 
     if (this.#currentSortType === sortType) {
@@ -209,7 +217,7 @@ export default class ListPresenter {
     this.#renderPointsList();
   };
 
-  #handleModeChange = () => {
+  #modeChangeHandler = () => {
     this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };

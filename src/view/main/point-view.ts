@@ -58,18 +58,23 @@ export default class PointView extends AbstractView<HTMLTimeElement> {
   #point: Point;
   #destination: Destination;
   #selectedOffers: InnerOffer[];
-  #handleEditClick: EmptyFn;
-  #handleFavoriteClick: EmptyFn;
+  #editButtonClickHandler: EmptyFn;
+  #favoriteButtonClickHandler: EmptyFn;
 
-  constructor({ point, models, onEditClick, onFavoriteClick }: PointData & { onEditClick: EmptyFn; onFavoriteClick: EmptyFn }) {
+  constructor({
+    point,
+    models,
+    editButtonClickHandler: editButtonClickHandler,
+    favoriteButtonClickHandler: favoriteButtonClickHandler,
+  }: PointData & { editButtonClickHandler: EmptyFn; favoriteButtonClickHandler: EmptyFn }) {
     super();
 
     this.#point = point;
     this.#destination = models.destinationsModel.getDestinationByID(this.#point.destination)!;
     this.#selectedOffers = models.offersModel.getSelectedOffers(this.#point);
 
-    this.#handleEditClick = onEditClick;
-    this.#handleFavoriteClick = onFavoriteClick;
+    this.#editButtonClickHandler = editButtonClickHandler;
+    this.#favoriteButtonClickHandler = favoriteButtonClickHandler;
     this.element.querySelector('.event__rollup-btn')?.addEventListener('click', this.#editClickHandler);
     this.element.querySelector('.event__favorite-btn')?.addEventListener('click', this.#favoriteClickHandler);
   }
@@ -80,11 +85,11 @@ export default class PointView extends AbstractView<HTMLTimeElement> {
 
   #editClickHandler: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleEditClick();
+    this.#editButtonClickHandler();
   };
 
   #favoriteClickHandler: EventListener = (evt) => {
     evt.preventDefault();
-    this.#handleFavoriteClick();
+    this.#favoriteButtonClickHandler();
   };
 }
